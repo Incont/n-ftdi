@@ -1,0 +1,22 @@
+{
+  "name": "n-ftdi",
+  "version": "0.0.1",
+  "description": "FTDI bindings for N-API Node.js, with the same interface as the managed .NET wrapper.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "keywords": [
+    "ftdi",
+    "usb",
+    "device"
+  ],
+  "dependencies": {
+    "bindings": "^1.5.0",
+    "node-addon-api": "^1.7.1"
+  },
+  "gypfile": true,
+  "author": "",
+  "license": "ISC"
+}
