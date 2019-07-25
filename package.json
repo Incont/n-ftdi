@@ -16,6 +16,10 @@
     "bindings": "^1.5.0",
     "node-addon-api": "^1.7.1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Incont/n-ftdi.git"
+  },
   "gypfile": true,
   "author": "",
   "license": "ISC"
