@@ -1,5 +1,5 @@
 'use strict';
-const _ftdi = require('bindings')('addon');
+const _ftdi = require('bindings')('FTD2XX');
 
 /**
  * Status values for FTDI devices

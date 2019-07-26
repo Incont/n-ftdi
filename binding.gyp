@@ -1,10 +1,10 @@
 {
   "targets": [
     {
-      "target_name": "addon",
+      "target_name": "FTD2XX",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ "./src/addon.cc" ],
+      "sources": [ "./src/FTD2XX.cc" ],
       "include_dirs": [
         "./src",
         "<!@(node -p \"require('node-addon-api').include\")"
