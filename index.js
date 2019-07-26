@@ -186,21 +186,121 @@ const FT_FLAGS = {
      * Indicates that the device is open
      * @type {Number}
      */
-    FT_FLAGS_OPENED: 1,
+    FT_FLAGS_OPENED: 0x00000001,
     /**
      * Indicates that the device is enumerated as a hi-speed USB device
      * @type {Number}
      */
-    FT_FLAGS_HISPEED: 2
+    FT_FLAGS_HISPEED: 0x00000002
 }
 Object.freeze(FT_FLAGS);
+
+/**
+ * Permitted data bits for FTDI devices
+ * @enum {Number}
+ */
+const FT_DATA_BITS = {
+    /**
+     * 8 data bits
+     * @enum {Number}
+     */
+    FT_BITS_8: 0x08,
+    /**
+     * 7 data bits
+     * @enum {Number}
+     */
+    FT_BITS_7: 0x07
+};
+Object.freeze(FT_FLAGS);
+
+/**
+ * Permitted stop bits for FTDI devices
+ * @enum {Number}
+ */
+const FT_STOP_BITS = {
+    /**
+     * 1 stop bit
+     * @enum {Number}
+     */
+    FT_STOP_BITS_1: 0x00,
+    /**
+     * 2 stop bits
+     * @enum {Number}
+     */
+    FT_STOP_BITS_2: 0x02
+};
+Object.freeze(FT_STOP_BITS);
+
+/**
+ * Permitted parity values for FTDI devices
+ * @enum {Number}
+ */
+const FT_PARITY = {
+    /**
+     * No parity
+     * @enum {Number}
+     */
+    FT_PARITY_NONE: 0x00,
+    /**
+     * Odd parity
+     * @enum {Number}
+     */
+    FT_PARITY_ODD: 0x01,
+    /**
+     * Even parity
+     * @enum {Number}
+     */
+    FT_PARITY_EVEN: 0x02,
+    /**
+     * Mark parity
+     * @enum {Number}
+     */
+    FT_PARITY_MARK: 0x03,
+    /**
+     * Space parity
+     * @enum {Number}
+     */
+    FT_PARITY_SPACE: 0x04
+};
+Object.freeze(FT_PARITY);
+
+
+/**
+ * Permitted flow control values for FTDI devices
+ * @enum {Number}
+ */
+const FT_FLOW_CONTROL = {
+    /**
+     * No flow control
+     * @enum {Number}
+     */
+    FT_FLOW_NONE: 0x0000,
+    /**
+     * RTS/CTS flow control
+     * @enum {Number}
+     */
+    FT_FLOW_RTS_CTS: 0x0100,
+    /**
+     * DTR/DSR flow control
+     * @enum {Number}
+     */
+    FT_FLOW_DTR_DSR: 0x0200,
+    /**
+     * Xon/Xoff flow control
+     * @enum {Number}
+     */
+    FT_FLOW_XON_XOFF: 0x0400
+};
+Object.freeze(FT_FLOW_CONTROL);
 
 class FTDI {
     /**
      * Class wrapper for FTD2XX.DLL
      * @constructor
      */
-    constructor() { }
+    constructor() {
+        this._ftHandle = null;
+    }
 
     /**
      * @typedef GetNumberOfDevicesResult
@@ -251,6 +351,35 @@ class FTDI {
             deviceInfoList[i] = _ftdi.getDeviceInfoDetail(i).deviceInfo;
         }
         return { ftStatus, deviceInfoList }
+    }
+
+    /**
+     * Opens the FTDI device with the specified index,
+     * initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param {Number} index - Index of the device to open,
+     * note that this cannot be guaranteed to open a specific device
+     * @return {Number} ftStatus - Status values for FTDI devices
+     */
+    openByIndex(index) {
+        let { ftStatus, ftHandle } = _ftdi.open(index);
+        if(ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+            this._ftHandle = ftHandle;
+            // Initialise port data characteristics
+            let wordLength = FT_DATA_BITS.FT_BITS_8;
+            let stopBits = FT_STOP_BITS.FT_STOP_BITS_1;
+            let parity = FT_PARITY.FT_PARITY_NONE;
+            ftStatus = _ftdi.setDataCharacteristics(ftHandle, wordLength, stopBits, parity);
+            let flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE;
+            let xon = 0x11;
+            let xoff = 0x13;
+            ftStatus = _ftdi.setFlowControl(ftHandle, flowControl, xon, xoff);
+            // Initialise Baud rate
+            let baudRate = 9600;
+            ftStatus = _ftdi.setBaudRate(ftHandle, baudRate);
+        } else {
+            this._ftHandle = null;
+        }
+        return ftStatus;
     }
 }
 
