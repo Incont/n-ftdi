@@ -1,6 +1,11 @@
 'use strict';
 const _ftdi = require('bindings')('FTD2XX');
 
+// Flags for FT_OpenEx
+const FT_OPEN_BY_SERIAL_NUMBER = 0x00000001;
+const FT_OPEN_BY_DESCRIPTION = 0x00000002;
+const FT_OPEN_BY_LOCATION = 0x00000004;
+
 /**
  * Status values for FTDI devices
  * @enum {Number}
@@ -328,6 +333,17 @@ class FTDI {
         return _ftdi.setBaudRate(this._ftHandle, baudRate);
     }
 
+    _openAndSetup(openFunc) {
+        let { ftStatus, ftHandle } = openFunc.call(this);
+        if(ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+            this._ftHandle = ftHandle;
+            ftStatus = this._setUpFtdiDevice();
+        } else {
+            this._ftHandle = null;
+        }
+        return ftStatus;
+    }
+
     /**
      * @typedef GetNumberOfDevicesResult
      * @type {Object}
@@ -380,21 +396,52 @@ class FTDI {
     }
 
     /**
-     * Opens the FTDI device with the specified index,
-     * initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * Opens the FTDI device with the specified index.
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param {Number} index Index of the device to open,
      * note that this cannot be guaranteed to open a specific device
      * @returns {Number} ftStatus Status values for FTDI device
      */
     openByIndex(index) {
-        let { ftStatus, ftHandle } = _ftdi.open(index);
-        if(ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
-            this._ftHandle = ftHandle;
-            ftStatus = this._setUpFtdiDevice();
-        } else {
-            this._ftHandle = null;
-        }
-        return ftStatus;
+        return this._openAndSetup(() => _ftdi.open(index));
+    }
+
+    /**
+     * Opens the FTDI device with the specified serial number
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param {string} serialNumber Serial number of the device to open
+     * @returns {Number} ftStatus Status values for FTDI device
+     */
+    openBySerialNumber(serialNumber) {
+        return this._openAndSetup(() => _ftdi.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER));
+    }
+
+    /**
+     * Opens the FTDI device with the specified description
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param {string} description Description of the device to open
+     * @returns {Number} ftStatus Status values for FTDI device
+     */
+    openByDescription(description) {
+        return this._openAndSetup(() => _ftdi.openEx(description, FT_OPEN_BY_DESCRIPTION));
+    }
+
+    /**
+     * Opens the FTDI device at the specified physical location
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param {Number} Location of the device to open
+     * @returns {Number} ftStatus Status values for FTDI device
+     */
+    openByLocation(location) {
+        return this._openAndSetup(() => _ftdi.openEx(location, FT_OPEN_BY_LOCATION));
+    }
+
+    /**
+     * Closes the handle to an open FTDI device
+     * @returns {Number} ftStatus Value from FT_Close
+     */
+    close() {
+        return this._checkFtHandle(() => _ftdi.close(this._ftHandle));
     }
 
     /**
@@ -432,14 +479,6 @@ class FTDI {
      */
     setBaudRate(baudRate) {
         return this._checkFtHandle(() => _ftdi.setBaudRate(this._ftHandle, baudRate));
-    }
-
-    /**
-     * Closes the handle to an open FTDI device
-     * @returns {Number} ftStatus Value from FT_Close
-     */
-    close() {
-        return this._checkFtHandle(() => _ftdi.close(this._ftHandle));
     }
 }
 

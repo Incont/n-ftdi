@@ -12,7 +12,7 @@ console.log(Object.keys(FTD2XX.FT_STATUS)[ftStatus]);
 console.log(FTD2XX.FTDI.getDeviceList());
 console.log("!!!");
 console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
-console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.openByIndex(0)]);
+console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.openByLocation(17)]);
 console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
 console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.close()]);
 console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
