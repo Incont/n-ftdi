@@ -303,10 +303,10 @@ class FTDI {
         this._ftHandle = null;
     }
 
-    _checkFtHandle(runIfOk) {
+    _checkFtHandle(invokeIfOk) {
         let ftStatus = FT_STATUS.FT_OTHER_ERROR;
         if(this._ftHandle != null && this._ftHandle !== 0) {
-            ftStatus = callback();
+            ftStatus = invokeIfOk.call(this);
         }
         return ftStatus;
     }
@@ -316,7 +316,7 @@ class FTDI {
         let wordLength = FT_DATA_BITS.FT_BITS_8;
         let stopBits = FT_STOP_BITS.FT_STOP_BITS_1;
         let parity = FT_PARITY.FT_PARITY_NONE;
-        ftStatus = _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity);
+        let ftStatus = _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity);
         if(ftStatus !== FT_STATUS.FT_OK) return ftStatus;
         let flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE;
         let xon = 0x11;
@@ -390,7 +390,7 @@ class FTDI {
         let { ftStatus, ftHandle } = _ftdi.open(index);
         if(ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
             this._ftHandle = ftHandle;
-            this._setUpFtdiDevice();
+            ftStatus = this._setUpFtdiDevice();
         } else {
             this._ftHandle = null;
         }
@@ -416,7 +416,7 @@ class FTDI {
      * @returns {Number} ftStatus Value from FT_SetFlowControl
      */
     setFlowControl(flowControl, xon, xoff) {
-        return this._checkFtHandle(() => _ftdi.setFlowControl(flowControl, xon, xoff));
+        return this._checkFtHandle(() => _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff));
     }
 
     // Intellisense comments
@@ -431,7 +431,15 @@ class FTDI {
      * @retern {Number} ftStatus Value from FT_SetBaudRate
      */
     setBaudRate(baudRate) {
-        return this._checkFtHandle(() => _ftdi.setBaudRate(baudRate));
+        return this._checkFtHandle(() => _ftdi.setBaudRate(this._ftHandle, baudRate));
+    }
+
+    /**
+     * Closes the handle to an open FTDI device
+     * @returns {Number} ftStatus Value from FT_Close
+     */
+    close() {
+        return this._checkFtHandle(() => _ftdi.close(this._ftHandle));
     }
 }
 

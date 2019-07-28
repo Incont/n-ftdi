@@ -97,6 +97,13 @@ Napi::Number SetBaudRate(const Napi::CallbackInfo &info) {
   return Napi::Number::New(env, ftStatus);
 }
 
+Napi::Number Close(const Napi::CallbackInfo &info) {
+  Napi::Env env = info.Env();
+  FT_HANDLE ftHandle = GetFtHandleFromWrapper(info[0]);
+  FT_STATUS ftStatus = FT_Close(ftHandle);
+  return Napi::Number::New(env, ftStatus);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   exports.Set(Napi::String::New(env, "createDeviceInfoList"), Napi::Function::New(env, CreateDeviceInfoList));
@@ -105,6 +112,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports.Set(Napi::String::New(env, "setDataCharacteristics"), Napi::Function::New(env, SetDataCharacteristics));
   exports.Set(Napi::String::New(env, "setFlowControl"), Napi::Function::New(env, SetFlowControl));
   exports.Set(Napi::String::New(env, "setBaudRate"), Napi::Function::New(env, SetBaudRate));
+  exports.Set(Napi::String::New(env, "close"), Napi::Function::New(env, Close));
   return exports;
 }
 

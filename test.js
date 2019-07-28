@@ -14,3 +14,5 @@ console.log("!!!");
 console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
 console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.openByIndex(0)]);
 console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
+console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.close()]);
+console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
