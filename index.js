@@ -1,5 +1,5 @@
 'use strict';
-const _ftdi = require('bindings')('FTD2XX');
+const _ftdi = require('bindings')('N-FTD2XX');
 
 // Flags for FT_OpenEx
 const FT_OPEN_BY_SERIAL_NUMBER = 0x00000001;
@@ -305,12 +305,16 @@ class FTDI {
      * @constructor
      */
     constructor() {
+        /**
+         * @type {FtHandle}
+         * @private
+         */
         this._ftHandle = null;
     }
 
     _checkFtHandle(invokeIfOk) {
         let ftStatus = FT_STATUS.FT_OTHER_ERROR;
-        if(this._ftHandle != null && this._ftHandle !== 0) {
+        if (this._ftHandle != null && this._ftHandle.value !== 0) {
             ftStatus = invokeIfOk.call(this);
         }
         return ftStatus;
@@ -322,20 +326,20 @@ class FTDI {
         let stopBits = FT_STOP_BITS.FT_STOP_BITS_1;
         let parity = FT_PARITY.FT_PARITY_NONE;
         let ftStatus = _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity);
-        if(ftStatus !== FT_STATUS.FT_OK) return ftStatus;
+        if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
         let flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE;
         let xon = 0x11;
         let xoff = 0x13;
         ftStatus = _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff);
-        if(ftStatus !== FT_STATUS.FT_OK) return ftStatus;
+        if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
         // Initialise Baud rate
         let baudRate = 9600;
         return _ftdi.setBaudRate(this._ftHandle, baudRate);
     }
 
     _openAndSetup(openFunc) {
-        let { ftStatus, ftHandle } = openFunc.call(this);
-        if(ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+        let {ftStatus, ftHandle} = openFunc.call(this);
+        if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
             this._ftHandle = ftHandle;
             ftStatus = this._setUpFtdiDevice();
         } else {
@@ -359,10 +363,14 @@ class FTDI {
     }
 
     /**
-     * The device handle
-     * @typedef FtHandle
-     * @type {Object}
-     * @property {Number} value
+     * @classdesc The device handle
+     * @name FtHandle
+     * @class
+     */
+    /**
+     * Mark handle as free
+     * @method
+     * @name FtHandle#free
      */
     /**
      * Type that holds device information for GetDeviceInformation method
@@ -372,10 +380,11 @@ class FTDI {
      * @property {Number} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
      * @property {Number} id The Vendor ID and Product ID of the device
      * @property {Number} locId The physical location identifier of the device
-     * @property {Number} serialNumber The device serial number
-     * @property {Number} description The device description
-     * @property {FtHandle} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle.value is 0.
+     * @property {String} serialNumber The device serial number
+     * @property {String} description The device description
+     * @property {FtHandle|null} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
      */
+
     /**
      * @typedef GetDeviceListResult
      * @type {Object}
@@ -388,11 +397,11 @@ class FTDI {
      */
     static getDeviceList() {
         let deviceInfoList = new Array();
-        let { ftStatus, devCount } = this.getNumberOfDevices();
+        let {ftStatus, devCount} = this.getNumberOfDevices();
         for (let i = 0; i < devCount; ++i) {
             deviceInfoList[i] = _ftdi.getDeviceInfoDetail(i).deviceInfo;
         }
-        return { ftStatus, deviceInfoList }
+        return {ftStatus, deviceInfoList}
     }
 
     /**
@@ -441,7 +450,12 @@ class FTDI {
      * @returns {Number} ftStatus Value from FT_Close
      */
     close() {
-        return this._checkFtHandle(() => _ftdi.close(this._ftHandle));
+        let ftStatus = this._checkFtHandle(() => _ftdi.close(this._ftHandle));
+        if (ftStatus === FT_STATUS.FT_OK) {
+            this._ftHandle.free();
+            this._ftHandle = null;
+        }
+        return ftStatus;
     }
 
     /**
@@ -465,13 +479,7 @@ class FTDI {
     setFlowControl(flowControl, xon, xoff) {
         return this._checkFtHandle(() => _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff));
     }
-
-    // Intellisense comments
-        /// <summary>
-        /// Sets the current Baud rate.
-        /// </summary>
-        /// <returns>FT_STATUS value from FT_SetBaudRate in FTD2XX.DLL</returns>
-        /// <param name="BaudRate">The desired Baud rate for the device.</param>
+    
     /**
      * Sets the current Baud rate.
      * @param {Number} baudRate The desired Baud rate for the device

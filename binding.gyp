@@ -1,10 +1,10 @@
 {
   "targets": [
     {
-      "target_name": "FTD2XX",
+      "target_name": "N-FTD2XX",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ "./src/FTD2XX.cc" ],
+      "sources": [ "./src/N-FTD2XX.cc", "./src/ft-handler-wrapper.cc" ],
       "include_dirs": [
         "./src",
         "<!@(node -p \"require('node-addon-api').include\")"
