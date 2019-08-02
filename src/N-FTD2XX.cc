@@ -68,7 +68,7 @@ Napi::Object OpenEx(const Napi::CallbackInfo &info)
   if (arg1.IsString())
   {
     snOrDsc = arg1.As<Napi::String>().Utf8Value();
-    pvArg1 = &snOrDsc;
+    pvArg1 = (void *)snOrDsc.c_str();
   }
   else
   {

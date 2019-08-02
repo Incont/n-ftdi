@@ -4,7 +4,8 @@
   "description": "FTDI bindings for N-API Node.js, with the same interface as the managed .NET wrapper.",
   "main": "index.js",
   "scripts": {
-    "test-no-devices": "mocha ./tests/no-plug-in-devices.test.js",
+    "test-no-devices": "mocha tests/no-devices.test.js",
+    "test-one-device": "mocha --expose_gc tests/one-device.test.js",
     "install": "node-gyp rebuild"
   },
   "keywords": [

@@ -479,7 +479,7 @@ class FTDI {
     setFlowControl(flowControl, xon, xoff) {
         return this._checkFtHandle(() => _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff));
     }
-    
+
     /**
      * Sets the current Baud rate.
      * @param {Number} baudRate The desired Baud rate for the device
