@@ -15,6 +15,11 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install
+- script: npm install -g node-gyp
+  displayName: 'install node-gyp'
+ 
+- script: npm install --global --production windows-build-tools
+  displayName: 'install windows-build-tools'
+
+- script: npm install
   displayName: 'npm install'
