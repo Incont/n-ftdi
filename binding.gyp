@@ -4,7 +4,7 @@
       "target_name": "N-FTD2XX",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ "./src/N-FTD2XX.cc", "./src/ft-handler-wrapper.cc" ],
+      "sources": [ "./src/N-FTD2XX.cc" ],
       "include_dirs": [
         "./src",
         "<!@(node -p \"require('node-addon-api').include\")"

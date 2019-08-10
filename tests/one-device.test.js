@@ -13,6 +13,7 @@ describe('Tests getNumberOfDevices', () => {
 });
 
 describe('Tests getDeviceList', () => {
+    let ftdi = new FTD2XX.FTDI();
     let deviceList = FTD2XX.FTDI.getDeviceList();
     it('FTDI.getDeviceList().ftStatus should equal FTD2XX.FT_STATUS.FT_OK', () => {
         assert.strictEqual(deviceList.ftStatus, FTD2XX.FT_STATUS.FT_OK);
@@ -27,7 +28,7 @@ describe('Tests getDeviceList', () => {
         assert.strictEqual(typeof deviceList.deviceInfoList[0].flags, 'number');
         assert.strictEqual(typeof deviceList.deviceInfoList[0].locId, 'number');
         assert.strictEqual(typeof deviceList.deviceInfoList[0].type, 'number');
-        assert.notStrictEqual(deviceList.deviceInfoList[0].ftHandle, null);
+        assert.strictEqual(deviceList.deviceInfoList[0].ftHandle, null);
     });
 });
 
@@ -44,14 +45,14 @@ describe('Tests ftdi open', () => {
     });
     it('FTDI.openByIndex(index) should return FT_OK', () => {
         assert.strictEqual(ftdi.openByIndex(0), FTD2XX.FT_STATUS.FT_OK);
+     });
+    it('FTDI.openByLocation(LocId) should return FT_OK', () => {
+        assert.strictEqual(ftdi.openByLocation(deviceInfo.locId), FTD2XX.FT_STATUS.FT_OK);
     });
     it('FTDI.openByDescription(description) should return FT_OK', () => {
         assert.strictEqual(ftdi.openByDescription(deviceInfo.description), FTD2XX.FT_STATUS.FT_OK);
     });
     it('FTDI.openBySerialNumber(serialNumber) should return FT_OK', () => {
         assert.strictEqual(ftdi.openBySerialNumber(deviceInfo.serialNumber), FTD2XX.FT_STATUS.FT_OK);
-    });
-    it('FTDI.openByLocation(LocId) should return FT_OK', () => {
-        assert.strictEqual(ftdi.openByLocation(deviceInfo.locId), FTD2XX.FT_STATUS.FT_OK);
     });
 });
