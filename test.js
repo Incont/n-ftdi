@@ -1,21 +1,19 @@
 'use strict';
-
+let FTD2XX = require('./index');
 (function() {
-    let FTD2XX = require('./index');
     let ftdi = new FTD2XX.FTDI();
-    let { ftStatus, devCount } = FTD2XX.FTDI.getNumberOfDevices();
+    let { ftStatus, devCount } = FTD2XX.FTDI.getNumberOfDevicesSync();
     console.log(ftStatus, devCount);
     console.log(Object.keys(FTD2XX.FT_STATUS)[ftStatus]);
-    console.log(FTD2XX.FTDI.getDeviceList());
+    console.log(FTD2XX.FTDI.getDeviceListSync());
     console.log("!!!");
-    console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
-    let t = ftdi.openByIndex(0);
-    console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.openByLocation(5136)]);
-    console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
-    console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.close()]);
-    console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0]);
+  //  console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0].ftHandle.free());
+    let t = ftdi.openByIndexSync(0);
+    console.log(FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]);
+    console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.closeSync()]);
+    console.log(FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]);
 })();
-
+/*
 
 function myFunc(arg) {
     console.log(`arg was => ${arg}`);
@@ -43,31 +41,29 @@ let ts2 = t3 - t2;
 console.log("Ts0 " + ts0);
 console.log("Ts1 " + ts1);
 console.log("Ts2 " + ts2);
+*/
+FTD2XX.FTDI.getDeviceList().then(result => {
+    console.log(result);
+    (() => console.log(this))();
+});
+
+function F() {
+  //  this.f = () => console.log(this);
+}
+F.prototype.f = () => console.log(this);
+(new F).f();
 
 function resolveAfter2Seconds(x) {
     return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(x);
-      }, 2000);
+        setTimeout(() => {
+            resolve(x);
+        }, 2000);
     });
-  }
-  
-  async function add1(x) {
-    const a = await resolveAfter2Seconds(20);
-    const b = await resolveAfter2Seconds(30);
-    return x + a + b;
-  }
-  
-  add1(10).then(v => {
-    console.log(v);  // prints 60 after 4 seconds.
-  });
-  
-  async function add2(x) {
-    const a = resolveAfter2Seconds(20);
-    const b = resolveAfter2Seconds(30);
-    return x + await a + await b;
-  }
-  
-  add2(10).then(v => {
-    console.log(v);  // prints 60 after 2 seconds.
-  });
+}
+
+async function add1(x) {
+    return 0;
+}
+console.log("!!!!");
+add1(1).then(r => console.log("result" + r));
+console.log("++++");

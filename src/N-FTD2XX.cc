@@ -98,8 +98,8 @@ private:
 
 Napi::Object CreateDeviceInfoListWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("createDeviceInfoList", Napi::Function::New(env, CreateDeviceInfoListWorker::InvokeSync));
-  exports.Set("createDeviceInfoListAsync", Napi::Function::New(env, CreateDeviceInfoListWorker::Invoke));
+  exports.Set("createDeviceInfoListSync", Napi::Function::New(env, CreateDeviceInfoListWorker::InvokeSync));
+  exports.Set("createDeviceInfoList", Napi::Function::New(env, CreateDeviceInfoListWorker::Invoke));
   return exports;
 }
 
@@ -176,8 +176,8 @@ private:
 
 Napi::Object GetDeviceInfoDetailWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("getDeviceInfoDetail", Napi::Function::New(env, GetDeviceInfoDetailWorker::InvokeSync));
-  exports.Set("getDeviceInfoDetailAsync", Napi::Function::New(env, GetDeviceInfoDetailWorker::Invoke));
+  exports.Set("getDeviceInfoDetailSync", Napi::Function::New(env, GetDeviceInfoDetailWorker::InvokeSync));
+  exports.Set("getDeviceInfoDetail", Napi::Function::New(env, GetDeviceInfoDetailWorker::Invoke));
   return exports;
 }
 
@@ -264,8 +264,8 @@ private:
 
 Napi::Object OpenWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("open", Napi::Function::New(env, OpenWorker::InvokeSync));
-  exports.Set("openAsync", Napi::Function::New(env, OpenWorker::Invoke));
+  exports.Set("openSync", Napi::Function::New(env, OpenWorker::InvokeSync));
+  exports.Set("open", Napi::Function::New(env, OpenWorker::Invoke));
   return exports;
 }
 
@@ -330,8 +330,8 @@ private:
 
 Napi::Object OpenExWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("openEx", Napi::Function::New(env, OpenExWorker::InvokeSync));
-  exports.Set("openExAsync", Napi::Function::New(env, OpenExWorker::Invoke));
+  exports.Set("openExSync", Napi::Function::New(env, OpenExWorker::InvokeSync));
+  exports.Set("openEx", Napi::Function::New(env, OpenExWorker::Invoke));
   return exports;
 }
 
@@ -416,8 +416,8 @@ private:
 
 Napi::Object CloseWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("close", Napi::Function::New(env, CloseWorker::InvokeSync));
-  exports.Set("closeAsync", Napi::Function::New(env, CloseWorker::Invoke));
+  exports.Set("closeSync", Napi::Function::New(env, CloseWorker::InvokeSync));
+  exports.Set("close", Napi::Function::New(env, CloseWorker::Invoke));
   return exports;
 }
 
@@ -475,8 +475,8 @@ private:
 
 Napi::Object SetDataCharacteristicsWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("setDataCharacteristics", Napi::Function::New(env, SetDataCharacteristicsWorker::InvokeSync));
-  exports.Set("SetDataCharacteristicsAsync", Napi::Function::New(env, SetDataCharacteristicsWorker::Invoke));
+  exports.Set("setDataCharacteristicsSync", Napi::Function::New(env, SetDataCharacteristicsWorker::InvokeSync));
+  exports.Set("SetDataCharacteristics", Napi::Function::New(env, SetDataCharacteristicsWorker::Invoke));
   return exports;
 }
 
@@ -540,8 +540,8 @@ private:
 
 Napi::Object SetFlowControlWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("setFlowControl", Napi::Function::New(env, SetFlowControlWorker::InvokeSync));
-  exports.Set("setFlowControlAsync", Napi::Function::New(env, SetFlowControlWorker::Invoke));
+  exports.Set("setFlowControlSync", Napi::Function::New(env, SetFlowControlWorker::InvokeSync));
+  exports.Set("setFlowControl", Napi::Function::New(env, SetFlowControlWorker::Invoke));
   return exports;
 }
 
@@ -603,8 +603,8 @@ private:
 
 Napi::Object SetBaudRateWorker::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("setBaudRate", Napi::Function::New(env, SetBaudRateWorker::InvokeSync));
-  exports.Set("setBaudRateAsync", Napi::Function::New(env, SetBaudRateWorker::Invoke));
+  exports.Set("setBaudRateSync", Napi::Function::New(env, SetBaudRateWorker::InvokeSync));
+  exports.Set("setBaudRate", Napi::Function::New(env, SetBaudRateWorker::Invoke));
   return exports;
 }
 

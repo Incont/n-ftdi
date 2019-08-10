@@ -298,6 +298,16 @@ const FT_FLOW_CONTROL = {
 };
 Object.freeze(FT_FLOW_CONTROL);
 
+function CallbackFactory(resolve, reject) {
+    return (err, result) => {
+        if (err) {
+            reject(err);
+        } else {
+            resolve(result);
+        }
+    };
+}
+
 class FTDI {
 
     /**
@@ -312,36 +322,73 @@ class FTDI {
         this._ftHandle = null;
     }
 
-    _checkFtHandle(invokeIfOk) {
+    _checkFtHandleSync(invokeIfOk) {
         let ftStatus = FT_STATUS.FT_OTHER_ERROR;
         if (this._ftHandle != null && this._ftHandle.value !== 0) {
-            ftStatus = invokeIfOk.call(this);
+            ftStatus = invokeIfOk();
         }
         return ftStatus;
     }
 
-    _setUpFtdiDevice() {
+    async _checkFtHandle(invokeIfOk) {
+        let ftStatus = FT_STATUS.FT_OTHER_ERROR;
+        if (this._ftHandle != null && this._ftHandle.value !== 0) {
+            ftStatus = await invokeIfOk();
+        }
+        return ftStatus;
+    }
+
+    _setUpFtdiDeviceSync() {
         // Initialise port data characteristics
         let wordLength = FT_DATA_BITS.FT_BITS_8;
         let stopBits = FT_STOP_BITS.FT_STOP_BITS_1;
         let parity = FT_PARITY.FT_PARITY_NONE;
-        let ftStatus = _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity);
+        let ftStatus = _ftdi.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity);
         if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
         let flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE;
         let xon = 0x11;
         let xoff = 0x13;
-        ftStatus = _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff);
+        ftStatus = _ftdi.setFlowControlSync(this._ftHandle, flowControl, xon, xoff);
         if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
         // Initialise Baud rate
         let baudRate = 9600;
-        return _ftdi.setBaudRate(this._ftHandle, baudRate);
+        return _ftdi.setBaudRateSync(this._ftHandle, baudRate);
     }
 
-    _openAndSetup(openFunc) {
-        let {ftStatus, ftHandle} = openFunc.call(this);
+    async _setUpFtdiDevice() {
+        //TODO
+        // Initialise port data characteristics
+        let wordLength = FT_DATA_BITS.FT_BITS_8;
+        let stopBits = FT_STOP_BITS.FT_STOP_BITS_1;
+        let parity = FT_PARITY.FT_PARITY_NONE;
+        let ftStatus = await _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity);
+        if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
+        let flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE;
+        let xon = 0x11;
+        let xoff = 0x13;
+        ftStatus = await _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff);
+        if (ftStatus !== FT_STATUS.FT_OK) return ftStatus;
+        // Initialise Baud rate
+        let baudRate = 9600;
+        return await _ftdi.setBaudRate(this._ftHandle, baudRate);
+    }
+
+    _openAndSetupSync(openFuncSync) {
+        let {ftStatus, ftHandle} = openFuncSync();
         if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
             this._ftHandle = ftHandle;
-            ftStatus = this._setUpFtdiDevice();
+            ftStatus = this._setUpFtdiDeviceSync();
+        } else {
+            this._ftHandle = null;
+        }
+        return ftStatus;
+    }
+
+    async _openAndSetup(openFunc) {
+        let {ftStatus, ftHandle} = await openFunc();
+        if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+            this._ftHandle = ftHandle;
+            ftStatus = await this._setUpFtdiDevice();
         } else {
             this._ftHandle = null;
         }
@@ -358,14 +405,22 @@ class FTDI {
      * Gets the number of FTDI devices available
      * @returns {GetNumberOfDevicesResult}
      */
-    static getNumberOfDevices() {
-        return _ftdi.createDeviceInfoList();
+    static getNumberOfDevicesSync() {
+        return _ftdi.createDeviceInfoListSync();
     }
 
     /**
-     * @classdesc The device handle
-     * @name FtHandle
-     * @class
+     * Gets the number of FTDI devices available
+     * @return {Promise<GetNumberOfDevicesResult>}
+     */
+    static getDeviceList() {
+        return new Promise((resolve, reject) => {
+            _ftdi.createDeviceInfoList(CallbackFactory(resolve, reject));
+        });
+    }
+
+    /**
+     * @typedef {FtHandle}
      */
     /**
      * Mark handle as free
@@ -395,11 +450,11 @@ class FTDI {
      * Gets information on all of the FTDI devices available
      * @returns {GetDeviceListResult}
      */
-    static getDeviceList() {
+    static getDeviceListSync() {
         let deviceInfoList = new Array();
-        let {ftStatus, devCount} = this.getNumberOfDevices();
+        let {ftStatus, devCount} = this.getNumberOfDevicesSync();
         for (let i = 0; i < devCount; ++i) {
-            deviceInfoList[i] = _ftdi.getDeviceInfoDetail(i).deviceInfo;
+            deviceInfoList[i] = _ftdi.getDeviceInfoDetailSync(i).deviceInfo;
         }
         return {ftStatus, deviceInfoList}
     }
@@ -411,8 +466,8 @@ class FTDI {
      * note that this cannot be guaranteed to open a specific device
      * @returns {Number} ftStatus Status values for FTDI device
      */
-    openByIndex(index) {
-        return this._openAndSetup(() => _ftdi.open(index));
+    openByIndexSync(index) {
+        return this._openAndSetupSync(() => _ftdi.openSync(index));
     }
 
     /**
@@ -421,8 +476,8 @@ class FTDI {
      * @param {string} serialNumber Serial number of the device to open
      * @returns {Number} ftStatus Status values for FTDI device
      */
-    openBySerialNumber(serialNumber) {
-        return this._openAndSetup(() => _ftdi.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER));
+    openBySerialNumberSync(serialNumber) {
+        return this._openAndSetupSync(() => _ftdi.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER));
     }
 
     /**
@@ -431,8 +486,8 @@ class FTDI {
      * @param {string} description Description of the device to open
      * @returns {Number} ftStatus Status values for FTDI device
      */
-    openByDescription(description) {
-        return this._openAndSetup(() => _ftdi.openEx(description, FT_OPEN_BY_DESCRIPTION));
+    openByDescriptionSync(description) {
+        return this._openAndSetupSync(() => _ftdi.openExSync(description, FT_OPEN_BY_DESCRIPTION));
     }
 
     /**
@@ -441,16 +496,16 @@ class FTDI {
      * @param {Number} Location of the device to open
      * @returns {Number} ftStatus Status values for FTDI device
      */
-    openByLocation(location) {
-        return this._openAndSetup(() => _ftdi.openEx(location, FT_OPEN_BY_LOCATION));
+    openByLocationSync(location) {
+        return this._openAndSetupSync(() => _ftdi.openExSync(location, FT_OPEN_BY_LOCATION));
     }
 
     /**
      * Closes the handle to an open FTDI device
      * @returns {Number} ftStatus Value from FT_Close
      */
-    close() {
-        let ftStatus = this._checkFtHandle(() => _ftdi.close(this._ftHandle));
+    closeSync() {
+        let ftStatus = this._checkFtHandleSync(() => _ftdi.closeSync(this._ftHandle));
         if (ftStatus === FT_STATUS.FT_OK) {
             this._ftHandle.free();
             this._ftHandle = null;
@@ -465,8 +520,8 @@ class FTDI {
      * @param {Number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
      * @returns {Number} ftStatus ftStatus value from FT_SetDataCharacteristics
      */
-    setDataCharacteristics(wordLength, stopBits, parity) {
-        return this._checkFtHandle(() => _ftdi.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity));
+    setDataCharacteristicsSync(wordLength, stopBits, parity) {
+        return this._checkFtHandleSync(() => _ftdi.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity));
     }
 
     /**
@@ -476,8 +531,8 @@ class FTDI {
      * @param {Number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
      * @returns {Number} ftStatus Value from FT_SetFlowControl
      */
-    setFlowControl(flowControl, xon, xoff) {
-        return this._checkFtHandle(() => _ftdi.setFlowControl(this._ftHandle, flowControl, xon, xoff));
+    setFlowControlSync(flowControl, xon, xoff) {
+        return this._checkFtHandleSync(() => _ftdi.setFlowControlSync(this._ftHandle, flowControl, xon, xoff));
     }
 
     /**
@@ -485,8 +540,8 @@ class FTDI {
      * @param {Number} baudRate The desired Baud rate for the device
      * @retern {Number} ftStatus Value from FT_SetBaudRate
      */
-    setBaudRate(baudRate) {
-        return this._checkFtHandle(() => _ftdi.setBaudRate(this._ftHandle, baudRate));
+    setBaudRateSync(baudRate) {
+        return this._checkFtHandleSync(() => _ftdi.setBaudRateSync(this._ftHandle, baudRate));
     }
 }
 
