@@ -26,7 +26,7 @@ public:
   FT_HANDLE GetFtHandler();
 
 private:
-  FT_HANDLE _ftHandle;
+  FT_HANDLE ftHandle;
   static Napi::FunctionReference constructor;
   void Free(const Napi::CallbackInfo &info);
 };
@@ -36,7 +36,10 @@ Napi::FunctionReference FtHandlerWrapper::constructor;
 Napi::Object FtHandlerWrapper::Init(Napi::Env env, Napi::Object exports)
 {
   Napi::HandleScope scope(env);
-  Napi::Function func = DefineClass(env, "FtHandler", {InstanceMethod("free", &FtHandlerWrapper::Free)});
+  Napi::Function func = DefineClass(
+      env,
+      "FtHandler",
+      {InstanceMethod("free", &FtHandlerWrapper::Free)});
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
   exports.Set("FtHandler", func);
@@ -48,7 +51,7 @@ Napi::Object FtHandlerWrapper::NewInstance(Napi::Env env, FT_HANDLE ftHandle)
   Napi::EscapableHandleScope scope(env);
   Napi::Object obj = constructor.New({});
   FtHandlerWrapper *wrapper = Napi::ObjectWrap<FtHandlerWrapper>::Unwrap(obj);
-  wrapper->_ftHandle = ftHandle;
+  wrapper->ftHandle = ftHandle;
   return scope.Escape(napi_value(obj)).ToObject();
 }
 
@@ -58,22 +61,23 @@ FT_HANDLE FtHandlerWrapper::GetFtHandler(Napi::Value value)
   return wrapper->GetFtHandler();
 }
 
-FtHandlerWrapper::FtHandlerWrapper(const Napi::CallbackInfo &info) : Napi::ObjectWrap<FtHandlerWrapper>(info) {}
+FtHandlerWrapper::FtHandlerWrapper(const Napi::CallbackInfo &info)
+    : Napi::ObjectWrap<FtHandlerWrapper>(info) {}
 
 void FtHandlerWrapper::Free(const Napi::CallbackInfo &info)
 {
-  this->_ftHandle = nullptr;
+  this->ftHandle = nullptr;
 }
 
 FtHandlerWrapper::~FtHandlerWrapper()
 {
-  if (this->_ftHandle != nullptr)
-    FT_Close(this->_ftHandle);
+  if (this->ftHandle != nullptr)
+    FT_Close(this->ftHandle);
 }
 
 FT_HANDLE FtHandlerWrapper::GetFtHandler()
 {
-  return _ftHandle;
+  return ftHandle;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,11 +90,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  CreateDeviceInfoListWorker(Napi::Function &callback);
+  CreateDeviceInfoListWorker(Napi::Env env, Napi::Promise::Deferred &deferred);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   FT_STATUS ftStatus;
   DWORD devCount;
   inline static Napi::Value CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount);
@@ -112,13 +117,14 @@ Napi::Value CreateDeviceInfoListWorker::InvokeSync(const Napi::CallbackInfo &inf
 
 Napi::Value CreateDeviceInfoListWorker::Invoke(const Napi::CallbackInfo &info)
 {
-  Napi::Function callback = info[0].As<Napi::Function>();
-  auto *worker = new CreateDeviceInfoListWorker(callback);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new CreateDeviceInfoListWorker(info.Env(), deferred);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-CreateDeviceInfoListWorker::CreateDeviceInfoListWorker(Napi::Function &callback) : Napi::AsyncWorker(callback) {}
+CreateDeviceInfoListWorker::CreateDeviceInfoListWorker(Napi::Env env, Napi::Promise::Deferred &deferred)
+    : Napi::AsyncWorker(deferred.Env()), deferred(deferred) {}
 
 void CreateDeviceInfoListWorker::Execute()
 {
@@ -128,7 +134,7 @@ void CreateDeviceInfoListWorker::Execute()
 void CreateDeviceInfoListWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), CreateResult(Env(), ftStatus, devCount)});
+  deferred.Resolve(CreateResult(Env(), ftStatus, devCount));
 }
 
 Napi::Value CreateDeviceInfoListWorker::CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount)
@@ -148,11 +154,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  GetDeviceInfoDetailWorker(Napi::Function &callback, DWORD index);
+  GetDeviceInfoDetailWorker(Napi::Env env, Napi::Promise::Deferred deferred, DWORD index);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   DWORD index;
   FT_STATUS ftStatus;
   DWORD flags;
@@ -198,13 +205,14 @@ Napi::Value GetDeviceInfoDetailWorker::InvokeSync(const Napi::CallbackInfo &info
 Napi::Value GetDeviceInfoDetailWorker::Invoke(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
-  Napi::Function callback = info[1].As<Napi::Function>();
-  auto *worker = new GetDeviceInfoDetailWorker(callback, index);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new GetDeviceInfoDetailWorker(info.Env(), deferred, index);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-GetDeviceInfoDetailWorker::GetDeviceInfoDetailWorker(Napi::Function &callback, DWORD index) : Napi::AsyncWorker(callback), index(index) {}
+GetDeviceInfoDetailWorker::GetDeviceInfoDetailWorker(Napi::Env env, Napi::Promise::Deferred deferred, DWORD index)
+    : Napi::AsyncWorker(env), deferred(deferred), index(index) {}
 
 void GetDeviceInfoDetailWorker::Execute()
 {
@@ -214,7 +222,7 @@ void GetDeviceInfoDetailWorker::Execute()
 void GetDeviceInfoDetailWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), CreateResult(Env(), ftStatus, flags, id, type, locId, serialNumber, description, ftHandle)});
+  deferred.Resolve(CreateResult(Env(), ftStatus, flags, id, type, locId, serialNumber, description, ftHandle));
 }
 
 Napi::Value GetDeviceInfoDetailWorker::CreateResult(
@@ -229,7 +237,9 @@ Napi::Value GetDeviceInfoDetailWorker::CreateResult(
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
   Napi::Object deviceInfo = Napi::Object::New(env);
-  Napi::Value nFtHandler = ftHandle == nullptr ? env.Null() : FtHandlerWrapper::NewInstance(env, ftHandle);
+  Napi::Value nFtHandler = ftHandle == nullptr
+                               ? env.Null()
+                               : FtHandlerWrapper::NewInstance(env, ftHandle);
   deviceInfo.Set("flags", flags);
   deviceInfo.Set("type", type);
   deviceInfo.Set("id", id);
@@ -251,11 +261,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  OpenWorker(Napi::Function &callback, DWORD index);
+  OpenWorker(Napi::Env env, Napi::Promise::Deferred deferred, DWORD index);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   DWORD index;
   FT_STATUS ftStatus;
   FT_HANDLE ftHandle;
@@ -280,13 +291,14 @@ Napi::Value OpenWorker::InvokeSync(const Napi::CallbackInfo &info)
 Napi::Value OpenWorker::Invoke(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
-  Napi::Function callback = info[1].As<Napi::Function>();
-  auto *worker = new OpenWorker(callback, index);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new OpenWorker(info.Env(), deferred, index);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-OpenWorker::OpenWorker(Napi::Function &callback, DWORD index) : Napi::AsyncWorker(callback), index(index) {}
+OpenWorker::OpenWorker(Napi::Env env, Napi::Promise::Deferred deferred, DWORD index)
+    : Napi::AsyncWorker(env), deferred(deferred), index(index) {}
 
 void OpenWorker::Execute()
 {
@@ -296,7 +308,7 @@ void OpenWorker::Execute()
 void OpenWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), CreateResult(Env(), ftStatus, ftHandle)});
+  deferred.Resolve(CreateResult(Env(), ftStatus, ftHandle));
 }
 
 Napi::Value OpenWorker::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
@@ -316,11 +328,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  OpenExWorker(Napi::Function &callback, PVOID pvArg1, DWORD flags);
+  OpenExWorker(Napi::Env env, Napi::Promise::Deferred deferred, PVOID pvArg1, DWORD flags);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   PVOID pvArg1;
   DWORD flags;
   FT_STATUS ftStatus;
@@ -368,14 +381,14 @@ Napi::Value OpenExWorker::Invoke(const Napi::CallbackInfo &info)
     pvArg1 = (void *)info[0].As<Napi::Number>().Int64Value();
   }
   DWORD flags = info[1].As<Napi::Number>().Int64Value();
-  Napi::Function callback = info[2].As<Napi::Function>();
-  auto *worker = new OpenExWorker(callback, pvArg1, flags);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new OpenExWorker(info.Env(), deferred, pvArg1, flags);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-OpenExWorker::OpenExWorker(Napi::Function &callback, PVOID pvArg1, DWORD flags)
-    : Napi::AsyncWorker(callback), pvArg1(pvArg1), flags(flags) {}
+OpenExWorker::OpenExWorker(Napi::Env env, Napi::Promise::Deferred deferred, PVOID pvArg1, DWORD flags)
+    : Napi::AsyncWorker(env), deferred(deferred), pvArg1(pvArg1), flags(flags) {}
 
 void OpenExWorker::Execute()
 {
@@ -385,7 +398,7 @@ void OpenExWorker::Execute()
 void OpenExWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), CreateResult(Env(), ftStatus, ftHandle)});
+  deferred.Resolve(CreateResult(Env(), ftStatus, ftHandle));
 }
 
 Napi::Value OpenExWorker::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
@@ -405,11 +418,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  CloseWorker(Napi::Function &callback, FT_HANDLE ftHandle);
+  CloseWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   FT_HANDLE ftHandle;
   FT_STATUS ftStatus;
 };
@@ -431,14 +445,14 @@ Napi::Value CloseWorker::InvokeSync(const Napi::CallbackInfo &info)
 Napi::Value CloseWorker::Invoke(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
-  Napi::Function callback = info[2].As<Napi::Function>();
-  auto *worker = new CloseWorker(callback, ftHandle);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new CloseWorker(info.Env(), deferred, ftHandle);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-CloseWorker::CloseWorker(Napi::Function &callback, FT_HANDLE ftHandle)
-    : Napi::AsyncWorker(callback), ftHandle(ftHandle) {}
+CloseWorker::CloseWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle)
+    : Napi::AsyncWorker(env), deferred(deferred), ftHandle(ftHandle) {}
 
 void CloseWorker::Execute()
 {
@@ -448,7 +462,7 @@ void CloseWorker::Execute()
 void CloseWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), Napi::Number::New(Env(), ftStatus)});
+  deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -461,11 +475,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  SetDataCharacteristicsWorker(Napi::Function &callback, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
+  SetDataCharacteristicsWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   FT_HANDLE ftHandle;
   UCHAR wordLength;
   UCHAR stopBits;
@@ -496,14 +511,14 @@ Napi::Value SetDataCharacteristicsWorker::Invoke(const Napi::CallbackInfo &info)
   UCHAR wordLength = info[1].As<Napi::Number>().Uint32Value();
   UCHAR stopBits = info[2].As<Napi::Number>().Uint32Value();
   UCHAR parity = info[3].As<Napi::Number>().Uint32Value();
-  Napi::Function callback = info[4].As<Napi::Function>();
-  auto *worker = new SetDataCharacteristicsWorker(callback, ftHandle, wordLength, stopBits, parity);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new SetDataCharacteristicsWorker(info.Env(), deferred, ftHandle, wordLength, stopBits, parity);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-SetDataCharacteristicsWorker::SetDataCharacteristicsWorker(Napi::Function &callback, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity)
-    : Napi::AsyncWorker(callback), ftHandle(ftHandle), wordLength(wordLength), stopBits(stopBits), parity(parity) {}
+SetDataCharacteristicsWorker::SetDataCharacteristicsWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity)
+    : Napi::AsyncWorker(env), deferred(deferred), ftHandle(ftHandle), wordLength(wordLength), stopBits(stopBits), parity(parity) {}
 
 void SetDataCharacteristicsWorker::Execute()
 {
@@ -513,7 +528,7 @@ void SetDataCharacteristicsWorker::Execute()
 void SetDataCharacteristicsWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), Napi::Number::New(Env(), ftStatus)});
+  deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -526,11 +541,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  SetFlowControlWorker(Napi::Function &callback, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff);
+  SetFlowControlWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   FT_HANDLE ftHandle;
   USHORT flowControl;
   UCHAR xon;
@@ -561,14 +577,14 @@ Napi::Value SetFlowControlWorker::Invoke(const Napi::CallbackInfo &info)
   USHORT flowControl = info[1].As<Napi::Number>().Uint32Value();
   UCHAR xon = info[2].As<Napi::Number>().Uint32Value();
   UCHAR xoff = info[3].As<Napi::Number>().Uint32Value();
-  Napi::Function callback = info[4].As<Napi::Function>();
-  auto *worker = new SetFlowControlWorker(callback, ftHandle, flowControl, xon, xoff);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new SetFlowControlWorker(info.Env(), deferred,ftHandle, flowControl, xon, xoff);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-SetFlowControlWorker::SetFlowControlWorker(Napi::Function &callback, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff)
-    : Napi::AsyncWorker(callback), ftHandle(ftHandle), flowControl(flowControl), xon(xon), xoff(xoff) {}
+SetFlowControlWorker::SetFlowControlWorker(Napi::Env env, Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff)
+    : Napi::AsyncWorker(deferred.Env()), deferred(deferred), ftHandle(ftHandle), flowControl(flowControl), xon(xon), xoff(xoff) {}
 
 void SetFlowControlWorker::Execute()
 {
@@ -578,7 +594,7 @@ void SetFlowControlWorker::Execute()
 void SetFlowControlWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), Napi::Number::New(Env(), ftStatus)});
+  deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -591,11 +607,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  SetBaudRateWorker(Napi::Function &callback, FT_HANDLE ftHandle, ULONG baudRate);
+  SetBaudRateWorker(Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, ULONG baudRate);
   void Execute();
   void OnOK();
 
 private:
+  Napi::Promise::Deferred deferred;
   FT_HANDLE ftHandle;
   ULONG baudRate;
   FT_STATUS ftStatus;
@@ -620,14 +637,14 @@ Napi::Value SetBaudRateWorker::Invoke(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   ULONG baudRate = info[1].As<Napi::Number>().Uint32Value();
-  Napi::Function callback = info[2].As<Napi::Function>();
-  auto *worker = new SetBaudRateWorker(callback, ftHandle, baudRate);
+  auto deferred = Napi::Promise::Deferred::New(info.Env());
+  auto *worker = new SetBaudRateWorker(deferred, ftHandle, baudRate);
   worker->Queue();
-  return info.Env().Undefined();
+  return deferred.Promise();
 }
 
-SetBaudRateWorker::SetBaudRateWorker(Napi::Function &callback, FT_HANDLE ftHandle, ULONG baudRate)
-    : Napi::AsyncWorker(callback), ftHandle(ftHandle), baudRate(baudRate) {}
+SetBaudRateWorker::SetBaudRateWorker(Napi::Promise::Deferred deferred, FT_HANDLE ftHandle, ULONG baudRate)
+    : Napi::AsyncWorker(deferred.Env()), deferred(deferred), ftHandle(ftHandle), baudRate(baudRate) {}
 
 void SetBaudRateWorker::Execute()
 {
@@ -637,7 +654,7 @@ void SetBaudRateWorker::Execute()
 void SetBaudRateWorker::OnOK()
 {
   Napi::HandleScope scope(Env());
-  Callback().Call({Env().Undefined(), Napi::Number::New(Env(), ftStatus)});
+  deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
