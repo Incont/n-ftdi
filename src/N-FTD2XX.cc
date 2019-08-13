@@ -90,7 +90,6 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Value InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Value Invoke(const Napi::CallbackInfo &info);
-  CreateDeviceInfoListWorker(Napi::Env env, Napi::Promise::Deferred &deferred);
   void Execute();
   void OnOK();
 
@@ -98,6 +97,7 @@ private:
   Napi::Promise::Deferred deferred;
   FT_STATUS ftStatus;
   DWORD devCount;
+  CreateDeviceInfoListWorker(Napi::Env env);
   inline static Napi::Value CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount);
 };
 
@@ -117,14 +117,13 @@ Napi::Value CreateDeviceInfoListWorker::InvokeSync(const Napi::CallbackInfo &inf
 
 Napi::Value CreateDeviceInfoListWorker::Invoke(const Napi::CallbackInfo &info)
 {
-  auto deferred = Napi::Promise::Deferred::New(info.Env());
-  auto *worker = new CreateDeviceInfoListWorker(info.Env(), deferred);
+  auto *worker = new CreateDeviceInfoListWorker(info.Env());
   worker->Queue();
-  return deferred.Promise();
+  return worker->deferred.Promise();
 }
 
-CreateDeviceInfoListWorker::CreateDeviceInfoListWorker(Napi::Env env, Napi::Promise::Deferred &deferred)
-    : Napi::AsyncWorker(deferred.Env()), deferred(deferred) {}
+CreateDeviceInfoListWorker::CreateDeviceInfoListWorker(Napi::Env env)
+    : Napi::AsyncWorker(env), deferred(Napi::Promise::Deferred::New(env)) {}
 
 void CreateDeviceInfoListWorker::Execute()
 {
@@ -133,8 +132,8 @@ void CreateDeviceInfoListWorker::Execute()
 
 void CreateDeviceInfoListWorker::OnOK()
 {
-  Napi::HandleScope scope(Env());
-  deferred.Resolve(CreateResult(Env(), ftStatus, devCount));
+  Napi::HandleScope scope(AsyncWorker::Env());
+  deferred.Resolve(CreateResult(AsyncWorker::Env(), ftStatus, devCount));
 }
 
 Napi::Value CreateDeviceInfoListWorker::CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount)
