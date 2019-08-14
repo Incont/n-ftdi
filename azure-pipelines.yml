@@ -18,7 +18,7 @@ steps:
 - script: npm install -g node-gyp
   displayName: 'install node-gyp'
  
-- script: npm install --global --production windows-build-tools@4.0.0
+- script: npm install --global --production windows-build-tools@5.2.0
   displayName: 'install windows-build-tools'
 
 - script: npm install
