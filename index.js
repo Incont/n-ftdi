@@ -378,7 +378,7 @@ class FTDI {
    * @property {number} devCount The number of FTDI devices available
    */
   /**
-   * Gets the number of FTDI devices available
+   * Synchronously gets the number of FTDI devices available
    * @returns {GetNumberOfDevicesResult}
    */
   static getNumberOfDevicesSync () {
@@ -386,7 +386,7 @@ class FTDI {
   }
 
   /**
-   * Gets the number of FTDI devices available
+   * Asynchronously gets the number of FTDI devices available
    * @returns {Promise<GetNumberOfDevicesResult>}
    */
   static async getNumberOfDevices () {
@@ -420,7 +420,7 @@ class FTDI {
    * @property {Array.<DeviceInfo>} deviceInfoList
    */
   /**
-   * Gets information on all of the FTDI devices available
+   * Synchronously gets information on all of the FTDI devices available
    * @returns {GetDeviceListResult}
    */
   static getDeviceListSync () {
@@ -437,7 +437,7 @@ class FTDI {
   }
 
   /**
-   * Gets information on all of the FTDI devices available
+   * Asynchronously gets information on all of the FTDI devices available
    * @returns {Promise<GetDeviceListResult>}
    */
   static async getDeviceList () {
@@ -454,7 +454,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified index.
+   * Synchronously opens the FTDI device with the specified index.
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
@@ -465,7 +465,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified index.
+   * Asynchronously opens the FTDI device with the specified index.
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
@@ -476,7 +476,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified serial number
+   * Synchronously opens the FTDI device with the specified serial number
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {number} ftStatus Status values for FTDI device
@@ -486,7 +486,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified serial number
+   * Asynchronously opens the FTDI device with the specified serial number
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {Promise<number>} ftStatus Status values for FTDI device
@@ -496,7 +496,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified description
+   * Synchronously opens the FTDI device with the specified description
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {number} ftStatus Status values for FTDI device
@@ -506,7 +506,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device with the specified description
+   * Asynchronously opens the FTDI device with the specified description
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {Promise<number>} ftStatus Status values for FTDI device
@@ -516,7 +516,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device at the specified physical location
+   * Synchronously opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {number} ftStatus Status values for FTDI device
@@ -526,7 +526,7 @@ class FTDI {
   }
 
   /**
-   * Opens the FTDI device at the specified physical location
+   * Asynchronously opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {Promise<number>} ftStatus Status values for FTDI device
@@ -536,7 +536,7 @@ class FTDI {
   }
 
   /**
-   * Closes the handle to an open FTDI device
+   * Synchronously closes the handle to an open FTDI device
    * @returns {number} ftStatus Value from FT_Close
    */
   closeSync () {
@@ -551,7 +551,7 @@ class FTDI {
   }
 
   /**
-   * Closes the handle to an open FTDI device
+   * Asynchronously closes the handle to an open FTDI device
    * @returns {Promise<number>} ftStatus Value from FT_Close
    */
   async close () {
@@ -566,7 +566,7 @@ class FTDI {
   }
 
   /**
-   * Sets the data bits, stop bits and parity for the device
+   * Synchronously sets the data bits, stop bits and parity for the device
    * @param {number} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
    * @param {number} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
@@ -577,7 +577,7 @@ class FTDI {
   }
 
   /**
-   * Sets the data bits, stop bits and parity for the device
+   * Asynchronously sets the data bits, stop bits and parity for the device
    * @param {number} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
    * @param {number} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
@@ -588,7 +588,7 @@ class FTDI {
   }
 
   /**
-   * Sets the flow control type.
+   * Synchronously sets the flow control type.
    * @param {number} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
@@ -599,7 +599,7 @@ class FTDI {
   }
 
   /**
-   * Sets the flow control type.
+   * Asynchronously sets the flow control type.
    * @param {number} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
@@ -610,7 +610,7 @@ class FTDI {
   }
 
   /**
-   * Sets the current Baud rate.
+   * Synchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {number} ftStatus Value from FT_SetBaudRate
    */
@@ -619,7 +619,7 @@ class FTDI {
   }
 
   /**
-   * Sets the current Baud rate.
+   * Asynchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {Promise<number>} ftStatus Value from FT_SetBaudRate
    */
