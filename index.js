@@ -441,7 +441,7 @@ class FTDI {
   }
 
   /**
-   * @typedef {FtHandle}
+   * @typedef {object} FtHandle
    */
   /**
    * Mark handle as free
