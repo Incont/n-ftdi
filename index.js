@@ -1,6 +1,5 @@
 'use strict'
 const _ftdiAddon = require('bindings')('N-FTD2XX')
-console.log('N-FTD2XX')
 
 // Flags for FT_OpenEx
 const FT_OPEN_BY_SERIAL_NUMBER = 0x00000001
