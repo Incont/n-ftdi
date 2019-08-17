@@ -6,7 +6,9 @@
   "scripts": {
     "test-no-devices": "mocha tests/no-devices.test.js",
     "test-one-device": "mocha --expose_gc tests/one-device.test.js",
-    "install": "node-gyp rebuild"
+    "install": "node-gyp rebuild",
+    "eslint": "eslint index.js ./tests/*.js",
+    "eslint-fix": "eslint index.js ./tests/*.js --fix"
   },
   "keywords": [
     "ftdi",
@@ -25,6 +27,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-standard": "^13.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsdoc": "^15.8.1",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
     "mocha": "^6.2.0"
   }
 }
