@@ -1,8 +1,6 @@
 'use strict'
-let ccc = Date.now()
 const _ftdiAddon = require('bindings')('N-FTD2XX')
 console.log('N-FTD2XX')
-console.log(Date.now() - ccc)
 
 // Flags for FT_OpenEx
 const FT_OPEN_BY_SERIAL_NUMBER = 0x00000001
@@ -300,22 +298,39 @@ const FT_FLOW_CONTROL = {
 }
 Object.freeze(FT_FLOW_CONTROL)
 
-function callbackFactory (resolve, reject) {
-  return (err, result) => {
-    if (err) {
-      reject(err)
-    } else {
-      resolve(result)
-    }
-  }
-}
 let ftdiIsBisy = false
 class FtdiError extends Error {}
 
-function throwErrorIfBisy() {
-  if (ftdiIsBisy) {
-    throw new FtdiError('FTDI driver has already engaged another task')
+function throwErrorIfBusySync (func) {
+  if (!ftdiIsBisy) {
+    try {
+      let func = arguments[arguments.length - 1]
+      for(let i = arguments.length - 2; i >= 0; --i){
+        func = arguments[i](func)
+      }
+      ftdiIsBisy = true
+      return func()
+    } finally {
+      ftdiIsBisy = false
+    }
   }
+  throw new FtdiError('FTDI driver has already engaged another task')
+}
+
+async function throwErrorIfBusy () {
+  if (!ftdiIsBisy) {
+    let func = arguments[arguments.length - 1]
+    for(let i = arguments.length - 2; i >= 0; --i){
+      func = arguments[i](func)
+    }
+    try {
+      ftdiIsBisy = true
+      return await func()
+    } finally {
+      ftdiIsBisy = false
+    }
+  }
+  throw new FtdiError('FTDI driver has already engaged another task')
 }
 
 class FTDI {
@@ -365,7 +380,6 @@ class FTDI {
   }
 
   async _setUpFtdiDevice () {
-    // TODO
     // Initialise port data characteristics
     const wordLength = FT_DATA_BITS.FT_BITS_8
     const stopBits = FT_STOP_BITS.FT_STOP_BITS_1
@@ -375,7 +389,7 @@ class FTDI {
     const flowControl = FT_FLOW_CONTROL.FT_FLOW_NONE
     const xon = 0x11
     const xoff = 0x13
-    ftStatus = _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff, c)
+    ftStatus = await _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)
     if (ftStatus !== FT_STATUS.FT_OK) return ftStatus
     // Initialise Baud rate
     const baudRate = 9600
@@ -415,20 +429,15 @@ class FTDI {
    * @returns {GetNumberOfDevicesResult}
    */
   static getNumberOfDevicesSync () {
-    throwErrorIfBisy()
-    return _ftdiAddon.createDeviceInfoListSync()
+    return throwErrorIfBusySync(_ftdiAddon.createDeviceInfoListSync)
   }
 
   /**
    * Gets the number of FTDI devices available
    * @return {Promise<GetNumberOfDevicesResult>}
    */
-  static getNumberOfDevices () {
-    if (!ftdiIsBisy) {
-      ftdiIsBisy = true
-      return _ftdiAddon.createDeviceInfoList().finally(() => { ftdiIsBisy = false })
-    }
-    return Promise.reject(new FtdiError('FTDI driver has already engaged another task'))
+  static async getNumberOfDevices () {
+    return throwErrorIfBusy(_ftdiAddon.createDeviceInfoList)
   }
 
   /**
@@ -462,12 +471,16 @@ class FTDI {
    * @returns {GetDeviceListResult}
    */
   static getDeviceListSync () {
-    const deviceInfoList = []
-    const { ftStatus, devCount } = this.getNumberOfDevicesSync()
-    for (let i = 0; i < devCount; ++i) {
-      deviceInfoList[i] = _ftdiAddon.getDeviceInfoDetailSync(i).deviceInfo
-    }
-    return { ftStatus, deviceInfoList }
+    return throwErrorIfBusySync(() => {
+      const deviceInfoList = []
+      let { ftStatus, devCount } = _ftdiAddon.getNumberOfDevicesSync()
+      for (let i = 0; i < devCount; ++i) {
+        const deviceInfoDetail = _ftdiAddon.getDeviceInfoDetailSync(i)
+        ftStatus = deviceInfoDetail.ftStatus
+        deviceInfoList[i] = deviceInfoDetail.deviceInfo
+      }
+      return { ftStatus, deviceInfoList }
+    })
   }
 
   /**
@@ -475,15 +488,16 @@ class FTDI {
    * @return {Promise<GetDeviceListResult>}
    */
   static async getDeviceList () {
-    const deviceInfoList = []
-    const { ftStatus, devCount } = await this.getNumberOfDevices()
-    for (let i = 0; i < devCount; ++i) {
-      const deviceInfo = await new Promise((resolve, reject) => {
-        _ftdiAddon.getDeviceInfoDetail(i, callbackFactory(resolve, reject))
-      })
-      deviceInfoList[i] = deviceInfo
-    }
-    return { ftStatus, deviceInfoList }
+    return throwErrorIfBusy(async () => {
+      const deviceInfoList = []
+      let { ftStatus, devCount } = await _ftdiAddon.getNumberOfDevices()
+      for (let i = 0; i < devCount; ++i) {
+        const deviceInfoDetail = await _ftdiAddon.getDeviceInfoDetail(i)
+        ftStatus = deviceInfoDetail.ftStatus
+        deviceInfoList[i] = deviceInfoDetail.deviceInfo
+      }
+      return { ftStatus, deviceInfoList }
+    })
   }
 
   /**
@@ -494,11 +508,18 @@ class FTDI {
    * @returns {Number} ftStatus Status values for FTDI device
    */
   openByIndexSync (index) {
-    return this._openAndSetupSync(() => _ftdiAddon.openSync(index))
+    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openSync(index))
   }
 
-  openByIndex (index) {
-    return this._openAndSetupSync(() => _ftdiAddon.openSync(index))
+  /**
+   * Opens the FTDI device with the specified index.
+   * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+   * @param {Number} index Index of the device to open,
+   * note that this cannot be guaranteed to open a specific device
+   * @returns {Promise<Number>} ftStatus Status values for FTDI device
+   */
+  async openByIndex (index) {
+    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.open(index))
   }
 
   /**
@@ -508,7 +529,17 @@ class FTDI {
    * @returns {Number} ftStatus Status values for FTDI device
    */
   openBySerialNumberSync (serialNumber) {
-    return this._openAndSetupSync(() => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
+    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
+  }
+
+  /**
+   * Opens the FTDI device with the specified serial number
+   * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+   * @param {string} serialNumber Serial number of the device to open
+   * @returns {Promise<Number>} ftStatus Status values for FTDI device
+   */
+  async openBySerialNumber (serialNumber) {
+    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
   }
 
   /**
@@ -518,7 +549,17 @@ class FTDI {
    * @returns {Number} ftStatus Status values for FTDI device
    */
   openByDescriptionSync (description) {
-    return this._openAndSetupSync(() => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION))
+    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION))
+  }
+
+  /**
+   * Opens the FTDI device with the specified description
+   * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+   * @param {string} description Description of the device to open
+   * @returns {Promise<Number>} ftStatus Status values for FTDI device
+   */
+  async openByDescription (description) {
+    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION))
   }
 
   /**
@@ -528,7 +569,17 @@ class FTDI {
    * @returns {Number} ftStatus Status values for FTDI device
    */
   openByLocationSync (location) {
-    return this._openAndSetupSync(() => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION))
+    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION))
+  }
+
+  /**
+   * Opens the FTDI device at the specified physical location
+   * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+   * @param {Number} Location of the device to open
+   * @returns {Promise<Number>} ftStatus Status values for FTDI device
+   */
+  async openByLocation (location) {
+    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION))
   }
 
   /**
@@ -536,12 +587,29 @@ class FTDI {
    * @returns {Number} ftStatus Value from FT_Close
    */
   closeSync () {
-    const ftStatus = this._checkFtHandleSync(() => _ftdiAddon.closeSync(this._ftHandle))
-    if (ftStatus === FT_STATUS.FT_OK) {
-      this._ftHandle.free()
-      this._ftHandle = null
-    }
-    return ftStatus
+    return throwErrorIfBusySync(() => {
+      const ftStatus = this._checkFtHandleSync(() => _ftdiAddon.closeSync(this._ftHandle))
+      if (ftStatus === FT_STATUS.FT_OK) {
+        this._ftHandle.free()
+        this._ftHandle = null
+      }
+      return ftStatus
+    })
+  }
+
+  /**
+   * Closes the handle to an open FTDI device
+   * @returns {Promise<Number>} ftStatus Value from FT_Close
+   */
+  async close () {
+    return throwErrorIfBusy(async () => {
+      const ftStatus = await this._checkFtHandle(() => _ftdiAddon.close(this._ftHandle))
+      if (ftStatus === FT_STATUS.FT_OK) {
+        this._ftHandle.free()
+        this._ftHandle = null
+      }
+      return ftStatus
+    })
   }
 
   /**
@@ -552,7 +620,18 @@ class FTDI {
    * @returns {Number} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity))
+    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity))
+  }
+
+  /**
+   * Sets the data bits, stop bits and parity for the device
+   * @param {Number} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
+   * @param {Number} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
+   * @param {Number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
+   * @returns {Promise<Number>} ftStatus ftStatus value from FT_SetDataCharacteristics
+   */
+  async setDataCharacteristics (wordLength, stopBits, parity) {
+    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity))
   }
 
   /**
@@ -563,7 +642,18 @@ class FTDI {
    * @returns {Number} ftStatus Value from FT_SetFlowControl
    */
   setFlowControlSync (flowControl, xon, xoff) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff))
+    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff))
+  }
+
+  /**
+   * Sets the flow control type.
+   * @param {Number} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
+   * @param {Number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
+   * @param {Number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
+   * @returns {Promise<Number>} ftStatus Value from FT_SetFlowControl
+   */
+  async setFlowControl (flowControl, xon, xoff) {
+    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff))
   }
 
   /**
@@ -572,7 +662,16 @@ class FTDI {
    * @retern {Number} ftStatus Value from FT_SetBaudRate
    */
   setBaudRateSync (baudRate) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate))
+    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate))
+  }
+
+  /**
+   * Sets the current Baud rate.
+   * @param {Number} baudRate The desired Baud rate for the device
+   * @retern {Promise<Number>} ftStatus Value from FT_SetBaudRate
+   */
+  async setBaudRate (baudRate) {
+    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setBaudRate(this._ftHandle, baudRate))
   }
 }
 
