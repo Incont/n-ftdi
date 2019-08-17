@@ -98,9 +98,9 @@ const FT_STATUS = {
    */
   FT_INVALID_ARGS: 16,
   /**
-  * An other error has occurred
-  * @type {Number}
-  */
+   * An other error has occurred
+   * @type {Number}
+   */
   FT_OTHER_ERROR: 17
 }
 Object.freeze(FT_STATUS)
