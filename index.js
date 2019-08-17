@@ -14,92 +14,74 @@ const FT_OPEN_BY_LOCATION = 0x00000004
 const FT_STATUS = {
   /**
    * Status OK
-   * @type {number}
    */
   FT_OK: 0,
   /**
    * The device handle is invalid
-   * @type {number}
    */
   FT_INVALID_HANDLE: 1,
   /**
    * Device not found
-   * @type {number}
    */
   FT_DEVICE_NOT_FOUND: 2,
   /**
    * Device is not open
-   * @type {number}
    */
   FT_DEVICE_NOT_OPENED: 3,
   /**
    * IO error
-   * @type {number}
    */
   FT_IO_ERROR: 4,
   /**
    * Insufficient resources
-   * @type {number}
    */
   FT_INSUFFICIENT_RESOURCES: 5,
   /**
    * A parameter was invalid
-   * @type {number}
    */
   FT_INVALID_PARAMETER: 6,
   /**
    * The requested baud rate is invalid
-   * @type {number}
    */
   FT_INVALID_BAUD_RATE: 7,
   /**
    * Device not opened for erase
-   * @type {number}
    */
   FT_DEVICE_NOT_OPENED_FOR_ERASE: 8,
   /**
    * Device not poened for write
-   * @type {number}
    */
   FT_DEVICE_NOT_OPENED_FOR_WRITE: 9,
   /**
    * Failed to write to device
-   * @type {number}
    */
   FT_FAILED_TO_WRITE_DEVICE: 10,
   /**
    * Failed to read the device EEPROM
-   * @type {number}
    */
   FT_EEPROM_READ_FAILED: 11,
   /**
    * Failed to write the device EEPROM
-   * @type {number}
    */
   FT_EEPROM_WRITE_FAILED: 12,
   /**
    * Failed to erase the device EEPROM
-   * @type {number}
    */
   FT_EEPROM_ERASE_FAILED: 13,
   /**
    * An EEPROM is not fitted to the device
-   * @type {number}
    */
   FT_EEPROM_NOT_PRESENT: 14,
   /**
    * Device EEPROM is blank
-   * @type {number}
    */
   FT_EEPROM_NOT_PROGRAMMED: 15,
   /**
    * Invalid arguments
-   * @type {number}
    */
   FT_INVALID_ARGS: 16,
   /**
    * An other error has occurred
-   * @type {number}
    */
   FT_OTHER_ERROR: 17
 }
@@ -112,72 +94,58 @@ Object.freeze(FT_STATUS)
 const FT_DEVICE = {
   /**
    * FT232B or FT245B device
-   * @type {number}
    */
   FT_DEVICE_BM: 0,
   /**
    * FT8U232AM or FT8U245AM device
-   * @type {number}
    */
   FT_DEVICE_AM: 1,
   /**
    * FT8U100AX device
-   * @type {number}
    */
   FT_DEVICE_100AX: 2,
   /**
    * Unknown device
-   * @type {number}
    */
   FT_DEVICE_UNKNOWN: 3,
   /**
    * FT2232 device
-   * @type {number}
    */
   FT_DEVICE_2232: 4,
   /**
    * FT232R or FT245R device
-   * @type {number}
    */
   FT_DEVICE_232R: 5,
   /**
    * FT2232H device
-   * @type {number}
    */
   FT_DEVICE_2232H: 6,
   /**
    * FT4232H device
-   * @type {number}
    */
   FT_DEVICE_4232H: 7,
   /**
    * FT232H device
-   * @type {number}
    */
   FT_DEVICE_232H: 8,
   /**
    * FT X-Series device
-   * @type {number}
    */
   FT_DEVICE_X_SERIES: 9,
   /**
    * FT4222 hi-speed device Mode 0 - 2 interfaces
-   * @type {number}
    */
   FT_DEVICE_4222H_0: 10,
   /**
    * FT4222 hi-speed device Mode 1 or 2 - 4 interfaces
-   * @type {number}
    */
   FT_DEVICE_4222H_1_2: 11,
   /**
    * FT4222 hi-speed device Mode 3 - 1 interface
-   * @type {number}
    */
   FT_DEVICE_4222H_3: 12,
   /**
    * OTP programmer board for the FT4222
-   * @type {number}
    */
   FT_DEVICE_4222_PROG: 13
 }
@@ -190,12 +158,10 @@ Object.freeze(FT_STATUS)
 const FT_FLAGS = {
   /**
    * Indicates that the device is open
-   * @type {number}
    */
   FT_FLAGS_OPENED: 0x00000001,
   /**
    * Indicates that the device is enumerated as a hi-speed USB device
-   * @type {number}
    */
   FT_FLAGS_HISPEED: 0x00000002
 }
@@ -208,12 +174,10 @@ Object.freeze(FT_FLAGS)
 const FT_DATA_BITS = {
   /**
    * 8 data bits
-   * @enum {number}
    */
   FT_BITS_8: 0x08,
   /**
    * 7 data bits
-   * @enum {number}
    */
   FT_BITS_7: 0x07
 }
@@ -226,12 +190,10 @@ Object.freeze(FT_FLAGS)
 const FT_STOP_BITS = {
   /**
    * 1 stop bit
-   * @enum {number}
    */
   FT_STOP_BITS_1: 0x00,
   /**
    * 2 stop bits
-   * @enum {number}
    */
   FT_STOP_BITS_2: 0x02
 }
@@ -244,27 +206,22 @@ Object.freeze(FT_STOP_BITS)
 const FT_PARITY = {
   /**
    * No parity
-   * @enum {number}
    */
   FT_PARITY_NONE: 0x00,
   /**
    * Odd parity
-   * @enum {number}
    */
   FT_PARITY_ODD: 0x01,
   /**
    * Even parity
-   * @enum {number}
    */
   FT_PARITY_EVEN: 0x02,
   /**
    * Mark parity
-   * @enum {number}
    */
   FT_PARITY_MARK: 0x03,
   /**
    * Space parity
-   * @enum {number}
    */
   FT_PARITY_SPACE: 0x04
 }
@@ -277,22 +234,18 @@ Object.freeze(FT_PARITY)
 const FT_FLOW_CONTROL = {
   /**
    * No flow control
-   * @enum {number}
    */
   FT_FLOW_NONE: 0x0000,
   /**
    * RTS/CTS flow control
-   * @enum {number}
    */
   FT_FLOW_RTS_CTS: 0x0100,
   /**
    * DTR/DSR flow control
-   * @enum {number}
    */
   FT_FLOW_DTR_DSR: 0x0200,
   /**
    * Xon/Xoff flow control
-   * @enum {number}
    */
   FT_FLOW_XON_XOFF: 0x0400
 }
@@ -333,11 +286,11 @@ async function throwErrorIfBusy () {
   throw new FtdiError('FTDI driver has already engaged another task')
 }
 
+/**
+ * Class wrapper for FTD2XX.DLL
+ * @class
+ */
 class FTDI {
-  /**
-   * Class wrapper for FTD2XX.DLL
-   * @class
-   */
   constructor () {
     /**
      * @type {FtHandle}
