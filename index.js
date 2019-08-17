@@ -305,7 +305,7 @@ function throwErrorIfBusySync (func) {
   if (!ftdiIsBisy) {
     try {
       let func = arguments[arguments.length - 1]
-      for(let i = arguments.length - 2; i >= 0; --i){
+      for (let i = arguments.length - 2; i >= 0; --i) {
         func = arguments[i](func)
       }
       ftdiIsBisy = true
@@ -320,7 +320,7 @@ function throwErrorIfBusySync (func) {
 async function throwErrorIfBusy () {
   if (!ftdiIsBisy) {
     let func = arguments[arguments.length - 1]
-    for(let i = arguments.length - 2; i >= 0; --i){
+    for (let i = arguments.length - 2; i >= 0; --i) {
       func = arguments[i](func)
     }
     try {
