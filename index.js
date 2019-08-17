@@ -336,7 +336,7 @@ async function throwErrorIfBusy () {
 class FTDI {
   /**
    * Class wrapper for FTD2XX.DLL
-   * @constructor
+   * @class
    */
   constructor () {
     /**
@@ -434,7 +434,7 @@ class FTDI {
 
   /**
    * Gets the number of FTDI devices available
-   * @return {Promise<GetNumberOfDevicesResult>}
+   * @returns {Promise<GetNumberOfDevicesResult>}
    */
   static async getNumberOfDevices () {
     return throwErrorIfBusy(_ftdiAddon.createDeviceInfoList)
@@ -445,7 +445,7 @@ class FTDI {
    */
   /**
    * Mark handle as free
-   * @method
+   * @function
    * @name FtHandle#free
    */
   /**
@@ -485,7 +485,7 @@ class FTDI {
 
   /**
    * Gets information on all of the FTDI devices available
-   * @return {Promise<GetDeviceListResult>}
+   * @returns {Promise<GetDeviceListResult>}
    */
   static async getDeviceList () {
     return throwErrorIfBusy(async () => {
@@ -659,7 +659,7 @@ class FTDI {
   /**
    * Sets the current Baud rate.
    * @param {Number} baudRate The desired Baud rate for the device
-   * @retern {Number} ftStatus Value from FT_SetBaudRate
+   * @returns {Number} ftStatus Value from FT_SetBaudRate
    */
   setBaudRateSync (baudRate) {
     return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate))
@@ -668,7 +668,7 @@ class FTDI {
   /**
    * Sets the current Baud rate.
    * @param {Number} baudRate The desired Baud rate for the device
-   * @retern {Promise<Number>} ftStatus Value from FT_SetBaudRate
+   * @returns {Promise<Number>} ftStatus Value from FT_SetBaudRate
    */
   async setBaudRate (baudRate) {
     return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setBaudRate(this._ftHandle, baudRate))
