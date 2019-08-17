@@ -424,7 +424,7 @@ class FTDI {
   static getDeviceListSync () {
     return throwErrorIfBusySync(() => {
       const deviceInfoList = []
-      let { ftStatus, devCount } = _ftdiAddon.getNumberOfDevicesSync()
+      let { ftStatus, devCount } = _ftdiAddon.createDeviceInfoListSync()
       for (let i = 0; i < devCount; ++i) {
         const deviceInfoDetail = _ftdiAddon.getDeviceInfoDetailSync(i)
         ftStatus = deviceInfoDetail.ftStatus
@@ -441,7 +441,7 @@ class FTDI {
   static async getDeviceList () {
     return throwErrorIfBusy(async () => {
       const deviceInfoList = []
-      let { ftStatus, devCount } = await _ftdiAddon.getNumberOfDevices()
+      let { ftStatus, devCount } = await _ftdiAddon.createDeviceInfoList()
       for (let i = 0; i < devCount; ++i) {
         const deviceInfoDetail = await _ftdiAddon.getDeviceInfoDetail(i)
         ftStatus = deviceInfoDetail.ftStatus
