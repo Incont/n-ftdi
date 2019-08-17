@@ -565,7 +565,7 @@ class FTDI {
   /**
    * Opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
-   * @param {Number} Location of the device to open
+   * @param {Number} location Location of the device to open
    * @returns {Number} ftStatus Status values for FTDI device
    */
   openByLocationSync (location) {
@@ -575,7 +575,7 @@ class FTDI {
   /**
    * Opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
-   * @param {Number} Location of the device to open
+   * @param {Number} location Location of the device to open
    * @returns {Promise<Number>} ftStatus Status values for FTDI device
    */
   async openByLocation (location) {
