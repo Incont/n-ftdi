@@ -2,17 +2,30 @@
 const assert = require('assert')
 const FTD2XX = require('./../index')
 
-describe('Tests getNumberOfDevices', () => {
-  const numberOfDevices = FTD2XX.FTDI.getNumberOfDevices()
-  it('FTDI.getNumberOfDevices().ftStatus should equal FTD2XX.FT_STATUS.FT_OK', () => {
+describe('Tests getNumberOfDevicesSync', () => {
+  const numberOfDevices = FTD2XX.FTDI.getNumberOfDevicesSync()
+  it('ftStatus should equal FTD2XX.FT_STATUS.FT_OK', () => {
     assert.strictEqual(numberOfDevices.ftStatus, FTD2XX.FT_STATUS.FT_OK)
   })
-  it('FTDI.getNumberOfDevices().devCount should equal 0', () => {
+  it('devCount should equal 0', () => {
+    assert.strictEqual(numberOfDevices.devCount, 0)
+  })
+})
+/*
+describe('Tests getNumberOfDevices', async () => {
+  queue = queue.then(() => FTD2XX.FTDI.getNumberOfDevices())
+  const numberOfDevices = await queue
+  it('ftStatus should equal FTD2XX.FT_STATUS.FT_OK', () => {
+    assert.strictEqual(numberOfDevices.ftStatus, FTD2XX.FT_STATUS.FT_OK)
+  })
+  it('devCount should equal 0',  () => {
     assert.strictEqual(numberOfDevices.devCount, 0)
   })
 })
 
-describe('Tests getDeviceList', () => {
+describe('Tests getDeviceListSync', async () => {
+  await queue
+  const deviceList = FTD2XX.FTDI.getDeviceListSync()
   it('FTDI.getDeviceList().ftStatus should equal FTD2XX.FT_STATUS.FT_OK', () => {
     assert.strictEqual(deviceList.ftStatus, FTD2XX.FT_STATUS.FT_OK)
   })
@@ -20,7 +33,8 @@ describe('Tests getDeviceList', () => {
     assert.strictEqual(deviceList.deviceInfoList.length, 0)
   })
 })
-
+*/
+/*
 describe('Tests ftdi open', () => {
   const ftdi = new FTD2XX.FTDI()
   ftdi.close()
@@ -37,3 +51,4 @@ describe('Tests ftdi open', () => {
     assert.strictEqual(ftdi.openByLocation(0x01), FTD2XX.FT_STATUS.FT_INVALID_HANDLE)
   })
 })
+*/

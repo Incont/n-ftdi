@@ -372,8 +372,7 @@ class FTDI {
   }
 
   /**
-   * @typedef GetNumberOfDevicesResult
-   * @type {object}
+   * @typedef {object} GetNumberOfDevicesResult
    * @property {number} ftStatus Value from FT_CreateDeviceInfoList
    * @property {number} devCount The number of FTDI devices available
    */
@@ -394,6 +393,7 @@ class FTDI {
   }
 
   /**
+   * Contain pointer to a variable of type FT_HANDLE where the handle will be stored. This handle must be used to access the device.
    * @typedef {object} FtHandle
    */
   /**
@@ -403,8 +403,7 @@ class FTDI {
    */
   /**
    * Type that holds device information for GetDeviceInformation method
-   * @typedef DeviceInfo
-   * @type {object}
+   * @typedef {object} DeviceInfo
    * @property {number} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
    * @property {number} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
@@ -414,8 +413,7 @@ class FTDI {
    * @property {FtHandle|null} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
    */
   /**
-   * @typedef GetDeviceListResult
-   * @type {object}
+   * @typedef {object} GetDeviceListResult
    * @property {number} ftStatus Value from FT_GetDeviceInfoDetail
    * @property {Array.<DeviceInfo>} deviceInfoList
    */
