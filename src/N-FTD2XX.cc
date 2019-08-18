@@ -726,11 +726,10 @@ Napi::Object GetDeviceInfoOp::CreateResult(
     char *description)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
-  Napi::Object deviceInfo = Napi::Object::New(env);
-  deviceInfo.Set("ftDevice", ftDevice);
-  deviceInfo.Set("deviceID", deviceID);
-  deviceInfo.Set("serialNumber", serialNumber);
-  deviceInfo.Set("description", description);
+  result.Set("ftDevice", ftDevice);
+  result.Set("deviceID", deviceID);
+  result.Set("serialNumber", serialNumber);
+  result.Set("description", description);
   return result;
 }
 

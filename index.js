@@ -434,7 +434,7 @@ function throwErrorIfBusySync (func) {
       ftdiIsBisy = false
     }
   }
-  throw new FtdiParallelInvocationError('FTDI driver has already engaged another task')
+  throw new FtdiParallelInvocationError('Another FTDI method already invoked')
 }
 
 async function throwErrorIfBusy (func) {
@@ -515,7 +515,6 @@ class FTDI {
     let { ftStatus, ftHandle } = openFuncSync()
     if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
       this._ftHandle = ftHandle
-      console.log(this)
       ftStatus = this._setUpFtdiDeviceSync()
     } else {
       this._ftHandle = null
@@ -567,7 +566,7 @@ class FTDI {
    * @name FtHandle#free
    */
   /**
-   * Type that holds device information for GetDeviceInformation method
+   * Type that holds device information for GetDeviceInfoDetail method
    * @typedef {object} DeviceInfoDetail
    * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
@@ -738,6 +737,32 @@ class FTDI {
       }
       return ftStatus
     })
+  }
+
+  /**
+   * @typedef {object} GetDeviceInfoResult
+   * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
+   * @property {FT_DEVICE} ftDevice Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+   * @property {number} deviceID The device ID (Vendor ID and Product ID) of the current device
+   * @property {string} serialNumber The device serial number
+   * @property {string} description The device description
+   */
+  /**
+   * Synchronously gets device information for an open device
+   * @returns {GetDeviceInfoResult}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   */
+  getDeviceInfoSync () {
+    return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.getDeviceInfoSync(this._ftHandle)))
+  }
+
+  /**
+   * Asynchronously gets device information for an open device
+   * @returns {GetDeviceInfoResult}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   */
+  getDeviceInfo () {
+    return throwErrorIfBusySync(() => this._checkFtHandle(() => _ftdiAddon.getDeviceInfo(this._ftHandle)))
   }
 
   /**
