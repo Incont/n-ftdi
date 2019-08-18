@@ -212,33 +212,33 @@ Napi::Object FtProgramDataWrapper::Init(Napi::Env env, Napi::Object exports)
        InstanceAccessor("selfPowered", &FtProgramDataWrapper::GetSelfPowered, &FtProgramDataWrapper::SetSelfPowered),
        InstanceAccessor("remoteWakeup", &FtProgramDataWrapper::GetRemoteWakeup, &FtProgramDataWrapper::SetRemoteWakeup),
 
-       InstanceAccessor("PullDownEnableH", &FtProgramDataWrapper::GetPullDownEnableH, &FtProgramDataWrapper::SetPullDownEnableH),
-       InstanceAccessor("SerNumEnableH", &FtProgramDataWrapper::GetSerNumEnableH, &FtProgramDataWrapper::SetSerNumEnableH),
-       InstanceAccessor("ACSlowSlewH", &FtProgramDataWrapper::GetACSlowSlewH, &FtProgramDataWrapper::SetACSlowSlewH),
-       InstanceAccessor("ACSchmittInputH", &FtProgramDataWrapper::GetACSchmittInputH, &FtProgramDataWrapper::SetACSchmittInputH),
-       InstanceAccessor("ACDriveCurrentH", &FtProgramDataWrapper::GetACDriveCurrentH, &FtProgramDataWrapper::SetACDriveCurrentH),
-       InstanceAccessor("ADSlowSlewH", &FtProgramDataWrapper::GetADSlowSlewH, &FtProgramDataWrapper::SetADSlowSlewH),
-       InstanceAccessor("ADSchmittInputH", &FtProgramDataWrapper::GetADSchmittInputH, &FtProgramDataWrapper::SetADSchmittInputH),
-       InstanceAccessor("ADDriveCurrentH", &FtProgramDataWrapper::GetADDriveCurrentH, &FtProgramDataWrapper::SetADDriveCurrentH),
-       InstanceAccessor("Cbus0H", &FtProgramDataWrapper::GetCbus0H, &FtProgramDataWrapper::SetCbus0H),
-       InstanceAccessor("Cbus1H", &FtProgramDataWrapper::GetCbus1H, &FtProgramDataWrapper::SetCbus1H),
-       InstanceAccessor("Cbus2H", &FtProgramDataWrapper::GetCbus2H, &FtProgramDataWrapper::SetCbus2H),
-       InstanceAccessor("Cbus3H", &FtProgramDataWrapper::GetCbus3H, &FtProgramDataWrapper::SetCbus3H),
-       InstanceAccessor("Cbus4H", &FtProgramDataWrapper::GetCbus4H, &FtProgramDataWrapper::SetCbus4H),
-       InstanceAccessor("Cbus5H", &FtProgramDataWrapper::GetCbus5H, &FtProgramDataWrapper::SetCbus5H),
-       InstanceAccessor("Cbus6H", &FtProgramDataWrapper::GetCbus6H, &FtProgramDataWrapper::SetCbus6H),
-       InstanceAccessor("Cbus7H", &FtProgramDataWrapper::GetCbus7H, &FtProgramDataWrapper::SetCbus7H),
-       InstanceAccessor("Cbus8H", &FtProgramDataWrapper::GetCbus8H, &FtProgramDataWrapper::SetCbus8H),
-       InstanceAccessor("Cbus9H", &FtProgramDataWrapper::GetCbus9H, &FtProgramDataWrapper::SetCbus9H),
-       InstanceAccessor("IsFifoH", &FtProgramDataWrapper::GetIsFifoH, &FtProgramDataWrapper::SetIsFifoH),
-       InstanceAccessor("IsFifoTarH", &FtProgramDataWrapper::GetIsFifoTarH, &FtProgramDataWrapper::SetIsFifoTarH),
-       InstanceAccessor("IsFastSerH", &FtProgramDataWrapper::GetIsFastSerH, &FtProgramDataWrapper::SetIsFastSerH),
-       InstanceAccessor("IsFT1248H", &FtProgramDataWrapper::GetIsFT1248H, &FtProgramDataWrapper::SetIsFT1248H),
-       InstanceAccessor("FT1248CpolH", &FtProgramDataWrapper::GetFT1248CpolH, &FtProgramDataWrapper::SetFT1248CpolH),
-       InstanceAccessor("FT1248LsbH", &FtProgramDataWrapper::GetFT1248LsbH, &FtProgramDataWrapper::SetFT1248LsbH),
-       InstanceAccessor("FT1248FlowControlH", &FtProgramDataWrapper::GetFT1248FlowControlH, &FtProgramDataWrapper::SetFT1248FlowControlH),
-       InstanceAccessor("IsVCPH", &FtProgramDataWrapper::GetIsVCPH, &FtProgramDataWrapper::SetIsVCPH),
-       InstanceAccessor("PowerSaveEnableH", &FtProgramDataWrapper::GetPowerSaveEnableH, &FtProgramDataWrapper::SetPowerSaveEnableH)});
+       InstanceAccessor("pullDownEnableH", &FtProgramDataWrapper::GetPullDownEnableH, &FtProgramDataWrapper::SetPullDownEnableH),
+       InstanceAccessor("serNumEnableH", &FtProgramDataWrapper::GetSerNumEnableH, &FtProgramDataWrapper::SetSerNumEnableH),
+       InstanceAccessor("acSlowSlewH", &FtProgramDataWrapper::GetACSlowSlewH, &FtProgramDataWrapper::SetACSlowSlewH),
+       InstanceAccessor("acSchmittInputH", &FtProgramDataWrapper::GetACSchmittInputH, &FtProgramDataWrapper::SetACSchmittInputH),
+       InstanceAccessor("acDriveCurrentH", &FtProgramDataWrapper::GetACDriveCurrentH, &FtProgramDataWrapper::SetACDriveCurrentH),
+       InstanceAccessor("adSlowSlewH", &FtProgramDataWrapper::GetADSlowSlewH, &FtProgramDataWrapper::SetADSlowSlewH),
+       InstanceAccessor("adSchmittInputH", &FtProgramDataWrapper::GetADSchmittInputH, &FtProgramDataWrapper::SetADSchmittInputH),
+       InstanceAccessor("adDriveCurrentH", &FtProgramDataWrapper::GetADDriveCurrentH, &FtProgramDataWrapper::SetADDriveCurrentH),
+       InstanceAccessor("cbus0H", &FtProgramDataWrapper::GetCbus0H, &FtProgramDataWrapper::SetCbus0H),
+       InstanceAccessor("cbus1H", &FtProgramDataWrapper::GetCbus1H, &FtProgramDataWrapper::SetCbus1H),
+       InstanceAccessor("cbus2H", &FtProgramDataWrapper::GetCbus2H, &FtProgramDataWrapper::SetCbus2H),
+       InstanceAccessor("cbus3H", &FtProgramDataWrapper::GetCbus3H, &FtProgramDataWrapper::SetCbus3H),
+       InstanceAccessor("cbus4H", &FtProgramDataWrapper::GetCbus4H, &FtProgramDataWrapper::SetCbus4H),
+       InstanceAccessor("cbus5H", &FtProgramDataWrapper::GetCbus5H, &FtProgramDataWrapper::SetCbus5H),
+       InstanceAccessor("cbus6H", &FtProgramDataWrapper::GetCbus6H, &FtProgramDataWrapper::SetCbus6H),
+       InstanceAccessor("cbus7H", &FtProgramDataWrapper::GetCbus7H, &FtProgramDataWrapper::SetCbus7H),
+       InstanceAccessor("cbus8H", &FtProgramDataWrapper::GetCbus8H, &FtProgramDataWrapper::SetCbus8H),
+       InstanceAccessor("cbus9H", &FtProgramDataWrapper::GetCbus9H, &FtProgramDataWrapper::SetCbus9H),
+       InstanceAccessor("isFifoH", &FtProgramDataWrapper::GetIsFifoH, &FtProgramDataWrapper::SetIsFifoH),
+       InstanceAccessor("isFifoTarH", &FtProgramDataWrapper::GetIsFifoTarH, &FtProgramDataWrapper::SetIsFifoTarH),
+       InstanceAccessor("isFastSerH", &FtProgramDataWrapper::GetIsFastSerH, &FtProgramDataWrapper::SetIsFastSerH),
+       InstanceAccessor("isFT1248H", &FtProgramDataWrapper::GetIsFT1248H, &FtProgramDataWrapper::SetIsFT1248H),
+       InstanceAccessor("ft1248CpolH", &FtProgramDataWrapper::GetFT1248CpolH, &FtProgramDataWrapper::SetFT1248CpolH),
+       InstanceAccessor("ft1248LsbH", &FtProgramDataWrapper::GetFT1248LsbH, &FtProgramDataWrapper::SetFT1248LsbH),
+       InstanceAccessor("ft1248FlowControlH", &FtProgramDataWrapper::GetFT1248FlowControlH, &FtProgramDataWrapper::SetFT1248FlowControlH),
+       InstanceAccessor("isVCPH", &FtProgramDataWrapper::GetIsVCPH, &FtProgramDataWrapper::SetIsVCPH),
+       InstanceAccessor("powerSaveEnableH", &FtProgramDataWrapper::GetPowerSaveEnableH, &FtProgramDataWrapper::SetPowerSaveEnableH)});
   constructor = Napi::Persistent(func);
   constructor.SuppressDestruct();
   exports.Set("FT_PROGRAM_DATA", func);
@@ -358,7 +358,7 @@ void FtProgramDataWrapper::SetProductID(const Napi::CallbackInfo &info, const Na
 
 Napi::Value FtProgramDataWrapper::GetManufacturer(const Napi::CallbackInfo &info)
 {
-  return Napi::String::New(info.Env(), manufacturer, 32);
+  return Napi::String::New(info.Env(), manufacturer);
 }
 
 void FtProgramDataWrapper::SetManufacturer(const Napi::CallbackInfo &info, const Napi::Value &value)
@@ -375,7 +375,7 @@ void FtProgramDataWrapper::SetManufacturer(const Napi::CallbackInfo &info, const
 
 Napi::Value FtProgramDataWrapper::GetManufacturerID(const Napi::CallbackInfo &info)
 {
-  return Napi::String::New(info.Env(), manufacturerID, 16);
+  return Napi::String::New(info.Env(), manufacturerID);
 }
 
 void FtProgramDataWrapper::SetManufacturerID(const Napi::CallbackInfo &info, const Napi::Value &value)

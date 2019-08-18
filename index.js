@@ -347,6 +347,50 @@ const FT_ERROR = {
 Object.freeze(FT_232H_CBUS_OPTIONS)
 
 /**
+ * @typedef {object} FT_PROGRAM_DATA
+ * @property {number} signature1 Header - must be 0x0000000
+ * @property {number} signature2 Header - must be 0xffffffff
+ * @property {number} version Header - FT_PROGRAM_DATA version: 0 = original (FT232B), 1 = FT2232 extensions, 2 = FT232R extensions, 3 = FT2232H extensions, 4 = FT4232H extensions, 5 = FT232H extensions
+ * @property {number} vendorID
+ * @property {number} productID
+ * @property {string} manufacturer
+ * @property {string} manufacturerID
+ * @property {string} description
+ * @property {string} serialNumber
+ * @property {number} maxPower 0 < MaxPower <= 500
+ * @property {number} pnp 0 = disabled, 1 = enabled
+ * @property {number} selfPowered 0 = bus powered, 1 = self powered
+ * @property {number} remoteWakeup 0 = not capable, 1 = capable
+ * @property {number} pullDownEnableH non-zero if pull down enabled
+ * @property {number} serNumEnableH non-zero if serial number to be used
+ * @property {number} acSlowSlewH  non-zero if AC pins have slow slew
+ * @property {number} acSchmittInputH non-zero if AC pins are Schmitt input
+ * @property {number} acDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
+ * @property {number} adSlowSlewH non-zero if AD pins have slow slew
+ * @property {number} adSchmittInputH non-zero if AD pins are Schmitt input
+ * @property {number} adDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
+ * @property {number} cbus0H Cbus Mux control
+ * @property {number} cbus1H Cbus Mux control
+ * @property {number} cbus2H Cbus Mux control
+ * @property {number} cbus3H Cbus Mux control
+ * @property {number} cbus4H Cbus Mux control
+ * @property {number} cbus5H Cbus Mux control
+ * @property {number} cbus6H Cbus Mux control
+ * @property {number} cbus7H Cbus Mux control
+ * @property {number} cbus8H Cbus Mux control
+ * @property {number} cbus9H Cbus Mux control
+ * @property {number} isFifoH non-zero if interface is 245 FIFO
+ * @property {number} isFifoTarH non-zero if interface is 245 FIFO CPU target
+ * @property {number} isFastSerH  non-zero if interface is Fast serial
+ * @property {number} isFT1248H non-zero if interface is FT1248
+ * @property {number} ft1248CpolH FT1248 clock polarity - clock idle high (1) or clock idle low (0)
+ * @property {number} ft1248LsbH FT1248 data is LSB (1) or MSB (0)
+ * @property {number} ft1248FlowControlH FT1248 flow control enable
+ * @property {number} isVCPH if interface is to use VCP drivers
+ * @property {number} powerSaveEnableH non-zero if using ACBUS7 to save power for self-powered
+ */
+
+/**
  * Common EEPROM elements for all devices. Inherited to specific device type EEPROMs
  * @property {number} vendorID=0x0403 Vendor ID as supplied by the USB Implementers Forum
  * @property {number} productID=0x6001 Product ID
@@ -914,17 +958,53 @@ class FTDI {
    * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   readFT232HEEPROMSync () {
-    return throwErrorIfBusy(() => this._checkFtHandle(() => {
+    return throwErrorIfBusySync(() => this._checkFtHandleSync(() => {
       let { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
       if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
         errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
       }
-      const eedata = new _ftdiAddon.FT_PROGRAM_DATA()
-      eedata.signature1 = 0x00000000
-      eedata.signature2 = 0xFFFFFFFF
-      eedata.version = 5
-      ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eedata)
+      /** * @type {FT_PROGRAM_DATA} */
+      const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+      eeData.signature1 = 0x00000000
+      eeData.signature2 = 0xFFFFFFFF
+      eeData.version = 5
+      ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
       const ee232h = new FT232H_EEPROM_STRUCTURE()
+      ee232h.manufacturer = eeData.manufacturer
+      ee232h.manufacturerID = eeData.manufacturerID
+      ee232h.description = eeData.description
+      ee232h.serialNumber = eeData.serialNumber
+      ee232h.vendorID = eeData.vendorID
+      ee232h.productID = eeData.productID
+      ee232h.maxPower = eeData.maxPower
+      ee232h.selfPowered = eeData.selfPowered
+      ee232h.remoteWakeup = eeData.remoteWakeup
+      ee232h.pullDownEnable = eeData.pullDownEnableH
+      ee232h.serNumEnable = eeData.serNumEnableH
+      ee232h.acSlowSlew = eeData.acSlowSlewH
+      ee232h.acSchmittInput = eeData.acSchmittInputH
+      ee232h.acDriveCurrent = eeData.acDriveCurrentH
+      ee232h.adSlowSlew = eeData.adSlowSlewH
+      ee232h.adSchmittInput = eeData.adSchmittInputH
+      ee232h.adDriveCurrent = eeData.adDriveCurrentH
+      ee232h.cbus0 = eeData.cbus0H
+      ee232h.cbus1 = eeData.cbus1H
+      ee232h.cbus2 = eeData.cbus2H
+      ee232h.cbus3 = eeData.cbus3H
+      ee232h.cbus4 = eeData.cbus4H
+      ee232h.cbus5 = eeData.cbus5H
+      ee232h.cbus6 = eeData.cbus6H
+      ee232h.cbus7 = eeData.cbus7H
+      ee232h.cbus8 = eeData.cbus8H
+      ee232h.cbus9 = eeData.cbus9H
+      ee232h.isFifo = eeData.isFifoH
+      ee232h.isFifoTar = eeData.isFifoTarH
+      ee232h.isFastSer = eeData.isFastSerH
+      ee232h.ft1248Cpol = eeData.ft1248CpolH
+      ee232h.ft1248Lsb = eeData.ft1248LsbH
+      ee232h.ft1248FlowControl = eeData.ft1248FlowControlH
+      ee232h.isVCP = eeData.isVCPH
+      ee232h.powerSaveEnable = eeData.powerSaveEnableH
       return { ftStatus, ee232h }
     }))
   }
