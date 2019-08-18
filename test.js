@@ -9,7 +9,9 @@ let FTD2XX = require('./index');
     console.log("!!!");
   //  console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0].ftHandle.free());
     let t = ftdi.openByIndexSync(0);
-    console.log(FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]);
+    let r = FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]
+    console.log(r.type)
+    console.log(r);
     console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.closeSync()]);
     console.log(FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]);
 })();

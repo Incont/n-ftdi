@@ -256,10 +256,6 @@ class FtdiError extends Error {}
 function throwErrorIfBusySync (func) {
   if (!ftdiIsBisy) {
     try {
-      let func = arguments[arguments.length - 1]
-      for (let i = arguments.length - 2; i >= 0; --i) {
-        func = arguments[i](func)
-      }
       ftdiIsBisy = true
       return func()
     } finally {
@@ -269,12 +265,8 @@ function throwErrorIfBusySync (func) {
   throw new FtdiError('FTDI driver has already engaged another task')
 }
 
-async function throwErrorIfBusy () {
+async function throwErrorIfBusy (func) {
   if (!ftdiIsBisy) {
-    let func = arguments[arguments.length - 1]
-    for (let i = arguments.length - 2; i >= 0; --i) {
-      func = arguments[i](func)
-    }
     try {
       ftdiIsBisy = true
       return await func()
@@ -352,6 +344,7 @@ class FTDI {
     let { ftStatus, ftHandle } = openFuncSync()
     if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
       this._ftHandle = ftHandle
+      console.log(this)
       ftStatus = this._setUpFtdiDeviceSync()
     } else {
       this._ftHandle = null
@@ -372,7 +365,7 @@ class FTDI {
 
   /**
    * @typedef {object} GetNumberOfDevicesResult
-   * @property {number} ftStatus Value from FT_CreateDeviceInfoList
+   * @property {FT_STATUS} ftStatus Value from FT_CreateDeviceInfoList
    * @property {number} devCount The number of FTDI devices available
    */
   /**
@@ -403,8 +396,8 @@ class FTDI {
   /**
    * Type that holds device information for GetDeviceInformation method
    * @typedef {object} DeviceInfo
-   * @property {number} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
-   * @property {number} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+   * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
+   * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
    * @property {number} locId The physical location identifier of the device
    * @property {string} serialNumber The device serial number
@@ -413,7 +406,7 @@ class FTDI {
    */
   /**
    * @typedef {object} GetDeviceListResult
-   * @property {number} ftStatus Value from FT_GetDeviceInfoDetail
+   * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
    * @property {Array.<DeviceInfo>} deviceInfoList
    */
   /**
@@ -455,10 +448,10 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
-   * @returns {number} ftStatus Status values for FTDI device
+   * @returns {FT_STATUS} ftStatus Status values for FTDI device
    */
   openByIndexSync (index) {
-    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openSync(index))
+    return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openSync(index)))
   }
 
   /**
@@ -466,75 +459,75 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
-   * @returns {Promise<number>} ftStatus Status values for FTDI device
+   * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
   async openByIndex (index) {
-    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.open(index))
+    return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.open(index)))
   }
 
   /**
    * Synchronously opens the FTDI device with the specified serial number
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
-   * @returns {number} ftStatus Status values for FTDI device
+   * @returns {FT_STATUS} ftStatus Status values for FTDI device
    */
   openBySerialNumberSync (serialNumber) {
-    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
+    return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
   }
 
   /**
    * Asynchronously opens the FTDI device with the specified serial number
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
-   * @returns {Promise<number>} ftStatus Status values for FTDI device
+   * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
   async openBySerialNumber (serialNumber) {
-    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
+    return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
   }
 
   /**
    * Synchronously opens the FTDI device with the specified description
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
-   * @returns {number} ftStatus Status values for FTDI device
+   * @returns {FT_STATUS} ftStatus Status values for FTDI device
    */
   openByDescriptionSync (description) {
-    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION))
+    return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION)))
   }
 
   /**
    * Asynchronously opens the FTDI device with the specified description
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
-   * @returns {Promise<number>} ftStatus Status values for FTDI device
+   * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
   async openByDescription (description) {
-    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION))
+    return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION)))
   }
 
   /**
    * Synchronously opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
-   * @returns {number} ftStatus Status values for FTDI device
+   * @returns {FT_STATUS} ftStatus Status values for FTDI device
    */
   openByLocationSync (location) {
-    return throwErrorIfBusySync(this._openAndSetupSync, () => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION))
+    return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION)))
   }
 
   /**
    * Asynchronously opens the FTDI device at the specified physical location
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
-   * @returns {Promise<number>} ftStatus Status values for FTDI device
+   * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
   async openByLocation (location) {
-    return throwErrorIfBusy(this._openAndSetup, () => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION))
+    return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION)))
   }
 
   /**
    * Synchronously closes the handle to an open FTDI device
-   * @returns {number} ftStatus Value from FT_Close
+   * @returns {FT_STATUS} ftStatus Value from FT_Close
    */
   closeSync () {
     return throwErrorIfBusySync(() => {
@@ -549,7 +542,7 @@ class FTDI {
 
   /**
    * Asynchronously closes the handle to an open FTDI device
-   * @returns {Promise<number>} ftStatus Value from FT_Close
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
    */
   async close () {
     return throwErrorIfBusy(async () => {
@@ -564,64 +557,64 @@ class FTDI {
 
   /**
    * Synchronously sets the data bits, stop bits and parity for the device
-   * @param {number} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
-   * @param {number} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
-   * @param {number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
-   * @returns {number} ftStatus ftStatus value from FT_SetDataCharacteristics
+   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
+   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
+   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
+   * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
-    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity))
+    return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity)))
   }
 
   /**
    * Asynchronously sets the data bits, stop bits and parity for the device
-   * @param {number} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
-   * @param {number} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
-   * @param {number} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
-   * @returns {Promise<number>} ftStatus ftStatus value from FT_SetDataCharacteristics
+   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
+   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
+   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
+   * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
-    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity))
+    return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)))
   }
 
   /**
    * Synchronously sets the flow control type.
-   * @param {number} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
+   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
-   * @returns {number} ftStatus Value from FT_SetFlowControl
+   * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
    */
   setFlowControlSync (flowControl, xon, xoff) {
-    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff))
+    return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff)))
   }
 
   /**
    * Asynchronously sets the flow control type.
-   * @param {number} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
+   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
-   * @returns {Promise<number>} ftStatus Value from FT_SetFlowControl
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
    */
   async setFlowControl (flowControl, xon, xoff) {
-    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff))
+    return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)))
   }
 
   /**
    * Synchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
-   * @returns {number} ftStatus Value from FT_SetBaudRate
+   * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
    */
   setBaudRateSync (baudRate) {
-    return throwErrorIfBusySync(this._checkFtHandleSync, () => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate))
+    return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate)))
   }
 
   /**
    * Asynchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
-   * @returns {Promise<number>} ftStatus Value from FT_SetBaudRate
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
    */
   async setBaudRate (baudRate) {
-    return throwErrorIfBusy(this._checkFtHandle, () => _ftdiAddon.setBaudRate(this._ftHandle, baudRate))
+    return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setBaudRate(this._ftHandle, baudRate)))
   }
 }
 
@@ -632,5 +625,6 @@ module.exports = {
   FT_DATA_BITS,
   FT_STOP_BITS,
   FT_PARITY,
+  FT_FLOW_CONTROL,
   FTDI
 }
