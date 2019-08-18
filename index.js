@@ -250,8 +250,180 @@ const FT_FLOW_CONTROL = {
 }
 Object.freeze(FT_FLOW_CONTROL)
 
+/**
+ * Valid values for drive current options on FT2232H, FT4232H and FT232H devices
+ * @enum {number}
+ */
+const FT_DRIVE_CURRENT = {
+  /**
+   * 4mA drive current
+   */
+  FT_DRIVE_CURRENT_4MA: 4,
+  /**
+   * 8mA drive current
+   */
+  FT_DRIVE_CURRENT_8MA: 8,
+  /**
+   * 12mA drive current
+   */
+  FT_DRIVE_CURRENT_12MA: 12,
+  /**
+   * 16mA drive current
+   */
+  FT_DRIVE_CURRENT_16MA: 16
+}
+Object.freeze(FT_DRIVE_CURRENT)
+
+/**
+ * Available functions for the FT232H CBUS pins. Controlled by FT232H EEPROM settings
+ * @enum {number}
+ */
+const FT_232H_CBUS_OPTIONS = {
+  /**
+   * FT232H CBUS EEPROM options - Tristate
+   */
+  FT_CBUS_TRISTATE: 0x00,
+  /**
+   * FT232H CBUS EEPROM options - Rx LED
+   */
+  FT_CBUS_RXLED: 0x01,
+  /**
+   * FT232H CBUS EEPROM options - Tx LED
+   */
+  FT_CBUS_TXLED: 0x02,
+  /**
+   * FT232H CBUS EEPROM options - Tx and Rx LED
+   */
+  FT_CBUS_TXRXLED: 0x03,
+  /**
+   * FT232H CBUS EEPROM options - Power Enable#
+   */
+  FT_CBUS_PWREN: 0x04,
+  /**
+   * FT232H CBUS EEPROM options - Sleep
+   */
+  FT_CBUS_SLEEP: 0x05,
+  /**
+   * FT232H CBUS EEPROM options - Drive pin to logic 0
+   */
+  FT_CBUS_DRIVE_0: 0x06,
+  /**
+   * FT232H CBUS EEPROM options - Drive pin to logic 1
+   */
+  FT_CBUS_DRIVE_1: 0x07,
+  /**
+   * FT232H CBUS EEPROM options - IO Mode
+   */
+  FT_CBUS_IOMODE: 0x08,
+  /**
+   * FT232H CBUS EEPROM options - Tx Data Enable
+   */
+  FT_CBUS_TXDEN: 0x09,
+  /**
+   * FT232H CBUS EEPROM options - 30MHz clock
+   */
+  FT_CBUS_CLK30: 0x0A,
+  /**
+   * FT232H CBUS EEPROM options - 15MHz clock
+   */
+  FT_CBUS_CLK15: 0x0B,
+  /**
+   * FT232H CBUS EEPROM options - 7.5MHz clock
+   */
+  FT_CBUS_CLK7_5: 0x0C
+}
+Object.freeze(FT_232H_CBUS_OPTIONS)
+
+/**
+ * Common EEPROM elements for all devices. Inherited to specific device type EEPROMs
+ * @property {number} vendorID=0x0403 Vendor ID as supplied by the USB Implementers Forum
+ * @property {number} productID=0x6001 Product ID
+ * @property {string} manufacturer="FTDI" Manufacturer name string
+ * @property {string} manufacturerID="FT" Manufacturer name abbreviation to be used as a prefix for automatically generated serial numbers
+ * @property {string} description="USB-Serial Converter" Device description string
+ * @property {string} serialNumber="" Device serial number string
+ * @property {number} maxPower=0x0090 Maximum power the device needs
+ * @property {boolean} selfPowered=false Indicates if the device has its own power supply (self-powered) or gets power from the USB port (bus-powered)
+ * @property {boolean} remoteWakeup=false Determines if the device can wake the host PC from suspend by toggling the RI line
+ */
+class FT_EEPROM_DATA {
+  constructor () {
+    this.vendorID = 0x0403
+    this.productID = 0x6001
+    this.manufacturer = 'FTDI'
+    this.manufacturerID = 'FT'
+    this.description = 'USB-Serial Converter'
+    this.serialNumber = ''
+    this.maxPower = 0x0090
+    this.selfPowered = _ftdiAddon
+    this.remoteWakeup = false
+  }
+}
+
+/**
+ * EEPROM structure specific to FT232H devices
+ * @property {boolean} pullDownEnable=false Determines if IOs are pulled down when the device is in suspend
+ * @property {boolean} serNumEnable=true Determines if the serial number is enabled
+ * @property {boolean} acSlowSlew=false Determines if AC pins have a slow slew rate
+ * @property {boolean} acSchmittInput=false Determines if the AC pins have a Schmitt input
+ * @property {FT_DRIVE_CURRENT} acDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AC pins drive current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or FT_DRIVE_CURRENT_16MA
+ * @property {boolean} adSlowSlew=false Determines if AD pins have a slow slew rate
+ * @property {boolean} adSchmittInput=false Determines if the AD pins have a Schmitt input
+ * @property {FT_DRIVE_CURRENT} adDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AD pins drive current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or FT_DRIVE_CURRENT_16MA
+ * @property {FT_232H_CBUS_OPTIONS} cbus0=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS0 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus1=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS1 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus2=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS2 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus3=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS3 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus4=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS4 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus5=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS5 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus6=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS6 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus7=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS7 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE
+ * @property {FT_232H_CBUS_OPTIONS} cbus8=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS8 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus9=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS9 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {boolean} isFifo=false Determines if the device is in FIFO mode
+ * @property {boolean} isFifoTar=false Determines if the device is in FIFO target mode
+ * @property {boolean} isFastSer=false Determines if the device is in fast serial mode
+ * @property {boolean} isFT1248=false Determines if the device is in FT1248 mode
+ * @property {boolean} ft1248Cpol=false Determines FT1248 mode clock polarity
+ * @property {boolean} ft1248Lsb=false Determines if data is ent MSB (0) or LSB (1) in FT1248 mode
+ * @property {boolean} ft1248FlowControl=false Determines if FT1248 mode uses flow control
+ * @property {boolean} isVCP=true Determines if the VCP driver is loaded
+ * @property {boolean} powerSaveEnable=false For self-powered designs, keeps the FT232H in low power state until ACBUS7 is high
+ */
+class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
+  constructor () {
+    super()
+    this.pullDownEnable = false
+    this.serNumEnable = true
+    this.acSlowSlew = false
+    this.acSchmittInput = false
+    this.acDriveCurrent = FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA
+    this.adSlowSlew = false
+    this.adSchmittInput = false
+    this.adDriveCurrent = FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA
+    this.cbus0 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus1 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus2 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus3 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus4 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus5 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus6 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus7 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus8 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.cbus9 = FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
+    this.isFifo = false
+    this.isFifoTar = false
+    this.isFastSer = false
+    this.isFT1248 = false
+    this.ft1248Cpol = false
+    this.ft1248FlowControl = false
+    this.isVCP = true
+    this.powerSaveEnable = false
+  }
+}
+
 let ftdiIsBisy = false
-class FtdiError extends Error {}
+class FtdiParallelInvocationError extends Error {}
 
 function throwErrorIfBusySync (func) {
   if (!ftdiIsBisy) {
@@ -262,7 +434,7 @@ function throwErrorIfBusySync (func) {
       ftdiIsBisy = false
     }
   }
-  throw new FtdiError('FTDI driver has already engaged another task')
+  throw new FtdiParallelInvocationError('FTDI driver has already engaged another task')
 }
 
 async function throwErrorIfBusy (func) {
@@ -274,12 +446,11 @@ async function throwErrorIfBusy (func) {
       ftdiIsBisy = false
     }
   }
-  throw new FtdiError('FTDI driver has already engaged another task')
+  throw new FtdiParallelInvocationError('Another FTDI method already invoked')
 }
 
 /**
  * Class wrapper for FTD2XX.DLL
- * @class
  */
 class FTDI {
   constructor () {
@@ -371,6 +542,7 @@ class FTDI {
   /**
    * Synchronously gets the number of FTDI devices available
    * @returns {GetNumberOfDevicesResult}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   static getNumberOfDevicesSync () {
     return throwErrorIfBusySync(_ftdiAddon.createDeviceInfoListSync)
@@ -379,6 +551,7 @@ class FTDI {
   /**
    * Asynchronously gets the number of FTDI devices available
    * @returns {Promise<GetNumberOfDevicesResult>}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   static async getNumberOfDevices () {
     return throwErrorIfBusy(_ftdiAddon.createDeviceInfoList)
@@ -402,7 +575,7 @@ class FTDI {
    * @property {number} locId The physical location identifier of the device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
-   * @property {FtHandle|null} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
+   * @property {?FtHandle} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
    */
   /**
    * @typedef {object} GetDeviceListResult
@@ -412,6 +585,7 @@ class FTDI {
   /**
    * Synchronously gets information on all of the FTDI devices available
    * @returns {GetDeviceListResult}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   static getDeviceListSync () {
     return throwErrorIfBusySync(() => {
@@ -429,6 +603,7 @@ class FTDI {
   /**
    * Asynchronously gets information on all of the FTDI devices available
    * @returns {Promise<GetDeviceListResult>}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   static async getDeviceList () {
     return throwErrorIfBusy(async () => {
@@ -449,6 +624,7 @@ class FTDI {
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   openByIndexSync (index) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openSync(index)))
@@ -460,6 +636,7 @@ class FTDI {
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async openByIndex (index) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.open(index)))
@@ -470,6 +647,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   openBySerialNumberSync (serialNumber) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
@@ -480,6 +658,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async openBySerialNumber (serialNumber) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
@@ -490,6 +669,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   openByDescriptionSync (description) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION)))
@@ -500,6 +680,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async openByDescription (description) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION)))
@@ -510,6 +691,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   openByLocationSync (location) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION)))
@@ -520,6 +702,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async openByLocation (location) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION)))
@@ -528,6 +711,7 @@ class FTDI {
   /**
    * Synchronously closes the handle to an open FTDI device
    * @returns {FT_STATUS} ftStatus Value from FT_Close
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   closeSync () {
     return throwErrorIfBusySync(() => {
@@ -543,6 +727,7 @@ class FTDI {
   /**
    * Asynchronously closes the handle to an open FTDI device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async close () {
     return throwErrorIfBusy(async () => {
@@ -561,6 +746,7 @@ class FTDI {
    * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity)))
@@ -572,6 +758,7 @@ class FTDI {
    * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)))
@@ -583,6 +770,7 @@ class FTDI {
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   setFlowControlSync (flowControl, xon, xoff) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff)))
@@ -594,6 +782,7 @@ class FTDI {
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async setFlowControl (flowControl, xon, xoff) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)))
@@ -603,6 +792,7 @@ class FTDI {
    * Synchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   setBaudRateSync (baudRate) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate)))
@@ -612,9 +802,24 @@ class FTDI {
    * Asynchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   async setBaudRate (baudRate) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setBaudRate(this._ftHandle, baudRate)))
+  }
+
+  /**
+   * @typedef {object} ReadFT232HEEPROMResult
+   * @property {FT_STATUS} ftStatus Value from FT_EE_Read
+   * @property {FT232H_EEPROM_STRUCTURE} ee232h An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
+   */
+  /**
+   * Reads the EEPROM contents of an FT232H device
+   * @returns {ReadFT232HEEPROMResult}
+   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   */
+  readFT232HEEPROMSync () {
+    throw new Error('Not implement')
   }
 }
 
@@ -626,5 +831,7 @@ module.exports = {
   FT_STOP_BITS,
   FT_PARITY,
   FT_FLOW_CONTROL,
+  FT_DRIVE_CURRENT,
+  FT_232H_CBUS_OPTIONS,
   FTDI
 }
