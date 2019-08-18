@@ -568,7 +568,7 @@ class FTDI {
    */
   /**
    * Type that holds device information for GetDeviceInformation method
-   * @typedef {object} DeviceInfo
+   * @typedef {object} DeviceInfoDetail
    * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
@@ -580,7 +580,7 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceListResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {Array.<DeviceInfo>} deviceInfoList
+   * @property {Array.<DeviceInfoDetail>} deviceInfoList
    */
   /**
    * Synchronously gets information on all of the FTDI devices available
@@ -819,7 +819,9 @@ class FTDI {
    * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   readFT232HEEPROMSync () {
-    throw new Error('Not implement')
+    return throwErrorIfBusy(() => this._checkFtHandle(() => {
+      return 1
+    }))
   }
 }
 

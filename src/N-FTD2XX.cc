@@ -110,12 +110,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-
-private:
-  DWORD devCount;
   CreateDeviceInfoListOp(Napi::Env env);
   void Execute();
   void OnOK();
+
+private:
+  DWORD devCount;
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount);
 };
 
@@ -249,18 +249,18 @@ Napi::Object GetDeviceInfoDetailOp::CreateResult(
     FT_HANDLE ftHandle)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
-  Napi::Object deviceInfo = Napi::Object::New(env);
+  Napi::Object deviceInfoDetail = Napi::Object::New(env);
   Napi::Value nFtHandler = ftHandle == nullptr
                                ? env.Null()
                                : FtHandlerWrapper::NewInstance(env, ftHandle);
-  deviceInfo.Set("flags", flags);
-  deviceInfo.Set("type", type);
-  deviceInfo.Set("id", id);
-  deviceInfo.Set("locId", locId);
-  deviceInfo.Set("serialNumber", serialNumber);
-  deviceInfo.Set("description", description);
-  deviceInfo.Set("ftHandle", nFtHandler);
-  result.Set("deviceInfo", deviceInfo);
+  deviceInfoDetail.Set("flags", flags);
+  deviceInfoDetail.Set("type", type);
+  deviceInfoDetail.Set("id", id);
+  deviceInfoDetail.Set("locId", locId);
+  deviceInfoDetail.Set("serialNumber", serialNumber);
+  deviceInfoDetail.Set("description", description);
+  deviceInfoDetail.Set("ftHandle", nFtHandler);
+  result.Set("deviceInfoDetail", deviceInfoDetail);
   return result;
 }
 
@@ -274,13 +274,13 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  OpenOp(Napi::Env env, DWORD index);
+  void Execute();
+  void OnOK();
 
 private:
   DWORD index;
   FT_HANDLE ftHandle;
-  OpenOp(Napi::Env env, DWORD index);
-  void Execute();
-  void OnOK();
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle);
 };
 
@@ -337,14 +337,14 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  OpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags);
+  void Execute();
+  void OnOK();
 
 private:
   PVOID pvArg1;
   DWORD flags;
   FT_HANDLE ftHandle;
-  OpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags);
-  void Execute();
-  void OnOK();
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle);
 };
 
@@ -423,12 +423,12 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  CloseOp(Napi::Env env, FT_HANDLE ftHandle);
   void Execute();
   void OnOK();
 
 private:
   FT_HANDLE ftHandle;
-  CloseOp(Napi::Env env, FT_HANDLE ftHandle);
 };
 
 Napi::Object CloseOp::Init(Napi::Env env, Napi::Object exports)
@@ -476,6 +476,7 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  SetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
   void Execute();
   void OnOK();
 
@@ -484,7 +485,6 @@ private:
   UCHAR wordLength;
   UCHAR stopBits;
   UCHAR parity;
-  SetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
 };
 
 Napi::Object SetDataCharacteristicsOp::Init(Napi::Env env, Napi::Object exports)
@@ -539,6 +539,7 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  SetFlowControlOp(Napi::Env env, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff);
   void Execute();
   void OnOK();
 
@@ -547,7 +548,6 @@ private:
   USHORT flowControl;
   UCHAR xon;
   UCHAR xoff;
-  SetFlowControlOp(Napi::Env env, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff);
 };
 
 Napi::Object SetFlowControlOp::Init(Napi::Env env, Napi::Object exports)
@@ -602,13 +602,13 @@ public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  SetBaudRateOp(Napi::Env env, FT_HANDLE ftHandle, ULONG baudRate);
   void Execute();
   void OnOK();
 
 private:
   FT_HANDLE ftHandle;
   ULONG baudRate;
-  SetBaudRateOp(Napi::Env env, FT_HANDLE ftHandle, ULONG baudRate);
 };
 
 Napi::Object SetBaudRateOp::Init(Napi::Env env, Napi::Object exports)
@@ -650,6 +650,91 @@ void SetBaudRateOp::OnOK()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// GetDeviceInfoOp class
+////////////////////////////////////////////////////////////////////////////////
+
+class GetDeviceInfoOp : public BaseFtdiOp
+{
+public:
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
+  static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  GetDeviceInfoOp(Napi::Env env, FT_HANDLE ftHandle);
+  void Execute();
+  void OnOK();
+
+private:
+  FT_HANDLE ftHandle;
+  FT_DEVICE ftDevice;
+  DWORD deviceID;
+  char serialNumber[16];
+  char description[64];
+  inline static Napi::Object CreateResult(
+      Napi::Env env,
+      FT_STATUS ftStatus,
+      FT_DEVICE ftDevice,
+      DWORD deviceID,
+      char *serialNumber,
+      char *description);
+};
+
+Napi::Object GetDeviceInfoOp::Init(Napi::Env env, Napi::Object exports)
+{
+  exports.Set("getDeviceInfoSync", Napi::Function::New(env, GetDeviceInfoOp::InvokeSync));
+  exports.Set("getDeviceInfo", Napi::Function::New(env, GetDeviceInfoOp::Invoke));
+  return exports;
+}
+
+Napi::Object GetDeviceInfoOp::InvokeSync(const Napi::CallbackInfo &info)
+{
+  FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+  FT_DEVICE ftDevice;
+  DWORD deviceID;
+  char serialNumber[16];
+  char description[64];
+  FT_STATUS ftStatus =  FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
+  return CreateResult(info.Env(), ftStatus, ftDevice, deviceID, serialNumber, description);
+}
+
+Napi::Promise GetDeviceInfoOp::Invoke(const Napi::CallbackInfo &info)
+{
+  FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+  auto *operation = new GetDeviceInfoOp(info.Env(), ftHandle);
+  operation->Queue();
+  return operation->Promise();
+}
+
+GetDeviceInfoOp::GetDeviceInfoOp(Napi::Env env, FT_HANDLE ftHandle) : BaseFtdiOp(env), ftHandle(ftHandle) {}
+
+void GetDeviceInfoOp::Execute()
+{
+  ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
+}
+
+void GetDeviceInfoOp::OnOK()
+{
+  Napi::HandleScope scope(Env());
+  deferred.Resolve(CreateResult(Env(), ftStatus, ftDevice, deviceID, serialNumber, description));
+}
+
+Napi::Object GetDeviceInfoOp::CreateResult(
+    Napi::Env env,
+    FT_STATUS ftStatus,
+    FT_DEVICE ftDevice,
+    DWORD deviceID,
+    char *serialNumber,
+    char *description)
+{
+  Napi::Object result = CreateFtResultObject(env, ftStatus);
+  Napi::Object deviceInfo = Napi::Object::New(env);
+  deviceInfo.Set("ftDevice", ftDevice);
+  deviceInfo.Set("deviceID", deviceID);
+  deviceInfo.Set("serialNumber", serialNumber);
+  deviceInfo.Set("description", description);
+  return result;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
@@ -663,6 +748,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   SetDataCharacteristicsOp::Init(env, exports);
   SetFlowControlOp::Init(env, exports);
   SetBaudRateOp::Init(env, exports);
+  GetDeviceInfoOp::Init(env, exports);
   return exports;
 }
 
