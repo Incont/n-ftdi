@@ -335,6 +335,18 @@ const FT_232H_CBUS_OPTIONS = {
 Object.freeze(FT_232H_CBUS_OPTIONS)
 
 /**
+ * Error states not supported by FTD2XX
+ * @enum {number}
+ */
+const FT_ERROR = {
+  FT_NO_ERROR: 0,
+  FT_INCORRECT_DEVICE: 1,
+  FT_INVALID_BITMODE: 2,
+  FT_BUFFER_SIZE: 3
+}
+Object.freeze(FT_232H_CBUS_OPTIONS)
+
+/**
  * Common EEPROM elements for all devices. Inherited to specific device type EEPROMs
  * @property {number} vendorID=0x0403 Vendor ID as supplied by the USB Implementers Forum
  * @property {number} productID=0x6001 Product ID
@@ -424,6 +436,7 @@ class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
 
 let ftdiIsBisy = false
 class FtdiParallelInvocationError extends Error {}
+class FtException extends Error {}
 
 function throwErrorIfBusySync (func) {
   if (!ftdiIsBisy) {
@@ -447,6 +460,63 @@ async function throwErrorIfBusy (func) {
     }
   }
   throw new FtdiParallelInvocationError('Another FTDI method already invoked')
+}
+
+/**
+ * Method to check ftStatus and ftErrorCondition values for error conditions and throw exceptions accordingly
+ * @param {FT_STATUS} ftStatus
+ * @param {FT_ERROR} ftErrorCondition
+ */
+function errorHandler (ftStatus, ftErrorCondition) {
+  if (ftStatus !== FT_STATUS.FT_OK) {
+    // Check FT_STATUS values returned from FTD2XX DLL calls
+    switch (ftStatus) {
+      case FT_STATUS.FT_DEVICE_NOT_FOUND:
+        throw new FtException('FTDI device not found')
+      case FT_STATUS.FT_DEVICE_NOT_OPENED:
+        throw new FtException('FTDI device not opened')
+      case FT_STATUS.FT_DEVICE_NOT_OPENED_FOR_ERASE:
+        throw new FtException('FTDI device not opened for erase')
+      case FT_STATUS.FT_DEVICE_NOT_OPENED_FOR_WRITE:
+        throw new FtException('FTDI device not opened for write')
+      case FT_STATUS.FT_EEPROM_ERASE_FAILED:
+        throw new FtException('Failed to erase FTDI device EEPROM')
+      case FT_STATUS.FT_EEPROM_NOT_PRESENT:
+        throw new FtException('No EEPROM fitted to FTDI device')
+      case FT_STATUS.FT_EEPROM_NOT_PROGRAMMED:
+        throw new FtException('FTDI device EEPROM not programmed')
+      case FT_STATUS.FT_EEPROM_READ_FAILED:
+        throw new FtException('Failed to read FTDI device EEPROM')
+      case FT_STATUS.FT_EEPROM_WRITE_FAILED:
+        throw new FtException('Failed to write FTDI device EEPROM')
+      case FT_STATUS.FT_FAILED_TO_WRITE_DEVICE:
+        throw new FtException('Failed to write to FTDI device')
+      case FT_STATUS.FT_INSUFFICIENT_RESOURCES:
+        throw new FtException('Insufficient resources')
+      case FT_STATUS.FT_INVALID_ARGS:
+        throw new FtException('Invalid arguments for FTD2XX function call')
+      case FT_STATUS.FT_INVALID_BAUD_RATE:
+        throw new FtException('Invalid Baud rate for FTDI device')
+      case FT_STATUS.FT_INVALID_HANDLE:
+        throw new FtException('Invalid handle for FTDI device')
+      case FT_STATUS.FT_INVALID_PARAMETER:
+        throw new FtException('Invalid parameter for FTD2XX function call')
+      case FT_STATUS.FT_IO_ERROR:
+        throw new FtException('FTDI device IO error')
+      case FT_STATUS.FT_OTHER_ERROR:
+        throw new FtException('An unexpected error has occurred when trying to communicate with the FTDI device')
+    }
+  } else if (ftErrorCondition !== FT_ERROR.FT_NO_ERROR) {
+    // Check for other error conditions not handled by FTD2XX DLL
+    switch (ftErrorCondition) {
+      case FT_ERROR.FT_INCORRECT_DEVICE:
+        throw new FtException('The current device type does not match the EEPROM structure')
+      case FT_ERROR.FT_INVALID_BITMODE:
+        throw new FtException('The requested bit mode is not valid for the current device')
+      case FT_ERROR.FT_BUFFER_SIZE:
+        throw new FtException('The supplied buffer is not big enough')
+    }
+  }
 }
 
 /**
@@ -845,7 +915,10 @@ class FTDI {
    */
   readFT232HEEPROMSync () {
     return throwErrorIfBusy(() => this._checkFtHandle(() => {
-      return 1
+      const { ftStatus, ftDevice } = this.getDeviceInfo()
+      if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+        errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+      }
     }))
   }
 }
