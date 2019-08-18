@@ -460,18 +460,18 @@ void FtProgramDataWrapper::SetPnP(const Napi::CallbackInfo &info, const Napi::Va
 
 Napi::Value FtProgramDataWrapper::GetSelfPowered(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.SelfPowered);
+  return Napi::Boolean::New(info.Env(), ftData.SelfPowered);
 }
 
 void FtProgramDataWrapper::SetSelfPowered(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.SelfPowered = value.As<Napi::Number>().Uint32Value();
+    ftData.SelfPowered = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
