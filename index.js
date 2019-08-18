@@ -832,7 +832,7 @@ class FTDI {
    * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
    */
   getDeviceInfo () {
-    return throwErrorIfBusySync(() => this._checkFtHandle(() => _ftdiAddon.getDeviceInfo(this._ftHandle)))
+    return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.getDeviceInfo(this._ftHandle)))
   }
 
   /**
@@ -915,10 +915,17 @@ class FTDI {
    */
   readFT232HEEPROMSync () {
     return throwErrorIfBusy(() => this._checkFtHandle(() => {
-      const { ftStatus, ftDevice } = this.getDeviceInfo()
+      let { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
       if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
         errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
       }
+      const eedata = new _ftdiAddon.FT_PROGRAM_DATA()
+      eedata.signature1 = 0x00000000
+      eedata.signature2 = 0xFFFFFFFF
+      eedata.version = 5
+      ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eedata)
+      const ee232h = new FT232H_EEPROM_STRUCTURE()
+      return { ftStatus, ee232h }
     }))
   }
 }

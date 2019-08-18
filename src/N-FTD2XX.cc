@@ -26,8 +26,8 @@ public:
   FT_HANDLE GetFtHandler();
 
 private:
-  FT_HANDLE ftHandle;
   static Napi::FunctionReference constructor;
+  FT_HANDLE ftHandle;
   void Free(const Napi::CallbackInfo &info);
 };
 
@@ -78,6 +78,886 @@ FtHandlerWrapper::~FtHandlerWrapper()
 FT_HANDLE FtHandlerWrapper::GetFtHandler()
 {
   return ftHandle;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// FtProgramDataWrapper class
+////////////////////////////////////////////////////////////////////////////////
+
+class FtProgramDataWrapper : public Napi::ObjectWrap<FtProgramDataWrapper>
+{
+public:
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env, FT_HANDLE ftHandle);
+  static PFT_PROGRAM_DATA GetData(Napi::Value value);
+  FtProgramDataWrapper(const Napi::CallbackInfo &info);
+  PFT_PROGRAM_DATA GetData();
+
+private:
+  static Napi::FunctionReference constructor;
+  char manufacturer[32];
+  char manufacturerID[16];
+  char description[64];
+  char serialNumber[16];
+  FT_PROGRAM_DATA ftData;
+  Napi::Value GetSignature1(const Napi::CallbackInfo &info);
+  void SetSignature1(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetSignature2(const Napi::CallbackInfo &info);
+  void SetSignature2(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetVersion(const Napi::CallbackInfo &info);
+  void SetVersion(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetVendorID(const Napi::CallbackInfo &info);
+  void SetVendorID(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetProductID(const Napi::CallbackInfo &info);
+  void SetProductID(const Napi::CallbackInfo &info, const Napi::Value &value);
+
+  Napi::Value GetManufacturer(const Napi::CallbackInfo &info);
+  void SetManufacturer(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetManufacturerID(const Napi::CallbackInfo &info);
+  void SetManufacturerID(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetDescription(const Napi::CallbackInfo &info);
+  void SetDescription(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetSerialNumber(const Napi::CallbackInfo &info);
+  void SetSerialNumber(const Napi::CallbackInfo &info, const Napi::Value &value);
+
+  Napi::Value GetMaxPower(const Napi::CallbackInfo &info);
+  void SetMaxPower(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetPnP(const Napi::CallbackInfo &info);
+  void SetPnP(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetSelfPowered(const Napi::CallbackInfo &info);
+  void SetSelfPowered(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetRemoteWakeup(const Napi::CallbackInfo &info);
+  void SetRemoteWakeup(const Napi::CallbackInfo &info, const Napi::Value &value);
+
+  // FT2232H extensions
+  Napi::Value GetPullDownEnableH(const Napi::CallbackInfo &info);
+  void SetPullDownEnableH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetSerNumEnableH(const Napi::CallbackInfo &info);
+  void SetSerNumEnableH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetACSlowSlewH(const Napi::CallbackInfo &info);
+  void SetACSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetACSchmittInputH(const Napi::CallbackInfo &info);
+  void SetACSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetACDriveCurrentH(const Napi::CallbackInfo &info);
+  void SetACDriveCurrentH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetADSlowSlewH(const Napi::CallbackInfo &info);
+  void SetADSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetADSchmittInputH(const Napi::CallbackInfo &info);
+  void SetADSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetADDriveCurrentH(const Napi::CallbackInfo &info);
+  void SetADDriveCurrentH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus0H(const Napi::CallbackInfo &info);
+  void SetCbus0H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus1H(const Napi::CallbackInfo &info);
+  void SetCbus1H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus2H(const Napi::CallbackInfo &info);
+  void SetCbus2H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus3H(const Napi::CallbackInfo &info);
+  void SetCbus3H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus4H(const Napi::CallbackInfo &info);
+  void SetCbus4H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus5H(const Napi::CallbackInfo &info);
+  void SetCbus5H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus6H(const Napi::CallbackInfo &info);
+  void SetCbus6H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus7H(const Napi::CallbackInfo &info);
+  void SetCbus7H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus8H(const Napi::CallbackInfo &info);
+  void SetCbus8H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetCbus9H(const Napi::CallbackInfo &info);
+  void SetCbus9H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetIsFifoH(const Napi::CallbackInfo &info);
+  void SetIsFifoH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetIsFifoTarH(const Napi::CallbackInfo &info);
+  void SetIsFifoTarH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetIsFastSerH(const Napi::CallbackInfo &info);
+  void SetIsFastSerH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetIsFT1248H(const Napi::CallbackInfo &info);
+  void SetIsFT1248H(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetFT1248CpolH(const Napi::CallbackInfo &info);
+  void SetFT1248CpolH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetFT1248LsbH(const Napi::CallbackInfo &info);
+  void SetFT1248LsbH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetFT1248FlowControlH(const Napi::CallbackInfo &info);
+  void SetFT1248FlowControlH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetIsVCPH(const Napi::CallbackInfo &info);
+  void SetIsVCPH(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetPowerSaveEnableH(const Napi::CallbackInfo &info);
+  void SetPowerSaveEnableH(const Napi::CallbackInfo &info, const Napi::Value &value);
+
+  inline static void StrCopy(Napi::String src, char *dst, int maxLenght);
+};
+
+Napi::FunctionReference FtProgramDataWrapper::constructor;
+
+Napi::Object FtProgramDataWrapper::Init(Napi::Env env, Napi::Object exports)
+{
+  Napi::HandleScope scope(env);
+  Napi::Function func = DefineClass(
+      env,
+      "FT_PROGRAM_DATA",
+      {InstanceAccessor("signature1", &FtProgramDataWrapper::GetSignature1, &FtProgramDataWrapper::SetSignature1),
+       InstanceAccessor("signature2", &FtProgramDataWrapper::GetSignature2, &FtProgramDataWrapper::SetSignature2),
+       InstanceAccessor("version", &FtProgramDataWrapper::GetVersion, &FtProgramDataWrapper::SetVersion),
+       InstanceAccessor("vendorID", &FtProgramDataWrapper::GetVendorID, &FtProgramDataWrapper::SetVendorID),
+       InstanceAccessor("productID", &FtProgramDataWrapper::GetProductID, &FtProgramDataWrapper::SetProductID),
+
+       InstanceAccessor("manufacturer", &FtProgramDataWrapper::GetManufacturer, &FtProgramDataWrapper::SetManufacturer),
+       InstanceAccessor("manufacturerID", &FtProgramDataWrapper::GetManufacturerID, &FtProgramDataWrapper::SetManufacturerID),
+       InstanceAccessor("description", &FtProgramDataWrapper::GetDescription, &FtProgramDataWrapper::SetDescription),
+       InstanceAccessor("serialNumber", &FtProgramDataWrapper::GetSerialNumber, &FtProgramDataWrapper::SetSerialNumber),
+
+       InstanceAccessor("maxPower", &FtProgramDataWrapper::GetMaxPower, &FtProgramDataWrapper::SetMaxPower),
+       InstanceAccessor("pnp", &FtProgramDataWrapper::GetPnP, &FtProgramDataWrapper::SetPnP),
+       InstanceAccessor("selfPowered", &FtProgramDataWrapper::GetSelfPowered, &FtProgramDataWrapper::SetSelfPowered),
+       InstanceAccessor("remoteWakeup", &FtProgramDataWrapper::GetRemoteWakeup, &FtProgramDataWrapper::SetRemoteWakeup),
+
+       InstanceAccessor("PullDownEnableH", &FtProgramDataWrapper::GetPullDownEnableH, &FtProgramDataWrapper::SetPullDownEnableH),
+       InstanceAccessor("SerNumEnableH", &FtProgramDataWrapper::GetSerNumEnableH, &FtProgramDataWrapper::SetSerNumEnableH),
+       InstanceAccessor("ACSlowSlewH", &FtProgramDataWrapper::GetACSlowSlewH, &FtProgramDataWrapper::SetACSlowSlewH),
+       InstanceAccessor("ACSchmittInputH", &FtProgramDataWrapper::GetACSchmittInputH, &FtProgramDataWrapper::SetACSchmittInputH),
+       InstanceAccessor("ACDriveCurrentH", &FtProgramDataWrapper::GetACDriveCurrentH, &FtProgramDataWrapper::SetACDriveCurrentH),
+       InstanceAccessor("ADSlowSlewH", &FtProgramDataWrapper::GetADSlowSlewH, &FtProgramDataWrapper::SetADSlowSlewH),
+       InstanceAccessor("ADSchmittInputH", &FtProgramDataWrapper::GetADSchmittInputH, &FtProgramDataWrapper::SetADSchmittInputH),
+       InstanceAccessor("ADDriveCurrentH", &FtProgramDataWrapper::GetADDriveCurrentH, &FtProgramDataWrapper::SetADDriveCurrentH),
+       InstanceAccessor("Cbus0H", &FtProgramDataWrapper::GetCbus0H, &FtProgramDataWrapper::SetCbus0H),
+       InstanceAccessor("Cbus1H", &FtProgramDataWrapper::GetCbus1H, &FtProgramDataWrapper::SetCbus1H),
+       InstanceAccessor("Cbus2H", &FtProgramDataWrapper::GetCbus2H, &FtProgramDataWrapper::SetCbus2H),
+       InstanceAccessor("Cbus3H", &FtProgramDataWrapper::GetCbus3H, &FtProgramDataWrapper::SetCbus3H),
+       InstanceAccessor("Cbus4H", &FtProgramDataWrapper::GetCbus4H, &FtProgramDataWrapper::SetCbus4H),
+       InstanceAccessor("Cbus5H", &FtProgramDataWrapper::GetCbus5H, &FtProgramDataWrapper::SetCbus5H),
+       InstanceAccessor("Cbus6H", &FtProgramDataWrapper::GetCbus6H, &FtProgramDataWrapper::SetCbus6H),
+       InstanceAccessor("Cbus7H", &FtProgramDataWrapper::GetCbus7H, &FtProgramDataWrapper::SetCbus7H),
+       InstanceAccessor("Cbus8H", &FtProgramDataWrapper::GetCbus8H, &FtProgramDataWrapper::SetCbus8H),
+       InstanceAccessor("Cbus9H", &FtProgramDataWrapper::GetCbus9H, &FtProgramDataWrapper::SetCbus9H),
+       InstanceAccessor("IsFifoH", &FtProgramDataWrapper::GetIsFifoH, &FtProgramDataWrapper::SetIsFifoH),
+       InstanceAccessor("IsFifoTarH", &FtProgramDataWrapper::GetIsFifoTarH, &FtProgramDataWrapper::SetIsFifoTarH),
+       InstanceAccessor("IsFastSerH", &FtProgramDataWrapper::GetIsFastSerH, &FtProgramDataWrapper::SetIsFastSerH),
+       InstanceAccessor("IsFT1248H", &FtProgramDataWrapper::GetIsFT1248H, &FtProgramDataWrapper::SetIsFT1248H),
+       InstanceAccessor("FT1248CpolH", &FtProgramDataWrapper::GetFT1248CpolH, &FtProgramDataWrapper::SetFT1248CpolH),
+       InstanceAccessor("FT1248LsbH", &FtProgramDataWrapper::GetFT1248LsbH, &FtProgramDataWrapper::SetFT1248LsbH),
+       InstanceAccessor("FT1248FlowControlH", &FtProgramDataWrapper::GetFT1248FlowControlH, &FtProgramDataWrapper::SetFT1248FlowControlH),
+       InstanceAccessor("IsVCPH", &FtProgramDataWrapper::GetIsVCPH, &FtProgramDataWrapper::SetIsVCPH),
+       InstanceAccessor("PowerSaveEnableH", &FtProgramDataWrapper::GetPowerSaveEnableH, &FtProgramDataWrapper::SetPowerSaveEnableH)});
+  constructor = Napi::Persistent(func);
+  constructor.SuppressDestruct();
+  exports.Set("FT_PROGRAM_DATA", func);
+  return exports;
+}
+
+Napi::Object FtProgramDataWrapper::NewInstance(Napi::Env env, FT_HANDLE ftHandle)
+{
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = constructor.New({});
+  return scope.Escape(napi_value(obj)).ToObject();
+}
+
+PFT_PROGRAM_DATA FtProgramDataWrapper::GetData(Napi::Value value)
+{
+  FtProgramDataWrapper *wrapper = Napi::ObjectWrap<FtProgramDataWrapper>::Unwrap(value.As<Napi::Object>());
+  return wrapper->GetData();
+}
+
+FtProgramDataWrapper::FtProgramDataWrapper(const Napi::CallbackInfo &info) : Napi::ObjectWrap<FtProgramDataWrapper>(info)
+{
+  ftData.Manufacturer = manufacturer;
+  ftData.ManufacturerId = manufacturerID;
+  ftData.Description = description;
+  ftData.SerialNumber = serialNumber;
+}
+
+PFT_PROGRAM_DATA FtProgramDataWrapper::GetData()
+{
+  return &ftData;
+}
+
+Napi::Value FtProgramDataWrapper::GetSignature1(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Signature1);
+}
+
+void FtProgramDataWrapper::SetSignature1(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Signature1 = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetSignature2(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Signature2);
+}
+
+void FtProgramDataWrapper::SetSignature2(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Signature2 = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetVersion(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Version);
+}
+
+void FtProgramDataWrapper::SetVersion(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Version = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetVendorID(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.VendorId);
+}
+
+void FtProgramDataWrapper::SetVendorID(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.VendorId = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetProductID(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ProductId);
+}
+
+void FtProgramDataWrapper::SetProductID(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ProductId = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetManufacturer(const Napi::CallbackInfo &info)
+{
+  return Napi::String::New(info.Env(), manufacturer, 32);
+}
+
+void FtProgramDataWrapper::SetManufacturer(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsString())
+  {
+    StrCopy(value.As<Napi::String>(), manufacturer, 32);
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "String expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetManufacturerID(const Napi::CallbackInfo &info)
+{
+  return Napi::String::New(info.Env(), manufacturerID, 16);
+}
+
+void FtProgramDataWrapper::SetManufacturerID(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsString())
+  {
+    StrCopy(value.As<Napi::String>(), manufacturerID, 16);
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "String expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetDescription(const Napi::CallbackInfo &info)
+{
+  return Napi::String::New(info.Env(), description);
+}
+
+void FtProgramDataWrapper::SetDescription(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsString())
+  {
+    StrCopy(value.As<Napi::String>(), description, 64);
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "String expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetSerialNumber(const Napi::CallbackInfo &info)
+{
+  return Napi::String::New(info.Env(), serialNumber);
+}
+
+void FtProgramDataWrapper::SetSerialNumber(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsString())
+  {
+    StrCopy(value.As<Napi::String>(), serialNumber, 16);
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "String expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetMaxPower(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.MaxPower);
+}
+
+void FtProgramDataWrapper::SetMaxPower(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.MaxPower = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetPnP(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.PnP);
+}
+
+void FtProgramDataWrapper::SetPnP(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.PnP = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetSelfPowered(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.SelfPowered);
+}
+
+void FtProgramDataWrapper::SetSelfPowered(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.SelfPowered = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetRemoteWakeup(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.RemoteWakeup);
+}
+
+void FtProgramDataWrapper::SetRemoteWakeup(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.RemoteWakeup = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetPullDownEnableH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.PullDownEnableH);
+}
+
+void FtProgramDataWrapper::SetPullDownEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.PullDownEnableH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetSerNumEnableH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.SerNumEnableH);
+}
+
+void FtProgramDataWrapper::SetSerNumEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.SerNumEnableH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetACSlowSlewH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ACSlowSlewH);
+}
+
+void FtProgramDataWrapper::SetACSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ACSlowSlewH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetACSchmittInputH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ACSchmittInputH);
+}
+
+void FtProgramDataWrapper::SetACSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ACSchmittInputH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetACDriveCurrentH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ACDriveCurrentH);
+}
+
+void FtProgramDataWrapper::SetACDriveCurrentH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ACDriveCurrentH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetADSlowSlewH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ADSlowSlewH);
+}
+
+void FtProgramDataWrapper::SetADSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ADSlowSlewH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetADSchmittInputH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ADSchmittInputH);
+}
+
+void FtProgramDataWrapper::SetADSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ADSchmittInputH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetADDriveCurrentH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.ADDriveCurrentH);
+}
+
+void FtProgramDataWrapper::SetADDriveCurrentH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.ADDriveCurrentH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus0H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus0H);
+}
+
+void FtProgramDataWrapper::SetCbus0H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus0H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus1H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus1H);
+}
+
+void FtProgramDataWrapper::SetCbus1H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus1H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus2H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus2H);
+}
+
+void FtProgramDataWrapper::SetCbus2H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus2H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus3H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus3H);
+}
+
+void FtProgramDataWrapper::SetCbus3H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus3H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus4H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus4H);
+}
+
+void FtProgramDataWrapper::SetCbus4H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus4H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus5H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus5H);
+}
+
+void FtProgramDataWrapper::SetCbus5H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus5H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus6H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus6H);
+}
+
+void FtProgramDataWrapper::SetCbus6H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus6H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus7H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus7H);
+}
+
+void FtProgramDataWrapper::SetCbus7H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus7H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus8H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus8H);
+}
+
+void FtProgramDataWrapper::SetCbus8H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus8H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus9H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.Cbus9H);
+}
+
+void FtProgramDataWrapper::SetCbus9H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.Cbus9H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetIsFifoH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.IsFifoH);
+}
+
+void FtProgramDataWrapper::SetIsFifoH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.IsFifoH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetIsFifoTarH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.IsFifoTarH);
+}
+
+void FtProgramDataWrapper::SetIsFifoTarH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.IsFifoTarH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetIsFastSerH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.IsFastSerH);
+}
+
+void FtProgramDataWrapper::SetIsFastSerH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.IsFastSerH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetIsFT1248H(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.IsFT1248H);
+}
+
+void FtProgramDataWrapper::SetIsFT1248H(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.IsFT1248H = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetFT1248CpolH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.FT1248CpolH);
+}
+
+void FtProgramDataWrapper::SetFT1248CpolH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.FT1248CpolH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetFT1248LsbH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.FT1248LsbH);
+}
+
+void FtProgramDataWrapper::SetFT1248LsbH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.FT1248LsbH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetFT1248FlowControlH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.FT1248FlowControlH);
+}
+
+void FtProgramDataWrapper::SetFT1248FlowControlH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.FT1248FlowControlH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetIsVCPH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.IsVCPH);
+}
+
+void FtProgramDataWrapper::SetIsVCPH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.IsVCPH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+Napi::Value FtProgramDataWrapper::GetPowerSaveEnableH(const Napi::CallbackInfo &info)
+{
+  return Napi::Number::New(info.Env(), ftData.PowerSaveEnableH);
+}
+
+void FtProgramDataWrapper::SetPowerSaveEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+  if (value.IsNumber())
+  {
+    ftData.PowerSaveEnableH = value.As<Napi::Number>().Uint32Value();
+  }
+  else
+  {
+    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+  }
+}
+
+void FtProgramDataWrapper::StrCopy(Napi::String src, char *dst, int maxLenght)
+{
+  std::string str = src.As<Napi::String>().Utf8Value();
+  int length = str.length();
+  length = length < maxLenght ? length : maxLenght - 1;
+  str.copy(dst, length);
+  dst[length] = '\0';
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -692,7 +1572,7 @@ Napi::Object GetDeviceInfoOp::InvokeSync(const Napi::CallbackInfo &info)
   DWORD deviceID;
   char serialNumber[16];
   char description[64];
-  FT_STATUS ftStatus =  FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
+  FT_STATUS ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
   return CreateResult(info.Env(), ftStatus, ftDevice, deviceID, serialNumber, description);
 }
 
@@ -733,12 +1613,70 @@ Napi::Object GetDeviceInfoOp::CreateResult(
   return result;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// EE_ReadOp class
+////////////////////////////////////////////////////////////////////////////////
+
+class EeReadOp : public BaseFtdiOp
+{
+public:
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
+  static Napi::Promise Invoke(const Napi::CallbackInfo &info);
+  EeReadOp(Napi::Env env, FT_HANDLE ftHandle, PFT_PROGRAM_DATA pftData);
+  void Execute();
+  void OnOK();
+
+private:
+  FT_HANDLE ftHandle;
+  PFT_PROGRAM_DATA pftData;
+};
+
+Napi::Object EeReadOp::Init(Napi::Env env, Napi::Object exports)
+{
+  exports.Set("eeReadSync", Napi::Function::New(env, EeReadOp::InvokeSync));
+  exports.Set("eeRead", Napi::Function::New(env, EeReadOp::Invoke));
+  return exports;
+}
+
+Napi::Object EeReadOp::InvokeSync(const Napi::CallbackInfo &info)
+{
+  FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+  PFT_PROGRAM_DATA pftData = FtProgramDataWrapper::GetData(info[1]);
+  FT_STATUS ftStatus = FT_EE_Read(ftHandle, pftData);
+  printf("QWE\n");
+  return CreateFtResultObject(info.Env(), ftStatus);
+}
+
+Napi::Promise EeReadOp::Invoke(const Napi::CallbackInfo &info)
+{
+  FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+  PFT_PROGRAM_DATA pftData = FtProgramDataWrapper::GetData(info[1]);
+  auto *operation = new EeReadOp(info.Env(), ftHandle, pftData);
+  operation->Queue();
+  return operation->Promise();
+}
+
+EeReadOp::EeReadOp(Napi::Env env, FT_HANDLE ftHandle, PFT_PROGRAM_DATA pftData) : BaseFtdiOp(env), ftHandle(ftHandle), pftData(pftData) {}
+
+void EeReadOp::Execute()
+{
+  ftStatus = FT_EE_Read(ftHandle, pftData);
+}
+
+void EeReadOp::OnOK()
+{
+  Napi::HandleScope scope(Env());
+  deferred.Resolve(CreateFtResultObject(Env(), ftStatus));
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   FtHandlerWrapper::Init(env, exports);
+  FtProgramDataWrapper::Init(env, exports);
   CreateDeviceInfoListOp::Init(env, exports);
   GetDeviceInfoDetailOp::Init(env, exports);
   OpenOp::Init(env, exports);
@@ -748,6 +1686,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   SetFlowControlOp::Init(env, exports);
   SetBaudRateOp::Init(env, exports);
   GetDeviceInfoOp::Init(env, exports);
+  EeReadOp::Init(env, exports);
   return exports;
 }
 
