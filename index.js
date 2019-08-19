@@ -478,8 +478,54 @@ class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
   }
 }
 
+class FtEeUtils {
+  /**
+   * @param {FT_PROGRAM_DATA} eeData
+   * @returns {FT232H_EEPROM_STRUCTURE}
+   */
+  static CreateEe232h (eeData) {
+    const ee232h = new FT232H_EEPROM_STRUCTURE()
+    ee232h.manufacturer = eeData.manufacturer
+    ee232h.manufacturerId = eeData.manufacturerId
+    ee232h.description = eeData.description
+    ee232h.serialNumber = eeData.serialNumber
+    ee232h.vendorId = eeData.vendorId
+    ee232h.productId = eeData.productId
+    ee232h.maxPower = eeData.maxPower
+    ee232h.selfPowered = eeData.selfPowered
+    ee232h.remoteWakeup = eeData.remoteWakeup
+    ee232h.pullDownEnable = eeData.pullDownEnableH
+    ee232h.serNumEnable = eeData.serNumEnableH
+    ee232h.acSlowSlew = eeData.acSlowSlewH
+    ee232h.acSchmittInput = eeData.acSchmittInputH
+    ee232h.acDriveCurrent = eeData.acDriveCurrentH
+    ee232h.adSlowSlew = eeData.adSlowSlewH
+    ee232h.adSchmittInput = eeData.adSchmittInputH
+    ee232h.adDriveCurrent = eeData.adDriveCurrentH
+    ee232h.cbus0 = eeData.cbus0H
+    ee232h.cbus1 = eeData.cbus1H
+    ee232h.cbus2 = eeData.cbus2H
+    ee232h.cbus3 = eeData.cbus3H
+    ee232h.cbus4 = eeData.cbus4H
+    ee232h.cbus5 = eeData.cbus5H
+    ee232h.cbus6 = eeData.cbus6H
+    ee232h.cbus7 = eeData.cbus7H
+    ee232h.cbus8 = eeData.cbus8H
+    ee232h.cbus9 = eeData.cbus9H
+    ee232h.isFifo = eeData.isFifoH
+    ee232h.isFifoTar = eeData.isFifoTarH
+    ee232h.isFastSer = eeData.isFastSerH
+    ee232h.ft1248Cpol = eeData.ft1248CpolH
+    ee232h.ft1248Lsb = eeData.ft1248LsbH
+    ee232h.ft1248FlowControl = eeData.ft1248FlowControlH
+    ee232h.isVCP = eeData.isVCPH
+    ee232h.powerSaveEnable = eeData.powerSaveEnableH
+    return ee232h
+  }
+}
+
 let ftdiIsBisy = false
-class FtdiParallelInvocationError extends Error {}
+class FtParallelInvocationError extends Error {}
 class FtException extends Error {}
 
 function throwErrorIfBusySync (func) {
@@ -491,7 +537,7 @@ function throwErrorIfBusySync (func) {
       ftdiIsBisy = false
     }
   }
-  throw new FtdiParallelInvocationError('Another FTDI method already invoked')
+  throw new FtParallelInvocationError('Another FTDI method already invoked')
 }
 
 async function throwErrorIfBusy (func) {
@@ -503,13 +549,14 @@ async function throwErrorIfBusy (func) {
       ftdiIsBisy = false
     }
   }
-  throw new FtdiParallelInvocationError('Another FTDI method already invoked')
+  throw new FtParallelInvocationError('Another FTDI method already invoked')
 }
 
 /**
  * Method to check ftStatus and ftErrorCondition values for error conditions and throw exceptions accordingly
  * @param {FT_STATUS} ftStatus
  * @param {FT_ERROR} ftErrorCondition
+ * @ignore
  */
 function errorHandler (ftStatus, ftErrorCondition) {
   if (ftStatus !== FT_STATUS.FT_OK) {
@@ -655,7 +702,7 @@ class FTDI {
   /**
    * Synchronously gets the number of FTDI devices available
    * @returns {GetNumberOfDevicesResult}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   static getNumberOfDevicesSync () {
     return throwErrorIfBusySync(_ftdiAddon.createDeviceInfoListSync)
@@ -664,7 +711,7 @@ class FTDI {
   /**
    * Asynchronously gets the number of FTDI devices available
    * @returns {Promise<GetNumberOfDevicesResult>}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   static async getNumberOfDevices () {
     return throwErrorIfBusy(_ftdiAddon.createDeviceInfoList)
@@ -698,7 +745,7 @@ class FTDI {
   /**
    * Synchronously gets information on all of the FTDI devices available
    * @returns {GetDeviceListResult}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   static getDeviceListSync () {
     return throwErrorIfBusySync(() => {
@@ -716,7 +763,7 @@ class FTDI {
   /**
    * Asynchronously gets information on all of the FTDI devices available
    * @returns {Promise<GetDeviceListResult>}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   static async getDeviceList () {
     return throwErrorIfBusy(async () => {
@@ -737,7 +784,7 @@ class FTDI {
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   openByIndexSync (index) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openSync(index)))
@@ -749,7 +796,7 @@ class FTDI {
    * @param {number} index Index of the device to open,
    * note that this cannot be guaranteed to open a specific device
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async openByIndex (index) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.open(index)))
@@ -760,7 +807,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   openBySerialNumberSync (serialNumber) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
@@ -771,7 +818,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} serialNumber Serial number of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async openBySerialNumber (serialNumber) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER)))
@@ -782,7 +829,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   openByDescriptionSync (description) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(description, FT_OPEN_BY_DESCRIPTION)))
@@ -793,7 +840,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {string} description Description of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async openByDescription (description) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION)))
@@ -804,7 +851,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {FT_STATUS} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   openByLocationSync (location) {
     return throwErrorIfBusySync(() => this._openAndSetupSync(() => _ftdiAddon.openExSync(location, FT_OPEN_BY_LOCATION)))
@@ -815,7 +862,7 @@ class FTDI {
    * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
    * @param {number} location Location of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async openByLocation (location) {
     return throwErrorIfBusy(() => this._openAndSetup(() => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION)))
@@ -824,7 +871,7 @@ class FTDI {
   /**
    * Synchronously closes the handle to an open FTDI device
    * @returns {FT_STATUS} ftStatus Value from FT_Close
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   closeSync () {
     return throwErrorIfBusySync(() => {
@@ -840,7 +887,7 @@ class FTDI {
   /**
    * Asynchronously closes the handle to an open FTDI device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async close () {
     return throwErrorIfBusy(async () => {
@@ -864,7 +911,7 @@ class FTDI {
   /**
    * Synchronously gets device information for an open device
    * @returns {GetDeviceInfoResult}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   getDeviceInfoSync () {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.getDeviceInfoSync(this._ftHandle)))
@@ -873,7 +920,7 @@ class FTDI {
   /**
    * Asynchronously gets device information for an open device
    * @returns {GetDeviceInfoResult}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   getDeviceInfo () {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.getDeviceInfo(this._ftHandle)))
@@ -885,7 +932,7 @@ class FTDI {
    * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity)))
@@ -897,7 +944,7 @@ class FTDI {
    * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
    * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)))
@@ -909,7 +956,7 @@ class FTDI {
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   setFlowControlSync (flowControl, xon, xoff) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff)))
@@ -921,7 +968,7 @@ class FTDI {
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async setFlowControl (flowControl, xon, xoff) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)))
@@ -931,7 +978,7 @@ class FTDI {
    * Synchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   setBaudRateSync (baudRate) {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate)))
@@ -941,7 +988,7 @@ class FTDI {
    * Asynchronously sets the current Baud rate.
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
    */
   async setBaudRate (baudRate) {
     return throwErrorIfBusy(() => this._checkFtHandle(() => _ftdiAddon.setBaudRate(this._ftHandle, baudRate)))
@@ -953,9 +1000,10 @@ class FTDI {
    * @property {FT232H_EEPROM_STRUCTURE} ee232h An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
    */
   /**
-   * Reads the EEPROM contents of an FT232H device
+   * Synchronously reads the EEPROM contents of an FT232H device
    * @returns {ReadFT232HEEPROMResult}
-   * @throws {FtdiParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
    */
   readFT232HEEPROMSync () {
     return throwErrorIfBusySync(() => this._checkFtHandleSync(() => {
@@ -969,42 +1017,30 @@ class FTDI {
       eeData.signature2 = 0xFFFFFFFF
       eeData.version = 5
       ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
-      const ee232h = new FT232H_EEPROM_STRUCTURE()
-      ee232h.manufacturer = eeData.manufacturer
-      ee232h.manufacturerId = eeData.manufacturerId
-      ee232h.description = eeData.description
-      ee232h.serialNumber = eeData.serialNumber
-      ee232h.vendorId = eeData.vendorId
-      ee232h.productId = eeData.productId
-      ee232h.maxPower = eeData.maxPower
-      ee232h.selfPowered = eeData.selfPowered
-      ee232h.remoteWakeup = eeData.remoteWakeup
-      ee232h.pullDownEnable = eeData.pullDownEnableH
-      ee232h.serNumEnable = eeData.serNumEnableH
-      ee232h.acSlowSlew = eeData.acSlowSlewH
-      ee232h.acSchmittInput = eeData.acSchmittInputH
-      ee232h.acDriveCurrent = eeData.acDriveCurrentH
-      ee232h.adSlowSlew = eeData.adSlowSlewH
-      ee232h.adSchmittInput = eeData.adSchmittInputH
-      ee232h.adDriveCurrent = eeData.adDriveCurrentH
-      ee232h.cbus0 = eeData.cbus0H
-      ee232h.cbus1 = eeData.cbus1H
-      ee232h.cbus2 = eeData.cbus2H
-      ee232h.cbus3 = eeData.cbus3H
-      ee232h.cbus4 = eeData.cbus4H
-      ee232h.cbus5 = eeData.cbus5H
-      ee232h.cbus6 = eeData.cbus6H
-      ee232h.cbus7 = eeData.cbus7H
-      ee232h.cbus8 = eeData.cbus8H
-      ee232h.cbus9 = eeData.cbus9H
-      ee232h.isFifo = eeData.isFifoH
-      ee232h.isFifoTar = eeData.isFifoTarH
-      ee232h.isFastSer = eeData.isFastSerH
-      ee232h.ft1248Cpol = eeData.ft1248CpolH
-      ee232h.ft1248Lsb = eeData.ft1248LsbH
-      ee232h.ft1248FlowControl = eeData.ft1248FlowControlH
-      ee232h.isVCP = eeData.isVCPH
-      ee232h.powerSaveEnable = eeData.powerSaveEnableH
+      const ee232h = FtEeUtils.CreateEe232h(eeData)
+      return { ftStatus, ee232h }
+    }))
+  }
+
+  /**
+   * Asynchronously reads the EEPROM contents of an FT232H device
+   * @returns {ReadFT232HEEPROMResult}
+   * @throws {FtParallelInvocationError} FTDI methods can not run parallel
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  async readFT232HEEPROM () {
+    return throwErrorIfBusy(() => this._checkFtHandle(async () => {
+      let { ftStatus, ftDevice } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+      if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+        errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+      }
+      /** * @type {FT_PROGRAM_DATA} */
+      const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+      eeData.signature1 = 0x00000000
+      eeData.signature2 = 0xFFFFFFFF
+      eeData.version = 5
+      ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
+      const ee232h = FtEeUtils.CreateEe232h(eeData)
       return { ftStatus, ee232h }
     }))
   }
