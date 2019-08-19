@@ -351,10 +351,10 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @property {number} signature1 Header - must be 0x0000000
  * @property {number} signature2 Header - must be 0xffffffff
  * @property {number} version Header - FT_PROGRAM_DATA version: 0 = original (FT232B), 1 = FT2232 extensions, 2 = FT232R extensions, 3 = FT2232H extensions, 4 = FT4232H extensions, 5 = FT232H extensions
- * @property {number} vendorID
- * @property {number} productID
+ * @property {number} vendorId
+ * @property {number} productId
  * @property {string} manufacturer
- * @property {string} manufacturerID
+ * @property {string} manufacturerId
  * @property {string} description
  * @property {string} serialNumber
  * @property {number} maxPower 0 < MaxPower <= 500
@@ -392,10 +392,10 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
 
 /**
  * Common EEPROM elements for all devices. Inherited to specific device type EEPROMs
- * @property {number} vendorID=0x0403 Vendor ID as supplied by the USB Implementers Forum
- * @property {number} productID=0x6001 Product ID
+ * @property {number} vendorId=0x0403 Vendor ID as supplied by the USB Implementers Forum
+ * @property {number} productId=0x6001 Product ID
  * @property {string} manufacturer="FTDI" Manufacturer name string
- * @property {string} manufacturerID="FT" Manufacturer name abbreviation to be used as a prefix for automatically generated serial numbers
+ * @property {string} manufacturerId="FT" Manufacturer name abbreviation to be used as a prefix for automatically generated serial numbers
  * @property {string} description="USB-Serial Converter" Device description string
  * @property {string} serialNumber="" Device serial number string
  * @property {number} maxPower=0x0090 Maximum power the device needs
@@ -404,10 +404,10 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  */
 class FT_EEPROM_DATA {
   constructor () {
-    this.vendorID = 0x0403
-    this.productID = 0x6001
+    this.vendorId = 0x0403
+    this.productId = 0x6001
     this.manufacturer = 'FTDI'
-    this.manufacturerID = 'FT'
+    this.manufacturerId = 'FT'
     this.description = 'USB-Serial Converter'
     this.serialNumber = ''
     this.maxPower = 0x0090
@@ -857,7 +857,7 @@ class FTDI {
    * @typedef {object} GetDeviceInfoResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
    * @property {FT_DEVICE} ftDevice Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
-   * @property {number} deviceID The device ID (Vendor ID and Product ID) of the current device
+   * @property {number} deviceId The device ID (Vendor ID and Product ID) of the current device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
    */
@@ -971,11 +971,11 @@ class FTDI {
       ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
       const ee232h = new FT232H_EEPROM_STRUCTURE()
       ee232h.manufacturer = eeData.manufacturer
-      ee232h.manufacturerID = eeData.manufacturerID
+      ee232h.manufacturerId = eeData.manufacturerId
       ee232h.description = eeData.description
       ee232h.serialNumber = eeData.serialNumber
-      ee232h.vendorID = eeData.vendorID
-      ee232h.productID = eeData.productID
+      ee232h.vendorId = eeData.vendorId
+      ee232h.productId = eeData.productId
       ee232h.maxPower = eeData.maxPower
       ee232h.selfPowered = eeData.selfPowered
       ee232h.remoteWakeup = eeData.remoteWakeup

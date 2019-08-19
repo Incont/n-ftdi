@@ -96,7 +96,7 @@ public:
 private:
   static Napi::FunctionReference constructor;
   char manufacturer[32];
-  char manufacturerID[16];
+  char manufacturerId[16];
   char description[64];
   char serialNumber[16];
   FT_PROGRAM_DATA ftData;
@@ -106,15 +106,15 @@ private:
   void SetSignature2(const Napi::CallbackInfo &info, const Napi::Value &value);
   Napi::Value GetVersion(const Napi::CallbackInfo &info);
   void SetVersion(const Napi::CallbackInfo &info, const Napi::Value &value);
-  Napi::Value GetVendorID(const Napi::CallbackInfo &info);
-  void SetVendorID(const Napi::CallbackInfo &info, const Napi::Value &value);
-  Napi::Value GetProductID(const Napi::CallbackInfo &info);
-  void SetProductID(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetVendorId(const Napi::CallbackInfo &info);
+  void SetVendorId(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetProductId(const Napi::CallbackInfo &info);
+  void SetProductId(const Napi::CallbackInfo &info, const Napi::Value &value);
 
   Napi::Value GetManufacturer(const Napi::CallbackInfo &info);
   void SetManufacturer(const Napi::CallbackInfo &info, const Napi::Value &value);
-  Napi::Value GetManufacturerID(const Napi::CallbackInfo &info);
-  void SetManufacturerID(const Napi::CallbackInfo &info, const Napi::Value &value);
+  Napi::Value GetManufacturerId(const Napi::CallbackInfo &info);
+  void SetManufacturerId(const Napi::CallbackInfo &info, const Napi::Value &value);
   Napi::Value GetDescription(const Napi::CallbackInfo &info);
   void SetDescription(const Napi::CallbackInfo &info, const Napi::Value &value);
   Napi::Value GetSerialNumber(const Napi::CallbackInfo &info);
@@ -199,11 +199,11 @@ Napi::Object FtProgramDataWrapper::Init(Napi::Env env, Napi::Object exports)
       {InstanceAccessor("signature1", &FtProgramDataWrapper::GetSignature1, &FtProgramDataWrapper::SetSignature1),
        InstanceAccessor("signature2", &FtProgramDataWrapper::GetSignature2, &FtProgramDataWrapper::SetSignature2),
        InstanceAccessor("version", &FtProgramDataWrapper::GetVersion, &FtProgramDataWrapper::SetVersion),
-       InstanceAccessor("vendorID", &FtProgramDataWrapper::GetVendorID, &FtProgramDataWrapper::SetVendorID),
-       InstanceAccessor("productID", &FtProgramDataWrapper::GetProductID, &FtProgramDataWrapper::SetProductID),
+       InstanceAccessor("vendorId", &FtProgramDataWrapper::GetVendorId, &FtProgramDataWrapper::SetVendorId),
+       InstanceAccessor("productId", &FtProgramDataWrapper::GetProductId, &FtProgramDataWrapper::SetProductId),
 
        InstanceAccessor("manufacturer", &FtProgramDataWrapper::GetManufacturer, &FtProgramDataWrapper::SetManufacturer),
-       InstanceAccessor("manufacturerID", &FtProgramDataWrapper::GetManufacturerID, &FtProgramDataWrapper::SetManufacturerID),
+       InstanceAccessor("manufacturerId", &FtProgramDataWrapper::GetManufacturerId, &FtProgramDataWrapper::SetManufacturerId),
        InstanceAccessor("description", &FtProgramDataWrapper::GetDescription, &FtProgramDataWrapper::SetDescription),
        InstanceAccessor("serialNumber", &FtProgramDataWrapper::GetSerialNumber, &FtProgramDataWrapper::SetSerialNumber),
 
@@ -261,7 +261,7 @@ PFT_PROGRAM_DATA FtProgramDataWrapper::GetData(Napi::Value value)
 FtProgramDataWrapper::FtProgramDataWrapper(const Napi::CallbackInfo &info) : Napi::ObjectWrap<FtProgramDataWrapper>(info)
 {
   ftData.Manufacturer = manufacturer;
-  ftData.ManufacturerId = manufacturerID;
+  ftData.ManufacturerId = manufacturerId;
   ftData.Description = description;
   ftData.SerialNumber = serialNumber;
 }
@@ -322,12 +322,12 @@ void FtProgramDataWrapper::SetVersion(const Napi::CallbackInfo &info, const Napi
   }
 }
 
-Napi::Value FtProgramDataWrapper::GetVendorID(const Napi::CallbackInfo &info)
+Napi::Value FtProgramDataWrapper::GetVendorId(const Napi::CallbackInfo &info)
 {
   return Napi::Number::New(info.Env(), ftData.VendorId);
 }
 
-void FtProgramDataWrapper::SetVendorID(const Napi::CallbackInfo &info, const Napi::Value &value)
+void FtProgramDataWrapper::SetVendorId(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
   if (value.IsNumber())
   {
@@ -339,12 +339,12 @@ void FtProgramDataWrapper::SetVendorID(const Napi::CallbackInfo &info, const Nap
   }
 }
 
-Napi::Value FtProgramDataWrapper::GetProductID(const Napi::CallbackInfo &info)
+Napi::Value FtProgramDataWrapper::GetProductId(const Napi::CallbackInfo &info)
 {
   return Napi::Number::New(info.Env(), ftData.ProductId);
 }
 
-void FtProgramDataWrapper::SetProductID(const Napi::CallbackInfo &info, const Napi::Value &value)
+void FtProgramDataWrapper::SetProductId(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
   if (value.IsNumber())
   {
@@ -373,16 +373,16 @@ void FtProgramDataWrapper::SetManufacturer(const Napi::CallbackInfo &info, const
   }
 }
 
-Napi::Value FtProgramDataWrapper::GetManufacturerID(const Napi::CallbackInfo &info)
+Napi::Value FtProgramDataWrapper::GetManufacturerId(const Napi::CallbackInfo &info)
 {
-  return Napi::String::New(info.Env(), manufacturerID);
+  return Napi::String::New(info.Env(), manufacturerId);
 }
 
-void FtProgramDataWrapper::SetManufacturerID(const Napi::CallbackInfo &info, const Napi::Value &value)
+void FtProgramDataWrapper::SetManufacturerId(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
   if (value.IsString())
   {
-    StrCopy(value.As<Napi::String>(), manufacturerID, 16);
+    StrCopy(value.As<Napi::String>(), manufacturerId, 16);
   }
   else
   {
@@ -1546,14 +1546,14 @@ public:
 private:
   FT_HANDLE ftHandle;
   FT_DEVICE ftDevice;
-  DWORD deviceID;
+  DWORD deviceId;
   char serialNumber[16];
   char description[64];
   inline static Napi::Object CreateResult(
       Napi::Env env,
       FT_STATUS ftStatus,
       FT_DEVICE ftDevice,
-      DWORD deviceID,
+      DWORD deviceId,
       char *serialNumber,
       char *description);
 };
@@ -1569,11 +1569,11 @@ Napi::Object GetDeviceInfoOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   FT_DEVICE ftDevice;
-  DWORD deviceID;
+  DWORD deviceId;
   char serialNumber[16];
   char description[64];
-  FT_STATUS ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
-  return CreateResult(info.Env(), ftStatus, ftDevice, deviceID, serialNumber, description);
+  FT_STATUS ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceId, serialNumber, description, nullptr);
+  return CreateResult(info.Env(), ftStatus, ftDevice, deviceId, serialNumber, description);
 }
 
 Napi::Promise GetDeviceInfoOp::Invoke(const Napi::CallbackInfo &info)
@@ -1588,26 +1588,26 @@ GetDeviceInfoOp::GetDeviceInfoOp(Napi::Env env, FT_HANDLE ftHandle) : BaseFtdiOp
 
 void GetDeviceInfoOp::Execute()
 {
-  ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceID, serialNumber, description, nullptr);
+  ftStatus = FT_GetDeviceInfo(ftHandle, &ftDevice, &deviceId, serialNumber, description, nullptr);
 }
 
 void GetDeviceInfoOp::OnOK()
 {
   Napi::HandleScope scope(Env());
-  deferred.Resolve(CreateResult(Env(), ftStatus, ftDevice, deviceID, serialNumber, description));
+  deferred.Resolve(CreateResult(Env(), ftStatus, ftDevice, deviceId, serialNumber, description));
 }
 
 Napi::Object GetDeviceInfoOp::CreateResult(
     Napi::Env env,
     FT_STATUS ftStatus,
     FT_DEVICE ftDevice,
-    DWORD deviceID,
+    DWORD deviceId,
     char *serialNumber,
     char *description)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
   result.Set("ftDevice", ftDevice);
-  result.Set("deviceID", deviceID);
+  result.Set("deviceId", deviceId);
   result.Set("serialNumber", serialNumber);
   result.Set("description", description);
   return result;
