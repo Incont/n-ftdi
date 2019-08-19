@@ -359,15 +359,15 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @property {string} serialNumber
  * @property {number} maxPower 0 < MaxPower <= 500
  * @property {number} pnp 0 = disabled, 1 = enabled
- * @property {number} selfPowered 0 = bus powered, 1 = self powered
- * @property {number} remoteWakeup 0 = not capable, 1 = capable
- * @property {number} pullDownEnableH non-zero if pull down enabled
- * @property {number} serNumEnableH non-zero if serial number to be used
- * @property {number} acSlowSlewH  non-zero if AC pins have slow slew
- * @property {number} acSchmittInputH non-zero if AC pins are Schmitt input
+ * @property {boolean} selfPowered 0 = bus powered, 1 = self powered
+ * @property {boolean} remoteWakeup 0 = not capable, 1 = capable
+ * @property {boolean} pullDownEnableH non-zero if pull down enabled
+ * @property {boolean} serNumEnableH non-zero if serial number to be used
+ * @property {boolean} acSlowSlewH  non-zero if AC pins have slow slew
+ * @property {boolean} acSchmittInputH non-zero if AC pins are Schmitt input
  * @property {number} acDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
- * @property {number} adSlowSlewH non-zero if AD pins have slow slew
- * @property {number} adSchmittInputH non-zero if AD pins are Schmitt input
+ * @property {boolean} adSlowSlewH non-zero if AD pins have slow slew
+ * @property {boolean} adSchmittInputH non-zero if AD pins are Schmitt input
  * @property {number} adDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
  * @property {number} cbus0H Cbus Mux control
  * @property {number} cbus1H Cbus Mux control
@@ -379,15 +379,15 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @property {number} cbus7H Cbus Mux control
  * @property {number} cbus8H Cbus Mux control
  * @property {number} cbus9H Cbus Mux control
- * @property {number} isFifoH non-zero if interface is 245 FIFO
- * @property {number} isFifoTarH non-zero if interface is 245 FIFO CPU target
- * @property {number} isFastSerH  non-zero if interface is Fast serial
- * @property {number} isFT1248H non-zero if interface is FT1248
- * @property {number} ft1248CpolH FT1248 clock polarity - clock idle high (1) or clock idle low (0)
- * @property {number} ft1248LsbH FT1248 data is LSB (1) or MSB (0)
- * @property {number} ft1248FlowControlH FT1248 flow control enable
- * @property {number} isVCPH if interface is to use VCP drivers
- * @property {number} powerSaveEnableH non-zero if using ACBUS7 to save power for self-powered
+ * @property {boolean} isFifoH non-zero if interface is 245 FIFO
+ * @property {boolean} isFifoTarH non-zero if interface is 245 FIFO CPU target
+ * @property {boolean} isFastSerH  non-zero if interface is Fast serial
+ * @property {boolean} isFT1248H non-zero if interface is FT1248
+ * @property {boolean} ft1248CpolH FT1248 clock polarity - clock idle high (1) or clock idle low (0)
+ * @property {boolean} ft1248LsbH FT1248 data is LSB (1) or MSB (0)
+ * @property {boolean} ft1248FlowControlH FT1248 flow control enable
+ * @property {boolean} isVCPH if interface is to use VCP drivers
+ * @property {boolean} powerSaveEnableH non-zero if using ACBUS7 to save power for self-powered
  */
 
 /**

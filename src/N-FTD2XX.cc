@@ -477,86 +477,86 @@ void FtProgramDataWrapper::SetSelfPowered(const Napi::CallbackInfo &info, const 
 
 Napi::Value FtProgramDataWrapper::GetRemoteWakeup(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.RemoteWakeup);
+  return Napi::Boolean::New(info.Env(), ftData.RemoteWakeup);
 }
 
 void FtProgramDataWrapper::SetRemoteWakeup(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.RemoteWakeup = value.As<Napi::Number>().Uint32Value();
+    ftData.RemoteWakeup = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetPullDownEnableH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.PullDownEnableH);
+  return Napi::Boolean::New(info.Env(), ftData.PullDownEnableH);
 }
 
 void FtProgramDataWrapper::SetPullDownEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.PullDownEnableH = value.As<Napi::Number>().Uint32Value();
+    ftData.PullDownEnableH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetSerNumEnableH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.SerNumEnableH);
+  return Napi::Boolean::New(info.Env(), ftData.SerNumEnableH);
 }
 
 void FtProgramDataWrapper::SetSerNumEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.SerNumEnableH = value.As<Napi::Number>().Uint32Value();
+    ftData.SerNumEnableH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetACSlowSlewH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.ACSlowSlewH);
+  return Napi::Boolean::New(info.Env(), ftData.ACSlowSlewH);
 }
 
 void FtProgramDataWrapper::SetACSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.ACSlowSlewH = value.As<Napi::Number>().Uint32Value();
+    ftData.ACSlowSlewH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetACSchmittInputH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.ACSchmittInputH);
+  return Napi::Boolean::New(info.Env(), ftData.ACSchmittInputH);
 }
 
 void FtProgramDataWrapper::SetACSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.ACSchmittInputH = value.As<Napi::Number>().Uint32Value();
+    ftData.ACSchmittInputH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
@@ -579,35 +579,35 @@ void FtProgramDataWrapper::SetACDriveCurrentH(const Napi::CallbackInfo &info, co
 
 Napi::Value FtProgramDataWrapper::GetADSlowSlewH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.ADSlowSlewH);
+  return Napi::Boolean::New(info.Env(), ftData.ADSlowSlewH);
 }
 
 void FtProgramDataWrapper::SetADSlowSlewH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.ADSlowSlewH = value.As<Napi::Number>().Uint32Value();
+    ftData.ADSlowSlewH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetADSchmittInputH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.ADSchmittInputH);
+  return Napi::Boolean::New(info.Env(), ftData.ADSchmittInputH);
 }
 
 void FtProgramDataWrapper::SetADSchmittInputH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.ADSchmittInputH = value.As<Napi::Number>().Uint32Value();
+    ftData.ADSchmittInputH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
@@ -800,154 +800,154 @@ void FtProgramDataWrapper::SetCbus9H(const Napi::CallbackInfo &info, const Napi:
 
 Napi::Value FtProgramDataWrapper::GetIsFifoH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.IsFifoH);
+  return Napi::Boolean::New(info.Env(), ftData.IsFifoH);
 }
 
 void FtProgramDataWrapper::SetIsFifoH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.IsFifoH = value.As<Napi::Number>().Uint32Value();
+    ftData.IsFifoH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetIsFifoTarH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.IsFifoTarH);
+  return Napi::Boolean::New(info.Env(), ftData.IsFifoTarH);
 }
 
 void FtProgramDataWrapper::SetIsFifoTarH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.IsFifoTarH = value.As<Napi::Number>().Uint32Value();
+    ftData.IsFifoTarH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetIsFastSerH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.IsFastSerH);
+  return Napi::Boolean::New(info.Env(), ftData.IsFastSerH);
 }
 
 void FtProgramDataWrapper::SetIsFastSerH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.IsFastSerH = value.As<Napi::Number>().Uint32Value();
+    ftData.IsFastSerH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetIsFT1248H(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.IsFT1248H);
+  return Napi::Boolean::New(info.Env(), ftData.IsFT1248H);
 }
 
 void FtProgramDataWrapper::SetIsFT1248H(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.IsFT1248H = value.As<Napi::Number>().Uint32Value();
+    ftData.IsFT1248H = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetFT1248CpolH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.FT1248CpolH);
+  return Napi::Boolean::New(info.Env(), ftData.FT1248CpolH);
 }
 
 void FtProgramDataWrapper::SetFT1248CpolH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.FT1248CpolH = value.As<Napi::Number>().Uint32Value();
+    ftData.FT1248CpolH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetFT1248LsbH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.FT1248LsbH);
+  return Napi::Boolean::New(info.Env(), ftData.FT1248LsbH);
 }
 
 void FtProgramDataWrapper::SetFT1248LsbH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.FT1248LsbH = value.As<Napi::Number>().Uint32Value();
+    ftData.FT1248LsbH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetFT1248FlowControlH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.FT1248FlowControlH);
+  return Napi::Boolean::New(info.Env(), ftData.FT1248FlowControlH);
 }
 
 void FtProgramDataWrapper::SetFT1248FlowControlH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.FT1248FlowControlH = value.As<Napi::Number>().Uint32Value();
+    ftData.FT1248FlowControlH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetIsVCPH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.IsVCPH);
+  return Napi::Boolean::New(info.Env(), ftData.IsVCPH);
 }
 
 void FtProgramDataWrapper::SetIsVCPH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.IsVCPH = value.As<Napi::Number>().Uint32Value();
+    ftData.IsVCPH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
 Napi::Value FtProgramDataWrapper::GetPowerSaveEnableH(const Napi::CallbackInfo &info)
 {
-  return Napi::Number::New(info.Env(), ftData.PowerSaveEnableH);
+  return Napi::Boolean::New(info.Env(), ftData.PowerSaveEnableH);
 }
 
 void FtProgramDataWrapper::SetPowerSaveEnableH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-  if (value.IsNumber())
+  if (value.IsBoolean())
   {
-    ftData.PowerSaveEnableH = value.As<Napi::Number>().Uint32Value();
+    ftData.PowerSaveEnableH = value.As<Napi::Boolean>().Value();
   }
   else
   {
-    Napi::TypeError::New(info.Env(), "Number expected").ThrowAsJavaScriptException();
+    Napi::TypeError::New(info.Env(), "Boolean expected").ThrowAsJavaScriptException();
   }
 }
 
