@@ -1140,7 +1140,7 @@ Napi::Object GetDeviceInfoDetailOp::CreateResult(
   deviceInfoDetail.Set("serialNumber", serialNumber);
   deviceInfoDetail.Set("description", description);
   deviceInfoDetail.Set("ftHandle", nFtHandler);
-  result.Set("deviceInfoDetail", deviceInfoDetail);
+  result.Set("deviceInfoNode", deviceInfoDetail);
   return result;
 }
 

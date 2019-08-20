@@ -531,10 +531,10 @@ class FtException extends Error {}
 function throwErrorIfBusySync (func) {
   if (!ftdiIsBisy) {
     try {
-      ftdiIsBisy = true
+      //ftdiIsBisy = true
       return func()
     } finally {
-      ftdiIsBisy = false
+     //ftdiIsBisy = false
     }
   }
   throw new FtParallelInvocationError('Another FTDI method already invoked')
@@ -543,7 +543,7 @@ function throwErrorIfBusySync (func) {
 async function throwErrorIfBusy (func) {
   if (!ftdiIsBisy) {
     try {
-      ftdiIsBisy = true
+      //ftdiIsBisy = true
       return await func()
     } finally {
       ftdiIsBisy = false
@@ -728,7 +728,7 @@ class FTDI {
    */
   /**
    * Type that holds device information for GetDeviceInfoDetail method
-   * @typedef {object} DeviceInfoDetail
+   * @typedef {object} DeviceInfoNode
    * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
@@ -740,7 +740,7 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceListResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {Array.<DeviceInfoDetail>} deviceInfoList
+   * @property {Array.<DeviceInfoNode>} deviceInfoDetailList
    */
   /**
    * Synchronously gets information on all of the FTDI devices available
@@ -749,14 +749,14 @@ class FTDI {
    */
   static getDeviceListSync () {
     return throwErrorIfBusySync(() => {
-      const deviceInfoList = []
+      const deviceInfoNodeList = []
       let { ftStatus, devCount } = _ftdiAddon.createDeviceInfoListSync()
       for (let i = 0; i < devCount; ++i) {
-        const deviceInfoDetail = _ftdiAddon.getDeviceInfoDetailSync(i)
-        ftStatus = deviceInfoDetail.ftStatus
-        deviceInfoList[i] = deviceInfoDetail.deviceInfo
+        const obj = _ftdiAddon.getDeviceInfoDetailSync(i)
+        ftStatus = obj.ftStatus
+        deviceInfoNodeList[i] = obj.deviceInfoNode
       }
-      return { ftStatus, deviceInfoList }
+      return { ftStatus, deviceInfoNodeList }
     })
   }
 
@@ -770,9 +770,9 @@ class FTDI {
       const deviceInfoList = []
       let { ftStatus, devCount } = await _ftdiAddon.createDeviceInfoList()
       for (let i = 0; i < devCount; ++i) {
-        const deviceInfoDetail = await _ftdiAddon.getDeviceInfoDetail(i)
-        ftStatus = deviceInfoDetail.ftStatus
-        deviceInfoList[i] = deviceInfoDetail.deviceInfo
+        const obj = await _ftdiAddon.getDeviceInfoDetail(i)
+        ftStatus = obj.ftStatus
+        deviceInfoList[i] = obj.deviceInfoNode
       }
       return { ftStatus, deviceInfoList }
     })

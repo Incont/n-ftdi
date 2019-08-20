@@ -1,5 +1,6 @@
-'use strict';
+//'use strict';
 let FTD2XX = require('./index');
+/*
 (function() {
     let ftdi = new FTD2XX.FTDI();
     let { ftStatus, devCount } = FTD2XX.FTDI.getNumberOfDevicesSync();
@@ -16,6 +17,8 @@ let FTD2XX = require('./index');
     console.log(Object.keys(FTD2XX.FT_STATUS)[ftdi.closeSync()]);
     console.log(FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]);
 })();
+*/
+
 /*
 
 function myFunc(arg) {
@@ -45,6 +48,7 @@ console.log("Ts0 " + ts0);
 console.log("Ts1 " + ts1);
 console.log("Ts2 " + ts2);
 */
+/*
 FTD2XX.FTDI.getDeviceList().then(result => {
     console.log(result);
     (() => console.log(this))();
@@ -69,4 +73,30 @@ async function add1(x) {
 }
 console.log("!!!!");
 add1(1).then(r => console.log("result" + r));
-console.log("++++");
+console.log("++++");*/
+//let f = new FTD2XX.FTDI()
+//console.log('!!!!!!!!!!!!!!!!')
+//console.log(f.openByIndexSync(0))
+//console.log(f.getDeviceInfoSync())
+//f.readFT232HEEPROM().then(r => console.log(r))
+
+/*
+const _ftdiAddon = require('bindings')('N-FTD2XX')
+let t = new _ftdiAddon.FT_PROGRAM_DATA()
+t.signature1 = 10
+t.manufacturerID = '12345678901234567'
+console.log(t.manufacturerID)
+*/
+/*
+const _ftdiAddon = require('bindings')('N-FTD2XX')
+_ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
+_ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
+_ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
+_ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
+_ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
+_ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
+*/
+
+FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
+FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
+FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
