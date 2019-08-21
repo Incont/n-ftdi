@@ -596,22 +596,6 @@ class FTDI {
     this._ftHandle = null
   }
 
-  _checkFtHandleSync (invokeIfOk) {
-    let ftStatus = FT_STATUS.FT_OTHER_ERROR
-    if (this._ftHandle != null && this._ftHandle.value !== 0) {
-      ftStatus = invokeIfOk()
-    }
-    return ftStatus
-  }
-
-  async _checkFtHandle (invokeIfOk) {
-    let ftStatus = FT_STATUS.FT_OTHER_ERROR
-    if (this._ftHandle != null && this._ftHandle.value !== 0) {
-      ftStatus = await invokeIfOk()
-    }
-    return ftStatus
-  }
-
   _setUpFtdiDeviceSync () {
     // Initialise port data characteristics
     const wordLength = FT_DATA_BITS.FT_BITS_8
@@ -648,7 +632,7 @@ class FTDI {
 
   _openAndSetupSync (openFuncSync) {
     let { ftStatus, ftHandle } = openFuncSync()
-    if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+    if (ftStatus === FT_STATUS.FT_OK && ftHandle) {
       this._ftHandle = ftHandle
       ftStatus = this._setUpFtdiDeviceSync()
     } else {
@@ -659,7 +643,7 @@ class FTDI {
 
   async _openAndSetup (openFunc) {
     let { ftStatus, ftHandle } = await openFunc()
-    if (ftStatus === FT_STATUS.FT_OK || ftHandle.value !== 0) {
+    if (ftStatus === FT_STATUS.FT_OK && ftHandle) {
       this._ftHandle = ftHandle
       ftStatus = await this._setUpFtdiDevice()
     } else {
@@ -831,7 +815,8 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_Close
    */
   closeSync () {
-    const ftStatus = this._checkFtHandleSync(() => _ftdiAddon.closeSync(this._ftHandle))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const ftStatus = _ftdiAddon.closeSync(this._ftHandle)
     if (ftStatus === FT_STATUS.FT_OK) {
       this._ftHandle.free()
       this._ftHandle = null
@@ -844,7 +829,8 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
    */
   async close () {
-    const ftStatus = await this._checkFtHandle(() => _ftdiAddon.close(this._ftHandle))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const ftStatus = await _ftdiAddon.close(this._ftHandle)
     if (ftStatus === FT_STATUS.FT_OK) {
       this._ftHandle.free()
       this._ftHandle = null
@@ -855,17 +841,18 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceInfoResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {FT_DEVICE} ftDevice Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
-   * @property {number} deviceId The device ID (Vendor ID and Product ID) of the current device
-   * @property {string} serialNumber The device serial number
-   * @property {string} description The device description
+   * @property {FT_DEVICE} [ftDevice] Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+   * @property {number} [deviceId] The device ID (Vendor ID and Product ID) of the current device
+   * @property {string} [serialNumber] The device serial number
+   * @property {string} [description] The device description
    */
   /**
    * Synchronously gets device information for an open device
    * @returns {GetDeviceInfoResult}
    */
   getDeviceInfoSync () {
-    return this._checkFtHandleSync(() => _ftdiAddon.getDeviceInfoSync(this._ftHandle))
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getDeviceInfoSync(this._ftHandle)
   }
 
   /**
@@ -873,7 +860,8 @@ class FTDI {
    * @returns {GetDeviceInfoResult}
    */
   getDeviceInfo () {
-    return this._checkFtHandle(() => _ftdiAddon.getDeviceInfo(this._ftHandle))
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getDeviceInfo(this._ftHandle)
   }
 
   /**
@@ -884,7 +872,8 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity)
   }
 
   /**
@@ -895,7 +884,8 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
-    return this._checkFtHandle(() => _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)
   }
 
   /**
@@ -906,7 +896,8 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
    */
   setFlowControlSync (flowControl, xon, xoff) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff)
   }
 
   /**
@@ -917,7 +908,8 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
    */
   async setFlowControl (flowControl, xon, xoff) {
-    return this._checkFtHandle(() => _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)
   }
 
   /**
@@ -926,7 +918,8 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
    */
   setBaudRateSync (baudRate) {
-    return this._checkFtHandleSync(() => _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate)
   }
 
   /**
@@ -935,13 +928,14 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
    */
   async setBaudRate (baudRate) {
-    return this._checkFtHandle(() => _ftdiAddon.setBaudRate(this._ftHandle, baudRate))
+    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setBaudRate(this._ftHandle, baudRate)
   }
 
   /**
    * @typedef {object} ReadFT232HEEPROMResult
    * @property {FT_STATUS} ftStatus Value from FT_EE_Read
-   * @property {FT232H_EEPROM_STRUCTURE} ee232h An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
+   * @property {FT232H_EEPROM_STRUCTURE} [ee232h] An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
    */
   /**
    * Synchronously reads the EEPROM contents of an FT232H device
@@ -949,20 +943,19 @@ class FTDI {
    * @throws {FtException} Thrown when the current device does not match the type required by this method
    */
   readFT232HEEPROMSync () {
-    return this._checkFtHandleSync(() => {
-      let { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
-      if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
-        errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
-      }
-      /** * @type {FT_PROGRAM_DATA} */
-      const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
-      eeData.signature1 = 0x00000000
-      eeData.signature2 = 0xFFFFFFFF
-      eeData.version = 5
-      ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
-      const ee232h = FtEeUtils.CreateEe232h(eeData)
-      return { ftStatus, ee232h }
-    })
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    let { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 5
+    ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
+    const ee232h = FtEeUtils.CreateEe232h(eeData)
+    return { ftStatus, ee232h }
   }
 
   /**
@@ -971,20 +964,19 @@ class FTDI {
    * @throws {FtException} Thrown when the current device does not match the type required by this method
    */
   async readFT232HEEPROM () {
-    return this._checkFtHandle(async () => {
-      let { ftStatus, ftDevice } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
-      if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
-        errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
-      }
-      /** * @type {FT_PROGRAM_DATA} */
-      const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
-      eeData.signature1 = 0x00000000
-      eeData.signature2 = 0xFFFFFFFF
-      eeData.version = 5
-      ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
-      const ee232h = FtEeUtils.CreateEe232h(eeData)
-      return { ftStatus, ee232h }
-    })
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    let { ftStatus, ftDevice } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 5
+    ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
+    const ee232h = FtEeUtils.CreateEe232h(eeData)
+    return { ftStatus, ee232h }
   }
 }
 
