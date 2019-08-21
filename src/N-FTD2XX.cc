@@ -1129,18 +1129,18 @@ Napi::Object GetDeviceInfoDetailOp::CreateResult(
     FT_HANDLE ftHandle)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
-  Napi::Object deviceInfoDetail = Napi::Object::New(env);
+  Napi::Object deviceInfoNode = Napi::Object::New(env);
   Napi::Value nFtHandler = ftHandle == nullptr
                                ? env.Null()
                                : FtHandlerWrapper::NewInstance(env, ftHandle);
-  deviceInfoDetail.Set("flags", flags);
-  deviceInfoDetail.Set("type", type);
-  deviceInfoDetail.Set("id", id);
-  deviceInfoDetail.Set("locId", locId);
-  deviceInfoDetail.Set("serialNumber", serialNumber);
-  deviceInfoDetail.Set("description", description);
-  deviceInfoDetail.Set("ftHandle", nFtHandler);
-  result.Set("deviceInfoNode", deviceInfoDetail);
+  deviceInfoNode.Set("flags", flags);
+  deviceInfoNode.Set("type", type);
+  deviceInfoNode.Set("id", id);
+  deviceInfoNode.Set("locId", locId);
+  deviceInfoNode.Set("serialNumber", serialNumber);
+  deviceInfoNode.Set("description", description);
+  deviceInfoNode.Set("ftHandle", nFtHandler);
+  result.Set("deviceInfoNode", deviceInfoNode);
   return result;
 }
 
@@ -1370,7 +1370,7 @@ private:
 Napi::Object SetDataCharacteristicsOp::Init(Napi::Env env, Napi::Object exports)
 {
   exports.Set("setDataCharacteristicsSync", Napi::Function::New(env, SetDataCharacteristicsOp::InvokeSync));
-  exports.Set("SetDataCharacteristics", Napi::Function::New(env, SetDataCharacteristicsOp::Invoke));
+  exports.Set("setDataCharacteristics", Napi::Function::New(env, SetDataCharacteristicsOp::Invoke));
   return exports;
 }
 
@@ -1644,7 +1644,6 @@ Napi::Object EeReadOp::InvokeSync(const Napi::CallbackInfo &info)
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   PFT_PROGRAM_DATA pftData = FtProgramDataWrapper::GetData(info[1]);
   FT_STATUS ftStatus = FT_EE_Read(ftHandle, pftData);
-  printf("QWE\n");
   return CreateFtResultObject(info.Env(), ftStatus);
 }
 

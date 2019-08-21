@@ -10,7 +10,7 @@ let FTD2XX = require('./index');
     console.log("!!!");
   //  console.log(FTD2XX.FTDI.getDeviceList().deviceInfoList[0].ftHandle.free());
     let t = ftdi.openByIndexSync(0);
-    let r = FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]
+    let r = FTD2XX.FTDI.getDeviceListSync().deviceInfoList[0]F
   r.f
     console.log(r.type)
     console.log(r);
@@ -97,6 +97,9 @@ _ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
 _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 */
 
-FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
-FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
-FTD2XX.FTDI.getDeviceList().then(r => console.log(r))
+let ftdi = new FTD2XX.FTDI()
+FTD2XX.FTDI.getDeviceList()
+  .then(r => console.log(r))
+  .then(() => ftdi.openByIndex(0))
+  .then(async () => console.log(await ftdi.getDeviceInfo()))
+  .then(async () => console.log(await ftdi.readFT232HEEPROM()))
