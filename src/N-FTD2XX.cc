@@ -981,16 +981,16 @@ Napi::Promise BaseFtdiOp::Promise()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// CreateDeviceInfoListOp class
+// FtCreateDeviceInfoListOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class CreateDeviceInfoListOp : public BaseFtdiOp
+class FtCreateDeviceInfoListOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  CreateDeviceInfoListOp(Napi::Env env);
+  FtCreateDeviceInfoListOp(Napi::Env env);
   void Execute();
   void OnOK();
 
@@ -999,41 +999,41 @@ private:
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount);
 };
 
-Napi::Object CreateDeviceInfoListOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtCreateDeviceInfoListOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("createDeviceInfoListSync", Napi::Function::New(env, CreateDeviceInfoListOp::InvokeSync));
-  exports.Set("createDeviceInfoList", Napi::Function::New(env, CreateDeviceInfoListOp::Invoke));
+  exports.Set("createDeviceInfoListSync", Napi::Function::New(env, FtCreateDeviceInfoListOp::InvokeSync));
+  exports.Set("createDeviceInfoList", Napi::Function::New(env, FtCreateDeviceInfoListOp::Invoke));
   return exports;
 }
 
-Napi::Object CreateDeviceInfoListOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Object FtCreateDeviceInfoListOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   DWORD devCount;
   FT_STATUS ftStatus = FT_CreateDeviceInfoList(&devCount);
   return CreateResult(info.Env(), ftStatus, devCount);
 }
 
-Napi::Promise CreateDeviceInfoListOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtCreateDeviceInfoListOp::Invoke(const Napi::CallbackInfo &info)
 {
-  auto *operation = new CreateDeviceInfoListOp(info.Env());
+  auto *operation = new FtCreateDeviceInfoListOp(info.Env());
   operation->Queue();
   return operation->Promise();
 }
 
-CreateDeviceInfoListOp::CreateDeviceInfoListOp(Napi::Env env) : BaseFtdiOp(env) {}
+FtCreateDeviceInfoListOp::FtCreateDeviceInfoListOp(Napi::Env env) : BaseFtdiOp(env) {}
 
-void CreateDeviceInfoListOp::Execute()
+void FtCreateDeviceInfoListOp::Execute()
 {
   ftStatus = FT_CreateDeviceInfoList(&devCount);
 }
 
-void CreateDeviceInfoListOp::OnOK()
+void FtCreateDeviceInfoListOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(CreateResult(Env(), ftStatus, devCount));
 }
 
-Napi::Object CreateDeviceInfoListOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount)
+Napi::Object FtCreateDeviceInfoListOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD devCount)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
   result.Set("devCount", devCount);
@@ -1041,16 +1041,16 @@ Napi::Object CreateDeviceInfoListOp::CreateResult(Napi::Env env, FT_STATUS ftSta
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// GetDeviceInfoDetailOp class
+// FtGetDeviceInfoDetailOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class GetDeviceInfoDetailOp : public BaseFtdiOp
+class FtGetDeviceInfoDetailOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  GetDeviceInfoDetailOp(Napi::Env env, DWORD index);
+  FtGetDeviceInfoDetailOp(Napi::Env env, DWORD index);
   void Execute();
   void OnOK();
 
@@ -1075,14 +1075,14 @@ private:
       FT_HANDLE ftHandle);
 };
 
-Napi::Object GetDeviceInfoDetailOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtGetDeviceInfoDetailOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("getDeviceInfoDetailSync", Napi::Function::New(env, GetDeviceInfoDetailOp::InvokeSync));
-  exports.Set("getDeviceInfoDetail", Napi::Function::New(env, GetDeviceInfoDetailOp::Invoke));
+  exports.Set("getDeviceInfoDetailSync", Napi::Function::New(env, FtGetDeviceInfoDetailOp::InvokeSync));
+  exports.Set("getDeviceInfoDetail", Napi::Function::New(env, FtGetDeviceInfoDetailOp::Invoke));
   return exports;
 }
 
-Napi::Object GetDeviceInfoDetailOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Object FtGetDeviceInfoDetailOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
   DWORD flags;
@@ -1096,28 +1096,28 @@ Napi::Object GetDeviceInfoDetailOp::InvokeSync(const Napi::CallbackInfo &info)
   return CreateResult(info.Env(), ftStatus, flags, id, type, locId, serialNumber, description, ftHandle);
 }
 
-Napi::Promise GetDeviceInfoDetailOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtGetDeviceInfoDetailOp::Invoke(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
-  auto *operation = new GetDeviceInfoDetailOp(info.Env(), index);
+  auto *operation = new FtGetDeviceInfoDetailOp(info.Env(), index);
   operation->Queue();
   return operation->Promise();
 }
 
-GetDeviceInfoDetailOp::GetDeviceInfoDetailOp(Napi::Env env, DWORD index) : BaseFtdiOp(env), index(index) {}
+FtGetDeviceInfoDetailOp::FtGetDeviceInfoDetailOp(Napi::Env env, DWORD index) : BaseFtdiOp(env), index(index) {}
 
-void GetDeviceInfoDetailOp::Execute()
+void FtGetDeviceInfoDetailOp::Execute()
 {
   ftStatus = FT_GetDeviceInfoDetail(index, &flags, &type, &id, &locId, serialNumber, description, &ftHandle);
 }
 
-void GetDeviceInfoDetailOp::OnOK()
+void FtGetDeviceInfoDetailOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(CreateResult(Env(), ftStatus, flags, id, type, locId, serialNumber, description, ftHandle));
 }
 
-Napi::Object GetDeviceInfoDetailOp::CreateResult(
+Napi::Object FtGetDeviceInfoDetailOp::CreateResult(
     Napi::Env env,
     FT_STATUS ftStatus,
     DWORD flags,
@@ -1145,16 +1145,16 @@ Napi::Object GetDeviceInfoDetailOp::CreateResult(
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// OpenOp class
+// FtOpenOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class OpenOp : public BaseFtdiOp
+class FtOpenOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  OpenOp(Napi::Env env, DWORD index);
+  FtOpenOp(Napi::Env env, DWORD index);
   void Execute();
   void OnOK();
 
@@ -1164,14 +1164,14 @@ private:
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle);
 };
 
-Napi::Object OpenOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtOpenOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("openSync", Napi::Function::New(env, OpenOp::InvokeSync));
-  exports.Set("open", Napi::Function::New(env, OpenOp::Invoke));
+  exports.Set("openSync", Napi::Function::New(env, FtOpenOp::InvokeSync));
+  exports.Set("open", Napi::Function::New(env, FtOpenOp::Invoke));
   return exports;
 }
 
-Napi::Object OpenOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Object FtOpenOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
   FT_HANDLE ftHandle;
@@ -1179,28 +1179,28 @@ Napi::Object OpenOp::InvokeSync(const Napi::CallbackInfo &info)
   return CreateResult(info.Env(), ftStatus, ftHandle);
 }
 
-Napi::Promise OpenOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtOpenOp::Invoke(const Napi::CallbackInfo &info)
 {
   DWORD index = info[0].As<Napi::Number>().Int32Value();
-  auto *operation = new OpenOp(info.Env(), index);
+  auto *operation = new FtOpenOp(info.Env(), index);
   operation->Queue();
   return operation->Promise();
 }
 
-OpenOp::OpenOp(Napi::Env env, DWORD index) : BaseFtdiOp(env), index(index) {}
+FtOpenOp::FtOpenOp(Napi::Env env, DWORD index) : BaseFtdiOp(env), index(index) {}
 
-void OpenOp::Execute()
+void FtOpenOp::Execute()
 {
   ftStatus = FT_Open(index, &ftHandle);
 }
 
-void OpenOp::OnOK()
+void FtOpenOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(CreateResult(Env(), ftStatus, ftHandle));
 }
 
-Napi::Object OpenOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
+Napi::Object FtOpenOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
   result.Set("ftHandle", FtHandlerWrapper::NewInstance(env, ftHandle));
@@ -1208,16 +1208,16 @@ Napi::Object OpenOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE f
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// OpenExOp class
+// FtOpenExOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class OpenExOp : public BaseFtdiOp
+class FtOpenExOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  OpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags);
+  FtOpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags);
   void Execute();
   void OnOK();
 
@@ -1228,14 +1228,14 @@ private:
   inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle);
 };
 
-Napi::Object OpenExOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtOpenExOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("openExSync", Napi::Function::New(env, OpenExOp::InvokeSync));
-  exports.Set("openEx", Napi::Function::New(env, OpenExOp::Invoke));
+  exports.Set("openExSync", Napi::Function::New(env, FtOpenExOp::InvokeSync));
+  exports.Set("openEx", Napi::Function::New(env, FtOpenExOp::Invoke));
   return exports;
 }
 
-Napi::Object OpenExOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Object FtOpenExOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   PVOID pvArg1;
   std::string snOrDsc;
@@ -1254,7 +1254,7 @@ Napi::Object OpenExOp::InvokeSync(const Napi::CallbackInfo &info)
   return CreateResult(info.Env(), ftStatus, ftHandle);
 }
 
-Napi::Promise OpenExOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtOpenExOp::Invoke(const Napi::CallbackInfo &info)
 {
   PVOID pvArg1;
   std::string snOrDsc;
@@ -1268,25 +1268,25 @@ Napi::Promise OpenExOp::Invoke(const Napi::CallbackInfo &info)
     pvArg1 = (void *)info[0].As<Napi::Number>().Int64Value();
   }
   DWORD flags = info[1].As<Napi::Number>().Int64Value();
-  auto *operation = new OpenExOp(info.Env(), pvArg1, flags);
+  auto *operation = new FtOpenExOp(info.Env(), pvArg1, flags);
   operation->Queue();
   return operation->Promise();
 }
 
-OpenExOp::OpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags) : BaseFtdiOp(env), pvArg1(pvArg1), flags(flags) {}
+FtOpenExOp::FtOpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags) : BaseFtdiOp(env), pvArg1(pvArg1), flags(flags) {}
 
-void OpenExOp::Execute()
+void FtOpenExOp::Execute()
 {
   ftStatus = FT_OpenEx(pvArg1, flags, &ftHandle);
 }
 
-void OpenExOp::OnOK()
+void FtOpenExOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(CreateResult(Env(), ftStatus, ftHandle));
 }
 
-Napi::Object OpenExOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
+Napi::Object FtOpenExOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE ftHandle)
 {
   Napi::Object result = CreateFtResultObject(env, ftStatus);
   result.Set("ftHandle", FtHandlerWrapper::NewInstance(env, ftHandle));
@@ -1294,16 +1294,16 @@ Napi::Object OpenExOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// CloseOp class
+// FtCloseOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class CloseOp : public BaseFtdiOp
+class FtCloseOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  CloseOp(Napi::Env env, FT_HANDLE ftHandle);
+  FtCloseOp(Napi::Env env, FT_HANDLE ftHandle);
   void Execute();
   void OnOK();
 
@@ -1311,52 +1311,52 @@ private:
   FT_HANDLE ftHandle;
 };
 
-Napi::Object CloseOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtCloseOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("closeSync", Napi::Function::New(env, CloseOp::InvokeSync));
-  exports.Set("close", Napi::Function::New(env, CloseOp::Invoke));
+  exports.Set("closeSync", Napi::Function::New(env, FtCloseOp::InvokeSync));
+  exports.Set("close", Napi::Function::New(env, FtCloseOp::Invoke));
   return exports;
 }
 
-Napi::Number CloseOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Number FtCloseOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   FT_STATUS ftStatus = FT_Close(ftHandle);
   return Napi::Number::New(info.Env(), ftStatus);
 }
 
-Napi::Promise CloseOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtCloseOp::Invoke(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
-  auto *operation = new CloseOp(info.Env(), ftHandle);
+  auto *operation = new FtCloseOp(info.Env(), ftHandle);
   operation->Queue();
   return operation->Promise();
 }
 
-CloseOp::CloseOp(Napi::Env env, FT_HANDLE ftHandle) : BaseFtdiOp(env), ftHandle(ftHandle) {}
+FtCloseOp::FtCloseOp(Napi::Env env, FT_HANDLE ftHandle) : BaseFtdiOp(env), ftHandle(ftHandle) {}
 
-void CloseOp::Execute()
+void FtCloseOp::Execute()
 {
   ftStatus = FT_Close(ftHandle);
 }
 
-void CloseOp::OnOK()
+void FtCloseOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// SetDataCharacteristicsOp class
+// FtSetDataCharacteristicsOp class
 ////////////////////////////////////////////////////////////////////////////////
 
-class SetDataCharacteristicsOp : public BaseFtdiOp
+class FtSetDataCharacteristicsOp : public BaseFtdiOp
 {
 public:
   static Napi::Object Init(Napi::Env env, Napi::Object exports);
   static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
   static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-  SetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
+  FtSetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity);
   void Execute();
   void OnOK();
 
@@ -1367,14 +1367,14 @@ private:
   UCHAR parity;
 };
 
-Napi::Object SetDataCharacteristicsOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtSetDataCharacteristicsOp::Init(Napi::Env env, Napi::Object exports)
 {
-  exports.Set("setDataCharacteristicsSync", Napi::Function::New(env, SetDataCharacteristicsOp::InvokeSync));
-  exports.Set("setDataCharacteristics", Napi::Function::New(env, SetDataCharacteristicsOp::Invoke));
+  exports.Set("setDataCharacteristicsSync", Napi::Function::New(env, FtSetDataCharacteristicsOp::InvokeSync));
+  exports.Set("setDataCharacteristics", Napi::Function::New(env, FtSetDataCharacteristicsOp::Invoke));
   return exports;
 }
 
-Napi::Number SetDataCharacteristicsOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Number FtSetDataCharacteristicsOp::InvokeSync(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   UCHAR wordLength = info[1].As<Napi::Number>().Uint32Value();
@@ -1384,26 +1384,26 @@ Napi::Number SetDataCharacteristicsOp::InvokeSync(const Napi::CallbackInfo &info
   return Napi::Number::New(info.Env(), ftStatus);
 }
 
-Napi::Promise SetDataCharacteristicsOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtSetDataCharacteristicsOp::Invoke(const Napi::CallbackInfo &info)
 {
   FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
   UCHAR wordLength = info[1].As<Napi::Number>().Uint32Value();
   UCHAR stopBits = info[2].As<Napi::Number>().Uint32Value();
   UCHAR parity = info[3].As<Napi::Number>().Uint32Value();
-  auto *operation = new SetDataCharacteristicsOp(info.Env(), ftHandle, wordLength, stopBits, parity);
+  auto *operation = new FtSetDataCharacteristicsOp(info.Env(), ftHandle, wordLength, stopBits, parity);
   operation->Queue();
   return operation->Promise();
 }
 
-SetDataCharacteristicsOp::SetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity)
+FtSetDataCharacteristicsOp::FtSetDataCharacteristicsOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR wordLength, UCHAR stopBits, UCHAR parity)
     : BaseFtdiOp(env), ftHandle(ftHandle), wordLength(wordLength), stopBits(stopBits), parity(parity) {}
 
-void SetDataCharacteristicsOp::Execute()
+void FtSetDataCharacteristicsOp::Execute()
 {
   ftStatus = FT_SetDataCharacteristics(ftHandle, wordLength, stopBits, parity);
 }
 
-void SetDataCharacteristicsOp::OnOK()
+void FtSetDataCharacteristicsOp::OnOK()
 {
   Napi::HandleScope scope(Env());
   deferred.Resolve(Napi::Number::New(Env(), ftStatus));
@@ -1676,12 +1676,12 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   FtHandlerWrapper::Init(env, exports);
   FtProgramDataWrapper::Init(env, exports);
-  CreateDeviceInfoListOp::Init(env, exports);
-  GetDeviceInfoDetailOp::Init(env, exports);
-  OpenOp::Init(env, exports);
-  OpenExOp::Init(env, exports);
-  CloseOp::Init(env, exports);
-  SetDataCharacteristicsOp::Init(env, exports);
+  FtCreateDeviceInfoListOp::Init(env, exports);
+  FtGetDeviceInfoDetailOp::Init(env, exports);
+  FtOpenOp::Init(env, exports);
+  FtOpenExOp::Init(env, exports);
+  FtCloseOp::Init(env, exports);
+  FtSetDataCharacteristicsOp::Init(env, exports);
   SetFlowControlOp::Init(env, exports);
   SetBaudRateOp::Init(env, exports);
   GetDeviceInfoOp::Init(env, exports);
