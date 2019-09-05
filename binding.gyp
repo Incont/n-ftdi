@@ -4,7 +4,21 @@
       "target_name": "N-FTD2XX",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ "./src/N-FTD2XX.cc" ],
+      "sources": [ 
+        "./src/N_FTD2XX.cc",
+        "./src/ft_handler_wrapper.cc",
+        "./src/ft_program_data_wrapper.cc",
+        "./src/ft_create_device_info_list_op.cc",
+        "./src/ft_get_device_info_detail_op.cc",
+        "./src/ft_open_op.cc",
+        "./src/ft_open_ex_op.cc",
+        "./src/ft_close_op.cc",
+        "./src/ft_set_data_characteristics_op.cc",
+        "./src/ft_set_flow_control_op.cc",
+        "./src/ft_set_baud_rate_op.cc",
+        "./src/ft_get_device_info_op.cc",
+        "./src/ft_ee_read_op.cc"
+      ],
       "include_dirs": [
         "./src",
         "<!@(node -p \"require('node-addon-api').include\")"
