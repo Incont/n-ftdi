@@ -106,3 +106,5 @@ FTD2XX.FTDI.getDeviceList()
 setInterval(function () {
   console.log(ftdi.getDeviceInfoSync())
 }, 1000)
+
+console.log('test')
