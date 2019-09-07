@@ -17,8 +17,6 @@ Napi::Object FtWriteOp::InvokeSync(const Napi::CallbackInfo &info)
     }
     DWORD numBytesWritten;
     void* txBuffer = buf.Data();
-    printf("\n%d\n", buf.ByteLength());
-    printf("\n%s\n", (char*)txBuffer);
     FT_STATUS ftStatus =  FT_Write(ftHandle, txBuffer, numBytesToWrite, &numBytesWritten);
     return CreateResult(info.Env(), ftStatus, numBytesWritten);
 }
@@ -42,14 +40,10 @@ FtWriteOp::FtWriteOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer& buffe
       numBytesToWrite(numBytesToWrite),
       objRef(Napi::Persistent(buffer)) {
           txBuffer = buffer.Data();
-          printf("\n%d\n", buffer.ByteLength());
-          printf("\n%s\n", (char*)txBuffer);
       }
 
 void FtWriteOp::Execute()
 {
-    printf("\n%d\n", (char*)numBytesToWrite);
-    printf("\n%s\n", (char*)txBuffer);
     ftStatus = FT_Write(ftHandle, txBuffer, numBytesToWrite, &numBytesWritten);
 }
 

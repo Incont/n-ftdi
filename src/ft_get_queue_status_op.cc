@@ -12,7 +12,6 @@ Napi::Object FtGetQueueStatusOp::InvokeSync(const Napi::CallbackInfo &info)
     FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
     DWORD rxQueue;
     FT_STATUS ftStatus = FT_GetQueueStatus(ftHandle, &rxQueue);
-    printf("\n%d\n", rxQueue);
     return CreateResult(info.Env(), ftStatus, rxQueue);
 }
 
@@ -29,7 +28,6 @@ FtGetQueueStatusOp::FtGetQueueStatusOp(Napi::Env env, FT_HANDLE ftHandle) : FtBa
 void FtGetQueueStatusOp::Execute()
 {
     ftStatus = FT_GetQueueStatus(ftHandle, &rxQueue);
-    printf("\n%d\n", rxQueue);
 }
 
 void FtGetQueueStatusOp::OnOK()
