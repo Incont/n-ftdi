@@ -111,3 +111,13 @@ console.log();
 let p = new util.TextEncoder("utf-8").encode("aaaaaaaa");
 let h;
 let ftdi = new FTD2XX.FTDI()
+ftdi.openByIndexSync(0)
+ftdi.setBaudRateSync(38400)
+console.log(ftdi.getDeviceInfoSync())
+console.log(_ftdiAddon.writeSync(ftdi._ftHandle, p.buffer, 1))
+
+let qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
+while(qqq.rxQueue == 0) {
+  qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
+}
+console.log(qqq)
