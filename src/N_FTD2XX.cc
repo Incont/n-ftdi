@@ -16,6 +16,10 @@
 #include "ft_set_baud_rate_op.h"
 #include "ft_get_device_info_op.h"
 #include "ft_ee_read_op.h"
+#include "ft_write_op.h"
+#include "ft_get_queue_status_op.h"
+#include "ft_get_status_op.h"
+#include "ft_read_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -31,6 +35,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtSetBaudRateOp::Init(env, exports);
     FtGetDeviceInfoOp::Init(env, exports);
     FtEeReadOp::Init(env, exports);
+    FtWriteOp::Init(env, exports);
+    FtGetQueueStatusOp::Init(env, exports);
+    FtGetStatusOp::Init(env, exports);
+    FtWriteOp::Init(env, exports);
     return exports;
 }
 

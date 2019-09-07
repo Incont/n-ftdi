@@ -96,13 +96,28 @@ _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 _ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
 _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 */
-
+function delay(ms) {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, ms);
+  });
+}
+const _ftdiAddon = require('bindings')('N-FTD2XX')
+var util = require('util');
+let rxB = new ArrayBuffer(256);
+let txB = new ArrayBuffer();
+let str = String.fromCharCode.call(null, new Uint8Array(rxB));
+console.log(str);
+console.log();
+let p = new util.TextEncoder("utf-8").encode("aaaaaaaa");
+let h;
 let ftdi = new FTD2XX.FTDI()
-FTD2XX.FTDI.getDeviceList()
-  .then(r => console.log(r))
-  .then(async () => console.log( await ftdi.openByIndex(0)))
-  .then(async () => console.log(await ftdi.getDeviceInfo()))
-  .then(async () => console.log(await ftdi.readFT232HEEPROM()))
-setInterval(function () {
-  console.log(ftdi.getDeviceInfoSync())
-}, 1000)
+ftdi.openByIndexSync(0)
+ftdi.setBaudRateSync(38400)
+console.log(ftdi.getDeviceInfoSync())
+console.log(_ftdiAddon.writeSync(ftdi._ftHandle, p.buffer, 1))
+
+let qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
+while(qqq.rxQueue == 0) {
+     qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
+  }
+    console.log(qqq)
