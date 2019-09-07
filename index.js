@@ -933,6 +933,113 @@ class FTDI {
   }
 
   /**
+   * @typedef {object} GetQueueStatusResult
+   * @property {FT_STATUS} ftStatus Value from FT_GetQueueStatus
+   * @property {number} [rxQueue] The number of bytes available to be read
+   */
+  /**
+   * Synchronously gets the number of bytes available in the receive buffer
+   * @returns {GetQueueStatusResult}
+   */
+  getQueueStatusSync () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getQueueStatusSync(this._ftHandle)
+  }
+
+  /**
+   * Asynchronously gets the number of bytes available in the receive buffer
+   * @returns {Promise<GetQueueStatusResult>}
+   */
+  async getQueueStatus () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getQueueStatus(this._ftHandle)
+  }
+
+  /**
+   * @typedef {object} GetStatusResult
+   * @property {FT_STATUS} ftStatus Value from FT_GetStatus
+   * @property {number} [rxQueue] The number of bytes available to be read
+   * @property {number} [txQueue] The number of bytes waiting to be sent
+   * @property {number} [eventStatus] The type of event that has occurred
+   */
+  /**
+   * Synchronously gets the device status including number of characters in the receive queue, number of characters in the transmit queue, and the current event status
+   * @returns {GetStatusResult}
+   */
+  getStatusSync () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getStatusSync(this._ftHandle)
+  }
+
+  /**
+   * Asynchronously gets the device status including number of characters in the receive queue, number of characters in the transmit queue, and the current event status
+   * @returns {Promise<GetStatusResult>}
+   */
+  async getStatus () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.getStatus(this._ftHandle)
+  }
+
+  /**
+   * @typedef {object} WriteResult
+   * @property {FT_STATUS} ftStatus Value from FT_Write
+   * @property {number} [numBytesWritten] The number of bytes actually written to the device
+   */
+  /**
+   * Synchronously write data to an open FTDI device
+   * @param {ArrayBuffer} txBuffer An array of bytes which contains the data to be written to the device
+   * @param {number} [numBytesToWrite] The number of bytes to be written to the device
+   * @returns {WriteResult}
+   */
+  writeSync (txBuffer, numBytesToWrite) {
+    numBytesToWrite = numBytesToWrite || txBuffer.byteLength
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.writeSync(this._ftHandle, txBuffer, numBytesToWrite)
+  }
+
+  /**
+   * Asynchronously write data to an open FTDI device
+   * @param {ArrayBuffer} txBuffer An array of bytes which contains the data to be written to the device
+   * @param {number} [numBytesToWrite] The number of bytes to be written to the device
+   * @returns {Promise<WriteResult>}
+   */
+  async write (txBuffer, numBytesToWrite) {
+    numBytesToWrite = numBytesToWrite || txBuffer.byteLength
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.write(this._ftHandle, txBuffer, numBytesToWrite)
+  }
+
+  /**
+   * @typedef {object} ReadResult
+   * @property {FT_STATUS} ftStatus Value from FT_Read
+   * @property {ArrayBuffer} [rxBuffer] An array of bytes which was populated with the data read from the device
+   * @property {number} [numBytesRead] The number of bytes actually read
+   */
+  /**
+   * Synchronously read data from an open FTDI device
+   * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
+   * @param {number} numBytesToRead The number of bytes requested from the device
+   * @returns {ReadResult}
+   */
+  readSync (rxBuffer, numBytesToRead) {
+    numBytesToRead = numBytesToRead || rxBuffer.byteLength
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.readSync(this._ftHandle, rxBuffer, numBytesToRead)
+  }
+
+  /**
+   * Asynchronously read data from an open FTDI device
+   * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
+   * @param {number} numBytesToRead The number of bytes requested from the device
+   * @returns {Promise<ReadResult>}
+   */
+  async read (rxBuffer, numBytesToRead) {
+    numBytesToRead = numBytesToRead || rxBuffer.byteLength
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.read(this._ftHandle, rxBuffer, numBytesToRead)
+  }
+
+  /**
    * @typedef {object} ReadFT232HEEPROMResult
    * @property {FT_STATUS} ftStatus Value from FT_EE_Read
    * @property {FT232H_EEPROM_STRUCTURE} [ee232h] An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device

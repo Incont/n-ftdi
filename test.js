@@ -115,16 +115,17 @@ async function Test() {
   await ftdi.openByIndex(0)
   await ftdi.setBaudRate(38400)
   console.log( await ftdi.getDeviceInfo())
-  console.log( await _ftdiAddon.write(ftdi._ftHandle, p.buffer, 1))
+  console.log( await ftdi.write(p.buffer, 1))
 
-  let qqq = await _ftdiAddon.getQueueStatus(ftdi._ftHandle)
+  let qqq = await ftdi.getQueueStatus()
   while(qqq.rxQueue == 0) {
-    qqq =  await _ftdiAddon.getQueueStatus(ftdi._ftHandle)
+    qqq =  await ftdi.getQueueStatus()
   }
   console.log(qqq);
-  console.log(await _ftdiAddon.read(ftdi._ftHandle, rxB, qqq.rxQueue))
+  console.log(await ftdi.read(rxB, qqq.rxQueue))
   str = new util.TextDecoder("utf-8").decode(new DataView(rxB, 0, qqq.rxQueue))
   console.log(str)
   console.log(str.length)
+  console.log("\r")
 }
 Test()
