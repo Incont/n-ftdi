@@ -34,7 +34,7 @@ Napi::Promise FtReadOp::Invoke(const Napi::CallbackInfo &info)
     return operation->Promise();
 }
 
-FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer& buffer, DWORD numBytesToWrite)
+FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer& buffer, DWORD numBytesToRead)
     : FtBaseOp(env),
       ftHandle(ftHandle),
       numBytesToRead(numBytesToRead),
