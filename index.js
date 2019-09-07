@@ -815,7 +815,7 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_Close
    */
   closeSync () {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     const ftStatus = _ftdiAddon.closeSync(this._ftHandle)
     if (ftStatus === FT_STATUS.FT_OK) {
       this._ftHandle.free()
@@ -829,7 +829,7 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
    */
   async close () {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     const ftStatus = await _ftdiAddon.close(this._ftHandle)
     if (ftStatus === FT_STATUS.FT_OK) {
       this._ftHandle.free()
@@ -872,7 +872,7 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setDataCharacteristicsSync(this._ftHandle, wordLength, stopBits, parity)
   }
 
@@ -884,7 +884,7 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)
   }
 
@@ -896,7 +896,7 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
    */
   setFlowControlSync (flowControl, xon, xoff) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setFlowControlSync(this._ftHandle, flowControl, xon, xoff)
   }
 
@@ -908,7 +908,7 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
    */
   async setFlowControl (flowControl, xon, xoff) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)
   }
 
@@ -918,7 +918,7 @@ class FTDI {
    * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
    */
   setBaudRateSync (baudRate) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setBaudRateSync(this._ftHandle, baudRate)
   }
 
@@ -928,7 +928,7 @@ class FTDI {
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
    */
   async setBaudRate (baudRate) {
-    if (this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setBaudRate(this._ftHandle, baudRate)
   }
 

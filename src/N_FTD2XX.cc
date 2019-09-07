@@ -38,7 +38,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtWriteOp::Init(env, exports);
     FtGetQueueStatusOp::Init(env, exports);
     FtGetStatusOp::Init(env, exports);
-    FtWriteOp::Init(env, exports);
+    FtReadOp::Init(env, exports);
     return exports;
 }
 

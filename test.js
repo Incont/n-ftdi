@@ -111,13 +111,20 @@ console.log();
 let p = new util.TextEncoder("utf-8").encode("aaaaaaaa");
 let h;
 let ftdi = new FTD2XX.FTDI()
-ftdi.openByIndexSync(0)
-ftdi.setBaudRateSync(38400)
-console.log(ftdi.getDeviceInfoSync())
-console.log(_ftdiAddon.writeSync(ftdi._ftHandle, p.buffer, 1))
+async function Test() {
+  await ftdi.openByIndex(0)
+  await ftdi.setBaudRate(38400)
+  console.log( await ftdi.getDeviceInfo())
+  console.log( await _ftdiAddon.write(ftdi._ftHandle, p.buffer, 1))
 
-let qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
-while(qqq.rxQueue == 0) {
-  qqq = _ftdiAddon.getQueueStatusSync(ftdi._ftHandle)
+  let qqq = await _ftdiAddon.getQueueStatus(ftdi._ftHandle)
+  while(qqq.rxQueue == 0) {
+    qqq =  await _ftdiAddon.getQueueStatus(ftdi._ftHandle)
+  }
+  console.log(qqq);
+  console.log(await _ftdiAddon.read(ftdi._ftHandle, rxB, qqq.rxQueue))
+  str = new util.TextDecoder("utf-8").decode(new DataView(rxB, 0, qqq.rxQueue))
+  console.log(str)
+  console.log(str.length)
 }
-console.log(qqq)
+Test()
