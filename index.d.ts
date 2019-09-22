@@ -134,25 +134,82 @@ export const FT_PARITY: {
     FT_PARITY_SPACE: number;
 };
 
-export const FT_STATUS: {
-    FT_DEVICE_NOT_FOUND: number;
-    FT_DEVICE_NOT_OPENED: number;
-    FT_DEVICE_NOT_OPENED_FOR_ERASE: number;
-    FT_DEVICE_NOT_OPENED_FOR_WRITE: number;
-    FT_EEPROM_ERASE_FAILED: number;
-    FT_EEPROM_NOT_PRESENT: number;
-    FT_EEPROM_NOT_PROGRAMMED: number;
-    FT_EEPROM_READ_FAILED: number;
-    FT_EEPROM_WRITE_FAILED: number;
-    FT_FAILED_TO_WRITE_DEVICE: number;
-    FT_INSUFFICIENT_RESOURCES: number;
-    FT_INVALID_ARGS: number;
-    FT_INVALID_BAUD_RATE: number;
-    FT_INVALID_HANDLE: number;
-    FT_INVALID_PARAMETER: number;
-    FT_IO_ERROR: number;
-    FT_OK: number;
-    FT_OTHER_ERROR: number;
+/**
+ * Status values for FTDI devices
+ */
+export const enum FT_STATUS {
+    /**
+     * Status OK
+     */
+    FT_OK = 0,
+    /**
+     * The device handle is invalid
+     */
+    FT_INVALID_HANDLE,
+    /**
+     * Device not found
+     */
+    FT_DEVICE_NOT_FOUND,
+    /**
+     * Device is not open
+     */
+    FT_DEVICE_NOT_OPENED,
+    /**
+     * IO error
+     */
+    FT_IO_ERROR,
+    /**
+     * Insufficient resources
+     */
+    FT_INSUFFICIENT_RESOURCES,
+    /**
+     * A parameter was invalid
+     */
+    FT_INVALID_PARAMETER,
+    /**
+     * The requested baud rate is invalid
+     */
+    FT_INVALID_BAUD_RATE,
+    /**
+     * Device not opened for erase
+     */
+    FT_DEVICE_NOT_OPENED_FOR_ERASE,
+    /**
+     * Device not poened for write
+     */
+    FT_DEVICE_NOT_OPENED_FOR_WRITE,
+    /**
+     * Failed to write to device
+     */
+    FT_FAILED_TO_WRITE_DEVICE,
+    /**
+     * Failed to read the device EEPROM
+     */
+    FT_EEPROM_READ_FAILED,
+    /**
+     * Failed to write the device EEPROM
+     */
+    FT_EEPROM_WRITE_FAILED,
+    /**
+     * Failed to erase the device EEPROM
+     */
+    FT_EEPROM_ERASE_FAILED,
+    /**
+     * An EEPROM is not fitted to the device
+     */
+    FT_EEPROM_NOT_PRESENT,
+    /**
+     * Device EEPROM is blank
+     */
+    FT_EEPROM_NOT_PROGRAMMED,
+    /**
+     * Invalid arguments
+     */
+    FT_INVALID_ARGS,
+    /**
+     * An other error has occurred
+     */
+    FT_OTHER_ERROR
 };
 
 export const FT_STOP_BITS: {
