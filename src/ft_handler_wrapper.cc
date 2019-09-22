@@ -40,8 +40,6 @@ void FtHandlerWrapper::Free(const Napi::CallbackInfo &info)
 
 FtHandlerWrapper::~FtHandlerWrapper()
 {
-    if (this->ftHandle != nullptr)
-        FT_Close(this->ftHandle);
 }
 
 FT_HANDLE FtHandlerWrapper::GetFtHandler()
