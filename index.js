@@ -688,7 +688,7 @@ class FTDI {
    * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
-   * @property {number} locId The physical location identifier of the device
+   * @property {number} locId The Vendor ID and Product ID of the device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
    * @property {?FtHandle} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
