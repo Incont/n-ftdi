@@ -230,13 +230,14 @@ export class FTDI {
      * Synchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param index
-     * @returns 
+     * @returns Status values for FTDI device
      */
     public openByIndexSync(index: number): FT_STATUS;
     /**
-     * 
-     * @param index 
-     * @returns
+     * Asynchronously opens the FTDI device with the specified index.
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param index
+     * @returns Status values for FTDI device
      */
     public openByIndex(index: number): Promise<FT_STATUS>;
 
