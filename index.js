@@ -713,7 +713,7 @@ class FTDI {
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C,
    * FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
-   * @property {number} locId The Vendor ID and Product ID of the device
+   * @property {number} locId The physical location identifier of the device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
    * @property {object} [ftHandle] This value is not used externally and is provided for information only.
@@ -722,21 +722,21 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceListResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {Array.<DeviceInfoNode>} deviceInfoNodeList
+   * @property {DeviceInfoNode[]} deviceList
    */
   /**
    * Synchronously gets information on all of the FTDI devices available
    * @returns {GetDeviceListResult}
    */
   static getDeviceListSync () {
-    const deviceInfoNodeList = []
+    const deviceList = []
     let { ftStatus, devCount } = _ftdiAddon.createDeviceInfoListSync()
     for (let i = 0; i < devCount; ++i) {
       const obj = _ftdiAddon.getDeviceInfoDetailSync(i)
       ftStatus = obj.ftStatus
-      deviceInfoNodeList[i] = obj.deviceInfoNode
+      deviceList[i] = obj.deviceList
     }
-    return { ftStatus, deviceInfoNodeList }
+    return { ftStatus, deviceList }
   }
 
   /**
@@ -744,14 +744,14 @@ class FTDI {
    * @returns {Promise<GetDeviceListResult>}
    */
   static async getDeviceList () {
-    const deviceInfoNodeList = []
+    const deviceList = []
     let { ftStatus, devCount } = await _ftdiAddon.createDeviceInfoList()
     for (let i = 0; i < devCount; ++i) {
       const obj = await _ftdiAddon.getDeviceInfoDetail(i)
       ftStatus = obj.ftStatus
-      deviceInfoNodeList[i] = obj.deviceInfoNode
+      deviceList[i] = obj.deviceList
     }
-    return { ftStatus, deviceInfoNodeList }
+    return { ftStatus, deviceList }
   }
 
   /**
@@ -859,11 +859,11 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceInfoResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {FT_DEVICE} [ftDevice] Indicates the device type. Can be one of the following: FT_DEVICE_232R,
+   * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R,
    * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
-   * @property {number} [deviceId] The device ID (Vendor ID and Product ID) of the current device
-   * @property {string} [serialNumber] The device serial number
-   * @property {string} [description] The device description
+   * @property {number} id The device ID (Vendor ID and Product ID) of the current device
+   * @property {string} serialNumber The device serial number
+   * @property {string} description The device description
    */
   /**
    * Synchronously gets device information for an open device

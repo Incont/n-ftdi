@@ -49,8 +49,8 @@ Napi::Object FtGetDeviceInfoOp::CreateResult(
 {
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);
-    result.Set("ftDevice", ftDevice);
-    result.Set("deviceId", deviceId);
+    result.Set("type", ftDevice);
+    result.Set("id", deviceId);
     result.Set("serialNumber", serialNumber);
     result.Set("description", description);
     return result;

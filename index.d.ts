@@ -172,7 +172,7 @@ export type DeviceInfoNode = {
      */
     readonly id: number;
     /**
-     * The Vendor ID and Product ID of the device
+     * The physical location identifier of the device
      */
     readonly locId: number;
     /**
@@ -206,7 +206,26 @@ export interface IGetNumberOfDevicesResult extends IFtResult {
 }
 
 export interface IGetDeviceListResult extends IFtResult {
-    deviceInfoNodeList: DeviceInfoNode[];
+    readonly devicelist: DeviceInfoNode[];
+}
+export interface IGetDeviceInfoResult extends IFtResult {
+    /**
+     * Indicates the device type. Can be one of the following: FT_DEVICE_232R,
+     * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+     */
+    readonly type: FT_DEVICE;
+    /**
+     * The device ID (Vendor ID and Product ID) of the current device
+     */
+    readonly id: number;
+    /**
+     * The device serial number
+     */
+    readonly serialNumber: string;
+    /**
+     * The device description
+     */
+    readonly description: string;
 }
 
 export class FTDI {
@@ -229,25 +248,69 @@ export class FTDI {
     /**
      * Synchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
-     * @param index
-     * @returns Status values for FTDI device
+     * @param index Index of the device to open,
+     * note that this cannot be guaranteed to open a specific device
      */
     public openByIndexSync(index: number): FT_STATUS;
     /**
      * Asynchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
-     * @param index
-     * @returns Status values for FTDI device
+     * @param index Index of the device to open,
+     * note that this cannot be guaranteed to open a specific device
      */
     public openByIndex(index: number): Promise<FT_STATUS>;
-
-    public close(...args: any[]): void;
-
-    public closeSync(...args: any[]): void;
-
-    public getDeviceInfo(...args: any[]): void;
-
-    public getDeviceInfoSync(...args: any[]): void;
+    /**
+     * Synchronously opens the FTDI device with the specified serial number
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param serialNumber Serial number of the device to open
+     */
+    public openBySerialNumberSync(serialNumber: string): FT_STATUS;
+    /**
+     * Asynchronously opens the FTDI device with the specified serial number
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param serialNumber Serial number of the device to open
+     */
+    public openBySerialNumber(serialNumber: string): Promise<FT_STATUS>;
+    /**
+     * Synchronously opens the FTDI device with the specified description
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param description Description of the device to open
+     */
+    public openByDescriptionSync(description: string): FT_STATUS;
+    /**
+     * Asynchronously opens the FTDI device with the specified description
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param description Description of the device to open
+     */
+    public openByDescription(description: string): Promise<FT_STATUS>;
+    /**
+     * Synchronously opens the FTDI device at the specified physical location
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param location Location of the device to open
+     */
+    public openByLocationSync(location: number): FT_STATUS;
+    /**
+     * Asynchronously opens the FTDI device at the specified physical location
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param location Location of the device to open
+     */
+    public openByLocation(location: number): Promise<FT_STATUS>;
+    /**
+     * Synchronously closes the handle to an open FTDI device
+     */
+    public closeSync(): FT_STATUS;
+    /**
+     * Asynchronously closes the handle to an open FTDI device
+     */
+    public close(): Promise<FT_STATUS>;
+    /**
+     * Synchronously gets device information for an open device
+     */
+    public getDeviceInfoSync(): IGetDeviceListResult;
+    /**
+     * Asynchronously gets device information for an open device
+     */
+    public getDeviceInfo(): Promise<IGetDeviceListResult>;
 
     public getQueueStatus(...args: any[]): void;
 
@@ -256,18 +319,6 @@ export class FTDI {
     public getStatus(...args: any[]): void;
 
     public getStatusSync(...args: any[]): void;
-
-    public openByDescription(...args: any[]): void;
-
-    public openByDescriptionSync(...args: any[]): void;
-
-    public openByLocation(...args: any[]): void;
-
-    public openByLocationSync(...args: any[]): void;
-
-    public openBySerialNumber(...args: any[]): void;
-
-    public openBySerialNumberSync(...args: any[]): void;
 
     public read(...args: any[]): void;
 
