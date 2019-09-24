@@ -415,7 +415,7 @@ class FT_EEPROM_DATA {
     this.description = 'USB-Serial Converter'
     this.serialNumber = ''
     this.maxPower = 0x0090
-    this.selfPowered = _ftdiAddon
+    this.selfPowered = false
     this.remoteWakeup = false
   }
 }
@@ -504,6 +504,7 @@ class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
     this.isFastSer = false
     this.isFT1248 = false
     this.ft1248Cpol = false
+    this.ft1248Lsb = false
     this.ft1248FlowControl = false
     this.isVCP = true
     this.powerSaveEnable = false
@@ -701,7 +702,7 @@ class FTDI {
    * Asynchronously gets the number of FTDI devices available
    * @returns {Promise<GetNumberOfDevicesResult>}
    */
-  static async getNumberOfDevices () {
+  static getNumberOfDevices () {
     return _ftdiAddon.createDeviceInfoList()
   }
 
@@ -772,7 +773,7 @@ class FTDI {
    * note that this cannot be guaranteed to open a specific device
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
-  async openByIndex (index) {
+  openByIndex (index) {
     return this._openAndSetup(() => _ftdiAddon.open(index))
   }
 
@@ -792,7 +793,7 @@ class FTDI {
    * @param {string} serialNumber Serial number of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
-  async openBySerialNumber (serialNumber) {
+  openBySerialNumber (serialNumber) {
     return this._openAndSetup(() => _ftdiAddon.openEx(serialNumber, FT_OPEN_BY_SERIAL_NUMBER))
   }
 
@@ -812,7 +813,7 @@ class FTDI {
    * @param {string} description Description of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
-  async openByDescription (description) {
+  openByDescription (description) {
     return this._openAndSetup(() => _ftdiAddon.openEx(description, FT_OPEN_BY_DESCRIPTION))
   }
 
@@ -832,7 +833,7 @@ class FTDI {
    * @param {number} location Location of the device to open
    * @returns {Promise<FT_STATUS>} ftStatus Status values for FTDI device
    */
-  async openByLocation (location) {
+  openByLocation (location) {
     return this._openAndSetup(() => _ftdiAddon.openEx(location, FT_OPEN_BY_LOCATION))
   }
 
@@ -850,10 +851,9 @@ class FTDI {
    * Asynchronously closes the handle to an open FTDI device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Close
    */
-  async close () {
+  close () {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
-    const ftStatus = await _ftdiAddon.close(this._ftHandle)
-    return ftStatus
+    return _ftdiAddon.close(this._ftHandle)
   }
 
   /**
@@ -908,13 +908,13 @@ class FTDI {
    * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
-  async setDataCharacteristics (wordLength, stopBits, parity) {
+  setDataCharacteristics (wordLength, stopBits, parity) {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setDataCharacteristics(this._ftHandle, wordLength, stopBits, parity)
   }
 
   /**
-   * Synchronously sets the flow control type.
+   * Synchronously sets the flow control type
    * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are
    * FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or
    * FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
@@ -928,7 +928,7 @@ class FTDI {
   }
 
   /**
-   * Asynchronously sets the flow control type.
+   * Asynchronously sets the flow control type
    * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are
    * FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or
    * FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
@@ -936,13 +936,13 @@ class FTDI {
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
    */
-  async setFlowControl (flowControl, xon, xoff) {
+  setFlowControl (flowControl, xon, xoff) {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setFlowControl(this._ftHandle, flowControl, xon, xoff)
   }
 
   /**
-   * Synchronously sets the current Baud rate.
+   * Synchronously sets the current Baud rate
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {FT_STATUS} ftStatus Value from FT_SetBaudRate
    */
@@ -952,11 +952,11 @@ class FTDI {
   }
 
   /**
-   * Asynchronously sets the current Baud rate.
+   * Asynchronously sets the current Baud rate
    * @param {number} baudRate The desired Baud rate for the device
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetBaudRate
    */
-  async setBaudRate (baudRate) {
+  setBaudRate (baudRate) {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setBaudRate(this._ftHandle, baudRate)
   }
@@ -979,7 +979,7 @@ class FTDI {
    * Asynchronously gets the number of bytes available in the receive buffer
    * @returns {Promise<GetQueueStatusResult>}
    */
-  async getQueueStatus () {
+  getQueueStatus () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     return _ftdiAddon.getQueueStatus(this._ftHandle)
   }
@@ -987,9 +987,9 @@ class FTDI {
   /**
    * @typedef {object} GetStatusResult
    * @property {FT_STATUS} ftStatus Value from FT_GetStatus
-   * @property {number} [rxQueue] The number of bytes available to be read
-   * @property {number} [txQueue] The number of bytes waiting to be sent
-   * @property {number} [eventStatus] The type of event that has occurred
+   * @property {number} rxQueue The number of bytes available to be read
+   * @property {number} txQueue The number of bytes waiting to be sent
+   * @property {number} eventStatus The type of event that has occurred
    */
   /**
    * Synchronously gets the device status including number of characters in the receive queue,
@@ -1006,7 +1006,7 @@ class FTDI {
    * number of characters in the transmit queue, and the current event status
    * @returns {Promise<GetStatusResult>}
    */
-  async getStatus () {
+  getStatus () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     return _ftdiAddon.getStatus(this._ftHandle)
   }
@@ -1014,7 +1014,7 @@ class FTDI {
   /**
    * @typedef {object} WriteResult
    * @property {FT_STATUS} ftStatus Value from FT_Write
-   * @property {number} [numBytesWritten] The number of bytes actually written to the device
+   * @property {number} numBytesWritten The number of bytes actually written to the device
    */
   /**
    * Synchronously write data to an open FTDI device
@@ -1034,7 +1034,7 @@ class FTDI {
    * @param {number} [numBytesToWrite] The number of bytes to be written to the device
    * @returns {Promise<WriteResult>}
    */
-  async write (txBuffer, numBytesToWrite) {
+  write (txBuffer, numBytesToWrite) {
     numBytesToWrite = numBytesToWrite || txBuffer.byteLength
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     return _ftdiAddon.write(this._ftHandle, txBuffer, numBytesToWrite)
@@ -1043,13 +1043,13 @@ class FTDI {
   /**
    * @typedef {object} ReadResult
    * @property {FT_STATUS} ftStatus Value from FT_Read
-   * @property {ArrayBuffer} [rxBuffer] An array of bytes which was populated with the data read from the device
-   * @property {number} [numBytesRead] The number of bytes actually read
+   * @property {ArrayBuffer} rxBuffer An array of bytes which was populated with the data read from the device
+   * @property {number} numBytesRead The number of bytes actually read
    */
   /**
    * Synchronously read data from an open FTDI device
    * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
-   * @param {number} numBytesToRead The number of bytes requested from the device
+   * @param {number} [numBytesToRead] The number of bytes requested from the device
    * @returns {ReadResult}
    */
   readSync (rxBuffer, numBytesToRead) {
@@ -1061,10 +1061,10 @@ class FTDI {
   /**
    * Asynchronously read data from an open FTDI device
    * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
-   * @param {number} numBytesToRead The number of bytes requested from the device
+   * @param {number} [numBytesToRead] The number of bytes requested from the device
    * @returns {Promise<ReadResult>}
    */
-  async read (rxBuffer, numBytesToRead) {
+  read (rxBuffer, numBytesToRead) {
     numBytesToRead = numBytesToRead || rxBuffer.byteLength
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     return _ftdiAddon.read(this._ftHandle, rxBuffer, numBytesToRead)
@@ -1099,7 +1099,7 @@ class FTDI {
 
   /**
    * Asynchronously reads the EEPROM contents of an FT232H device
-   * @returns {ReadFT232HEEPROMResult}
+   * @returns {Promise<ReadFT232HEEPROMResult>}
    * @throws {FtException} Thrown when the current device does not match the type required by this method
    */
   async readFT232HEEPROM () {
