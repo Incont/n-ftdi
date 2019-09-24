@@ -350,7 +350,8 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @typedef {object} FT_PROGRAM_DATA
  * @property {number} signature1 Header - must be 0x0000000
  * @property {number} signature2 Header - must be 0xffffffff
- * @property {number} version Header - FT_PROGRAM_DATA version: 0 = original (FT232B), 1 = FT2232 extensions, 2 = FT232R extensions, 3 = FT2232H extensions, 4 = FT4232H extensions, 5 = FT232H extensions
+ * @property {number} version Header - FT_PROGRAM_DATA version: 0 = original (FT232B), 1 = FT2232 extensions,
+ * 2 = FT232R extensions, 3 = FT2232H extensions, 4 = FT4232H extensions, 5 = FT232H extensions
  * @property {number} vendorId
  * @property {number} productId
  * @property {string} manufacturer
@@ -395,12 +396,15 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @property {number} vendorId=0x0403 Vendor ID as supplied by the USB Implementers Forum
  * @property {number} productId=0x6001 Product ID
  * @property {string} manufacturer="FTDI" Manufacturer name string
- * @property {string} manufacturerId="FT" Manufacturer name abbreviation to be used as a prefix for automatically generated serial numbers
+ * @property {string} manufacturerId="FT" Manufacturer name abbreviation to be used as a prefix for automatically
+ * generated serial numbers
  * @property {string} description="USB-Serial Converter" Device description string
  * @property {string} serialNumber="" Device serial number string
  * @property {number} maxPower=0x0090 Maximum power the device needs
- * @property {boolean} selfPowered=false Indicates if the device has its own power supply (self-powered) or gets power from the USB port (bus-powered)
- * @property {boolean} remoteWakeup=false Determines if the device can wake the host PC from suspend by toggling the RI line
+ * @property {boolean} selfPowered=false Indicates if the device has its own power supply (self-powered) or
+ * gets power from the USB port (bus-powered)
+ * @property {boolean} remoteWakeup=false Determines if the device can wake the host PC from
+ * suspend by toggling the RI line
  */
 class FT_EEPROM_DATA {
   constructor () {
@@ -422,20 +426,47 @@ class FT_EEPROM_DATA {
  * @property {boolean} serNumEnable=true Determines if the serial number is enabled
  * @property {boolean} acSlowSlew=false Determines if AC pins have a slow slew rate
  * @property {boolean} acSchmittInput=false Determines if the AC pins have a Schmitt input
- * @property {FT_DRIVE_CURRENT} acDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AC pins drive current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or FT_DRIVE_CURRENT_16MA
+ * @property {FT_DRIVE_CURRENT} acDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AC pins drive
+ * current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or
+ * FT_DRIVE_CURRENT_16MA
  * @property {boolean} adSlowSlew=false Determines if AD pins have a slow slew rate
  * @property {boolean} adSchmittInput=false Determines if the AD pins have a Schmitt input
- * @property {FT_DRIVE_CURRENT} adDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AD pins drive current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or FT_DRIVE_CURRENT_16MA
- * @property {FT_232H_CBUS_OPTIONS} cbus0=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS0 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
- * @property {FT_232H_CBUS_OPTIONS} cbus1=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS1 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
- * @property {FT_232H_CBUS_OPTIONS} cbus2=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS2 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
- * @property {FT_232H_CBUS_OPTIONS} cbus3=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS3 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
- * @property {FT_232H_CBUS_OPTIONS} cbus4=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS4 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
- * @property {FT_232H_CBUS_OPTIONS} cbus5=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS5 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
- * @property {FT_232H_CBUS_OPTIONS} cbus6=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS6 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
- * @property {FT_232H_CBUS_OPTIONS} cbus7=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS7 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE
- * @property {FT_232H_CBUS_OPTIONS} cbus8=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS8 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
- * @property {FT_232H_CBUS_OPTIONS} cbus9=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS9 pin for FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN, FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_DRIVE_CURRENT} adDriveCurrent=FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA Determines the AD pins drive
+ * current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or
+ * FT_DRIVE_CURRENT_16MA
+ * @property {FT_232H_CBUS_OPTIONS} cbus0=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS0 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus1=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS1 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN
+ *  FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus2=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS2 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus3=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS3 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus4=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS4 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN
+ * @property {FT_232H_CBUS_OPTIONS} cbus5=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS5 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
+ * FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus6=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS6 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
+ * FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus7=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS7 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE
+ * @property {FT_232H_CBUS_OPTIONS} cbus8=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS8 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
+ * FT_CBUS_CLK7_5
+ * @property {FT_232H_CBUS_OPTIONS} cbus9=FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE Sets the function of the CBUS9 pin for
+ * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
+ * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
+ * FT_CBUS_CLK7_5
  * @property {boolean} isFifo=false Determines if the device is in FIFO mode
  * @property {boolean} isFifoTar=false Determines if the device is in FIFO target mode
  * @property {boolean} isFastSer=false Determines if the device is in fast serial mode
@@ -444,7 +475,8 @@ class FT_EEPROM_DATA {
  * @property {boolean} ft1248Lsb=false Determines if data is ent MSB (0) or LSB (1) in FT1248 mode
  * @property {boolean} ft1248FlowControl=false Determines if FT1248 mode uses flow control
  * @property {boolean} isVCP=true Determines if the VCP driver is loaded
- * @property {boolean} powerSaveEnable=false For self-powered designs, keeps the FT232H in low power state until ACBUS7 is high
+ * @property {boolean} powerSaveEnable=false For self-powered designs, keeps the FT232H in low power state until
+ * ACBUS7 is high
  */
 class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
   constructor () {
@@ -676,13 +708,16 @@ class FTDI {
   /**
    * Type that holds device information for GetDeviceInfoDetail method
    * @typedef {object} DeviceInfoNode
-   * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
-   * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+   * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following:
+   * FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
+   * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C,
+   * FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} id The Vendor ID and Product ID of the device
    * @property {number} locId The Vendor ID and Product ID of the device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
-   * @property {object} [ftHandle] This value is not used externally and is provided for information only. If the device is not open, ftHandle is undefined
+   * @property {object} [ftHandle] This value is not used externally and is provided for information only.
+   * If the device is not open, ftHandle is undefined
    */
   /**
    * @typedef {object} GetDeviceListResult
@@ -824,7 +859,8 @@ class FTDI {
   /**
    * @typedef {object} GetDeviceInfoResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
-   * @property {FT_DEVICE} [ftDevice] Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+   * @property {FT_DEVICE} [ftDevice] Indicates the device type. Can be one of the following: FT_DEVICE_232R,
+   * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
    * @property {number} [deviceId] The device ID (Vendor ID and Product ID) of the current device
    * @property {string} [serialNumber] The device serial number
    * @property {string} [description] The device description
@@ -849,9 +885,12 @@ class FTDI {
 
   /**
    * Synchronously sets the data bits, stop bits and parity for the device
-   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
-   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
-   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
+   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
+   * FT_DATA_BITS.FT_BITS_8
+   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data.
+   * Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
+   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE,
+   * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {FT_STATUS} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   setDataCharacteristicsSync (wordLength, stopBits, parity) {
@@ -861,9 +900,12 @@ class FTDI {
 
   /**
    * Asynchronously sets the data bits, stop bits and parity for the device
-   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or FT_DATA_BITS.FT_BITS_8
-   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1 or FT_STOP_BITS.FT_STOP_BITS_2
-   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE, FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
+   * @param {FT_DATA_BITS} wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
+   * FT_DATA_BITS.FT_BITS_8
+   * @param {FT_STOP_BITS} stopBits The number of stop bits for UART data. Valid values are FT_STOP_BITS.FT_STOP_BITS_1
+   * or FT_STOP_BITS.FT_STOP_BITS_2
+   * @param {FT_PARITY} parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE,
+   * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
    * @returns {Promise<FT_STATUS>} ftStatus ftStatus value from FT_SetDataCharacteristics
    */
   async setDataCharacteristics (wordLength, stopBits, parity) {
@@ -873,7 +915,9 @@ class FTDI {
 
   /**
    * Synchronously sets the flow control type.
-   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
+   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are
+   * FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or
+   * FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {FT_STATUS} ftStatus Value from FT_SetFlowControl
@@ -885,7 +929,9 @@ class FTDI {
 
   /**
    * Asynchronously sets the flow control type.
-   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
+   * @param {FT_FLOW_CONTROL} flowControl The type of flow control for the UART. Valid values are
+   * FT_FLOW_CONTROL.FT_FLOW_NONE, FT_FLOW_CONTROL.FT_FLOW_RTS_CTS, FT_FLOW_CONTROL.FT_FLOW_DTR_DSR or
+   * FT_FLOW_CONTROL.FT_FLOW_XON_XOFF
    * @param {number} xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @param {number} xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetFlowControl
@@ -946,7 +992,8 @@ class FTDI {
    * @property {number} [eventStatus] The type of event that has occurred
    */
   /**
-   * Synchronously gets the device status including number of characters in the receive queue, number of characters in the transmit queue, and the current event status
+   * Synchronously gets the device status including number of characters in the receive queue,
+   * number of characters in the transmit queue, and the current event status
    * @returns {GetStatusResult}
    */
   getStatusSync () {
@@ -955,7 +1002,8 @@ class FTDI {
   }
 
   /**
-   * Asynchronously gets the device status including number of characters in the receive queue, number of characters in the transmit queue, and the current event status
+   * Asynchronously gets the device status including number of characters in the receive queue,
+   * number of characters in the transmit queue, and the current event status
    * @returns {Promise<GetStatusResult>}
    */
   async getStatus () {
@@ -1025,7 +1073,8 @@ class FTDI {
   /**
    * @typedef {object} ReadFT232HEEPROMResult
    * @property {FT_STATUS} ftStatus Value from FT_EE_Read
-   * @property {FT232H_EEPROM_STRUCTURE} [ee232h] An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
+   * @property {FT232H_EEPROM_STRUCTURE} [ee232h] An FT232H_EEPROM_STRUCTURE which contains only the relevant
+   * information for an FT232H device
    */
   /**
    * Synchronously reads the EEPROM contents of an FT232H device

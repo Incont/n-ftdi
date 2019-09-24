@@ -157,11 +157,14 @@ export const enum FT_DEVICE {
  */
 export type DeviceInfoNode = {
     /**
-     * Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
+     * Indicates device state.
+     * Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
      */
     readonly flags: FT_FLAGS;
     /**
-     * Indicates the device type. Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
+     * Indicates the device type.
+     * Can be one of the following: FT_DEVICE_232R, FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM,
+     * FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
      */
     readonly type: FT_DEVICE;
     /**
@@ -181,7 +184,8 @@ export type DeviceInfoNode = {
      */
     readonly description: string;
     /**
-     * This value is not used externally and is provided for information only. If the device is not open, ftHandle is undefined
+     * This value is not used externally and is provided for information only.
+     * If the device is not open, ftHandle is undefined
      */
     readonly ftHandle?: object;
 
@@ -222,8 +226,19 @@ export class FTDI {
      * Asynchronously gets information on all of the FTDI devices available
      */
     public static getDeviceList(): Promise<IGetDeviceListResult>;
-
-    constructor(...args: any[]);
+    /**
+     * Synchronously opens the FTDI device with the specified index.
+     * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
+     * @param index
+     * @returns 
+     */
+    public openByIndexSync(index: number): FT_STATUS;
+    /**
+     * 
+     * @param index 
+     * @returns
+     */
+    public openByIndex(index: number): Promise<FT_STATUS>;
 
     public close(...args: any[]): void;
 
@@ -244,10 +259,6 @@ export class FTDI {
     public openByDescription(...args: any[]): void;
 
     public openByDescriptionSync(...args: any[]): void;
-
-    public openByIndex(...args: any[]): void;
-
-    public openByIndexSync(...args: any[]): void;
 
     public openByLocation(...args: any[]): void;
 
