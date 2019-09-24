@@ -9,7 +9,7 @@ Napi::Object FtGetStatusOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Object FtGetStatusOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     DWORD rxQueue;
     DWORD txQueue;
     DWORD eventStatus;
@@ -19,7 +19,7 @@ Napi::Object FtGetStatusOp::InvokeSync(const Napi::CallbackInfo &info)
 
 Napi::Promise FtGetStatusOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     auto *operation = new FtGetStatusOp(info.Env(), ftHandle);
     operation->Queue();
     return operation->Promise();

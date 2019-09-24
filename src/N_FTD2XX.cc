@@ -3,7 +3,6 @@
 #if !_WIN32
 #include <WinTypes.h>
 #endif
-#include "ft_handler_wrapper.h"
 #include "ft_program_data_wrapper.h"
 #include "ft_base_op.h"
 #include "ft_create_device_info_list_op.h"
@@ -23,7 +22,6 @@
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
-    FtHandlerWrapper::Init(env, exports);
     FtProgramDataWrapper::Init(env, exports);
     FtCreateDeviceInfoListOp::Init(env, exports);
     FtGetDeviceInfoDetailOp::Init(env, exports);

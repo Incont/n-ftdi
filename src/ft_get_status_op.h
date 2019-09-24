@@ -4,7 +4,6 @@
 #include <napi.h>
 #include <ftd2xx.h>
 #include "ft_base_op.h"
-#include "ft_handler_wrapper.h"
 
 class FtGetStatusOp : public FtBaseOp
 {

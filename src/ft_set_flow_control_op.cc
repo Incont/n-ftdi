@@ -9,7 +9,7 @@ Napi::Object FtSetFlowControlOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Number FtSetFlowControlOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     USHORT flowControl = info[1].As<Napi::Number>().Uint32Value();
     UCHAR xon = info[2].As<Napi::Number>().Uint32Value();
     UCHAR xoff = info[3].As<Napi::Number>().Uint32Value();
@@ -19,7 +19,7 @@ Napi::Number FtSetFlowControlOp::InvokeSync(const Napi::CallbackInfo &info)
 
 Napi::Promise FtSetFlowControlOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     USHORT flowControl = info[1].As<Napi::Number>().Uint32Value();
     UCHAR xon = info[2].As<Napi::Number>().Uint32Value();
     UCHAR xoff = info[3].As<Napi::Number>().Uint32Value();

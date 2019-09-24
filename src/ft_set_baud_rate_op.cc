@@ -9,7 +9,7 @@ Napi::Object FtSetBaudRateOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Number FtSetBaudRateOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     ULONG baudRate = info[1].As<Napi::Number>().Uint32Value();
     FT_STATUS ftStatus = FT_SetBaudRate(ftHandle, baudRate);
     return Napi::Number::New(info.Env(), ftStatus);
@@ -17,7 +17,7 @@ Napi::Number FtSetBaudRateOp::InvokeSync(const Napi::CallbackInfo &info)
 
 Napi::Promise FtSetBaudRateOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     ULONG baudRate = info[1].As<Napi::Number>().Uint32Value();
     auto *operation = new FtSetBaudRateOp(info.Env(), ftHandle, baudRate);
     operation->Queue();

@@ -181,9 +181,9 @@ export type DeviceInfoNode = {
      */
     readonly description: string;
     /**
-     * This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
+     * This value is not used externally and is provided for information only. If the device is not open, ftHandle is undefined
      */
-    readonly ftHandle: object | null;
+    readonly ftHandle?: object;
 
  };
 

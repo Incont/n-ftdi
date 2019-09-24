@@ -62,6 +62,9 @@ Napi::Object FtOpenExOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HAND
 {
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);
-    result.Set("ftHandle", ftHandle == nullptr ? env.Null() : FtHandlerWrapper::NewInstance(env, ftHandle));
+    if(ftHandle != nullptr)
+    {
+        result.Set("ftHandle", Napi::External<void>::New(env, ftHandle));
+    }
     return result;
 }

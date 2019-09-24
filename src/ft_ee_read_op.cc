@@ -9,7 +9,7 @@ Napi::Object FtEeReadOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Number FtEeReadOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     PFT_PROGRAM_DATA pftData = FtProgramDataWrapper::GetData(info[1]);
     FT_STATUS ftStatus = FT_EE_Read(ftHandle, pftData);
     return Napi::Number::New(info.Env(), ftStatus);
@@ -17,7 +17,7 @@ Napi::Number FtEeReadOp::InvokeSync(const Napi::CallbackInfo &info)
 
 Napi::Promise FtEeReadOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     PFT_PROGRAM_DATA pftData = FtProgramDataWrapper::GetData(info[1]);
     auto *operation = new FtEeReadOp(info.Env(), ftHandle, pftData);
     operation->Queue();

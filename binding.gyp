@@ -6,7 +6,6 @@
       "cflags_cc!": [ "-fno-exceptions" ],
       "sources": [ 
         "./src/N_FTD2XX.cc",
-        "./src/ft_handler_wrapper.cc",
         "./src/ft_program_data_wrapper.cc",
         "./src/ft_create_device_info_list_op.cc",
         "./src/ft_get_device_info_detail_op.cc",

@@ -9,14 +9,14 @@ Napi::Object FtCloseOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Number FtCloseOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     FT_STATUS ftStatus = FT_Close(ftHandle);
     return Napi::Number::New(info.Env(), ftStatus);
 }
 
 Napi::Promise FtCloseOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     auto *operation = new FtCloseOp(info.Env(), ftHandle);
     operation->Queue();
     return operation->Promise();

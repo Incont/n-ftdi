@@ -9,7 +9,7 @@ Napi::Object FtSetDataCharacteristicsOp::Init(Napi::Env env, Napi::Object export
 
 Napi::Number FtSetDataCharacteristicsOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     UCHAR wordLength = info[1].As<Napi::Number>().Uint32Value();
     UCHAR stopBits = info[2].As<Napi::Number>().Uint32Value();
     UCHAR parity = info[3].As<Napi::Number>().Uint32Value();
@@ -19,7 +19,7 @@ Napi::Number FtSetDataCharacteristicsOp::InvokeSync(const Napi::CallbackInfo &in
 
 Napi::Promise FtSetDataCharacteristicsOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     UCHAR wordLength = info[1].As<Napi::Number>().Uint32Value();
     UCHAR stopBits = info[2].As<Napi::Number>().Uint32Value();
     UCHAR parity = info[3].As<Napi::Number>().Uint32Value();

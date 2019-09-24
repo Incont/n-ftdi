@@ -9,7 +9,7 @@ Napi::Object FtGetDeviceInfoOp::Init(Napi::Env env, Napi::Object exports)
 
 Napi::Object FtGetDeviceInfoOp::InvokeSync(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     FT_DEVICE ftDevice;
     DWORD deviceId;
     char serialNumber[16];
@@ -20,7 +20,7 @@ Napi::Object FtGetDeviceInfoOp::InvokeSync(const Napi::CallbackInfo &info)
 
 Napi::Promise FtGetDeviceInfoOp::Invoke(const Napi::CallbackInfo &info)
 {
-    FT_HANDLE ftHandle = FtHandlerWrapper::GetFtHandler(info[0]);
+    FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     auto *operation = new FtGetDeviceInfoOp(info.Env(), ftHandle);
     operation->Queue();
     return operation->Promise();

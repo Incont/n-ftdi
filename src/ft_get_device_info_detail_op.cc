@@ -56,16 +56,16 @@ Napi::Object FtGetDeviceInfoDetailOp::CreateResult(
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);
     Napi::Object deviceInfoNode = Napi::Object::New(env);
-    Napi::Value nFtHandler = ftHandle == nullptr
-                                 ? env.Null()
-                                 : FtHandlerWrapper::NewInstance(env, ftHandle);
     deviceInfoNode.Set("flags", flags);
     deviceInfoNode.Set("type", type);
     deviceInfoNode.Set("id", id);
     deviceInfoNode.Set("locId", locId);
     deviceInfoNode.Set("serialNumber", serialNumber);
     deviceInfoNode.Set("description", description);
-    deviceInfoNode.Set("ftHandle", nFtHandler);
+    if(ftHandle != nullptr)
+    {
+        deviceInfoNode.Set("ftHandle", Napi::External<void>::New(env, ftHandle));
+    }
     result.Set("deviceInfoNode", deviceInfoNode);
     return result;
 }

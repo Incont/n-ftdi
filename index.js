@@ -590,7 +590,7 @@ function errorHandler (ftStatus, ftErrorCondition) {
 class FTDI {
   constructor () {
     /**
-     * @type {FtHandle}
+     * @type {object}
      * @private
      */
     this._ftHandle = null
@@ -674,15 +674,6 @@ class FTDI {
   }
 
   /**
-   * Contain pointer to a variable of type FT_HANDLE where the handle will be stored. This handle must be used to access the device.
-   * @typedef {object} FtHandle
-   */
-  /**
-   * Mark handle as free
-   * @function
-   * @name FtHandle#free
-   */
-  /**
    * Type that holds device information for GetDeviceInfoDetail method
    * @typedef {object} DeviceInfoNode
    * @property {FT_FLAGS} flags Indicates device state. Can be any combination of the following: FT_FLAGS.FT_FLAGS_OPENED, FT_FLAGS.FT_FLAGS_HISPEED
@@ -691,7 +682,7 @@ class FTDI {
    * @property {number} locId The Vendor ID and Product ID of the device
    * @property {string} serialNumber The device serial number
    * @property {string} description The device description
-   * @property {?FtHandle} ftHandle This value is not used externally and is provided for information only. If the device is not open, ftHandle is null
+   * @property {object} [ftHandle] This value is not used externally and is provided for information only. If the device is not open, ftHandle is undefined
    */
   /**
    * @typedef {object} GetDeviceListResult
@@ -817,10 +808,6 @@ class FTDI {
   closeSync () {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     const ftStatus = _ftdiAddon.closeSync(this._ftHandle)
-    if (ftStatus === FT_STATUS.FT_OK) {
-      this._ftHandle.free()
-      this._ftHandle = null
-    }
     return ftStatus
   }
 
@@ -831,10 +818,6 @@ class FTDI {
   async close () {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     const ftStatus = await _ftdiAddon.close(this._ftHandle)
-    if (ftStatus === FT_STATUS.FT_OK) {
-      this._ftHandle.free()
-      this._ftHandle = null
-    }
     return ftStatus
   }
 
