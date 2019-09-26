@@ -12,12 +12,13 @@ Napi::Object FtReadOp::InvokeSync(const Napi::CallbackInfo &info)
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
     DWORD numBytesToRead = info[2].As<Napi::Number>().Uint32Value();
-    if(numBytesToRead > buf.ByteLength()) {
+    if (numBytesToRead > buf.ByteLength())
+    {
         numBytesToRead = buf.ByteLength();
     }
     DWORD numBytesRead;
-    void* rxBuffer = buf.Data();
-    FT_STATUS ftStatus =  FT_Read(ftHandle, rxBuffer, numBytesToRead, &numBytesRead);
+    void *rxBuffer = buf.Data();
+    FT_STATUS ftStatus = FT_Read(ftHandle, rxBuffer, numBytesToRead, &numBytesRead);
     return CreateResult(info.Env(), ftStatus, buf, numBytesRead);
 }
 
@@ -26,7 +27,8 @@ Napi::Promise FtReadOp::Invoke(const Napi::CallbackInfo &info)
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
     DWORD numBytesToRead = info[2].As<Napi::Number>().Uint32Value();
-    if(numBytesToRead > buf.ByteLength()) {
+    if (numBytesToRead > buf.ByteLength())
+    {
         numBytesToRead = buf.ByteLength();
     }
     auto *operation = new FtReadOp(info.Env(), ftHandle, buf, numBytesToRead);
@@ -34,13 +36,14 @@ Napi::Promise FtReadOp::Invoke(const Napi::CallbackInfo &info)
     return operation->Promise();
 }
 
-FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer& buffer, DWORD numBytesToRead)
+FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer &buffer, DWORD numBytesToRead)
     : FtBaseOp(env),
       ftHandle(ftHandle),
       numBytesToRead(numBytesToRead),
-      objRef(Napi::Persistent(buffer)) {
-          rxBuffer = (char*)buffer.Data();
-      }
+      objRef(Napi::Persistent(buffer))
+{
+    rxBuffer = (char *)buffer.Data();
+}
 
 void FtReadOp::Execute()
 {

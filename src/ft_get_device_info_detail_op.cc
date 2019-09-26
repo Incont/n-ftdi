@@ -62,7 +62,7 @@ Napi::Object FtGetDeviceInfoDetailOp::CreateResult(
     deviceInfoNode.Set("locId", locId);
     deviceInfoNode.Set("serialNumber", serialNumber);
     deviceInfoNode.Set("description", description);
-    if(ftHandle != nullptr)
+    if (ftHandle != nullptr)
     {
         deviceInfoNode.Set("ftHandle", Napi::External<void>::New(env, ftHandle));
     }

@@ -11,7 +11,8 @@ public:
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
     static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-    FtOpenExOp(Napi::Env env, PVOID pvArg1, DWORD flags);
+    FtOpenExOp(Napi::Env env, Napi::Value arg, DWORD flags);
+    ~FtOpenExOp();
     void Execute();
     void OnOK();
 

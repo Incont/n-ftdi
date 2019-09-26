@@ -40,7 +40,7 @@ Napi::Object FtOpenOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, FT_HANDLE
 {
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);
-    if(ftHandle != nullptr)
+    if (ftHandle != nullptr)
     {
         result.Set("ftHandle", Napi::External<void>::New(env, ftHandle));
     }

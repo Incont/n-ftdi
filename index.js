@@ -735,7 +735,7 @@ class FTDI {
     for (let i = 0; i < devCount; ++i) {
       const obj = _ftdiAddon.getDeviceInfoDetailSync(i)
       ftStatus = obj.ftStatus
-      deviceList[i] = obj.deviceList
+      deviceList[i] = obj.deviceInfoNode
     }
     return { ftStatus, deviceList }
   }
@@ -750,7 +750,7 @@ class FTDI {
     for (let i = 0; i < devCount; ++i) {
       const obj = await _ftdiAddon.getDeviceInfoDetail(i)
       ftStatus = obj.ftStatus
-      deviceList[i] = obj.deviceList
+      deviceList[i] = obj.deviceInfoNode
     }
     return { ftStatus, deviceList }
   }

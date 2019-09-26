@@ -11,7 +11,7 @@ public:
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
     static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
-    FtWriteOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer& buffer, DWORD numBytesToWrite);
+    FtWriteOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer &buffer, DWORD numBytesToWrite);
     void Execute();
     void OnOK();
 
@@ -19,7 +19,7 @@ private:
     FT_HANDLE ftHandle;
     DWORD numBytesToWrite;
     Napi::Reference<Napi::ArrayBuffer> objRef;
-    void* txBuffer;
+    void *txBuffer;
     DWORD numBytesWritten;
     inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD numBytesWritten);
 };
