@@ -21,5 +21,9 @@ steps:
 - script: npm install --global --production windows-build-tools@4.0.0
   displayName: 'install windows-build-tools'
 
+- task: CmdLine@2
+  inputs:
+    script: 'SET VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120'
+
 - script: npm install
   displayName: 'npm install'
