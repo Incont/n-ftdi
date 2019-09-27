@@ -17,13 +17,23 @@ steps:
 
 - script: npm install -g node-gyp
   displayName: 'install node-gyp'
- 
-- script: npm install --global --production windows-build-tools@4.0.0
-  displayName: 'install windows-build-tools'
-
-- task: CmdLine@2
+- task: VSBuild@1
   inputs:
-    script: 'SET VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120'
-
-- script: npm install
-  displayName: 'npm install'
+    vsVersion: '15.0'
+    msbuildArchitecture: 'x64'
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '2.7'
+    addToPath: true
+    architecture: 'x64'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'config set python python2.7'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'config set msvs_version 2017'
+- task: Npm@1
+  inputs:
+    command: 'install'
