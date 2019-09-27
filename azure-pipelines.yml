@@ -20,12 +20,16 @@ steps:
   inputs:
     command: 'custom'
     customCommand: 'install -g node-gyp'
+  displayName: 'Install node-gyp'
 
 - task: Npm@1
   inputs:
     command: 'custom'
     customCommand: 'install --global --production windows-build-tools@4.0.0'
+  displayName: 'install windows-build-tools'
 
 - task: Npm@1
   inputs:
-    command: 'install'
+    command: 'custom'
+    customCommand: 'node-gyp build'
+  displayName: 'node-gyp build'
