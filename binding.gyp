@@ -4,7 +4,7 @@
       "target_name": "N-FTD2XX",
       "cflags!": [ "-fno-exceptions" ],
       "cflags_cc!": [ "-fno-exceptions" ],
-      "sources": [ 
+      "sources": [
         "./src/N_FTD2XX.cc",
         "./src/ft_program_data_wrapper.cc",
         "./src/ft_create_device_info_list_op.cc",
@@ -55,18 +55,14 @@
             ]
           }
         }],
-        ['OS != "win"',
+        ['OS == "mac"',
           {
-            'include_dirs+': [
-              '/usr/local/include',
-              '/usr/local/include/libftd2xx/'
-            ],
             'ldflags': [
               '-Wl,-Map=output.map',
             ],
             'link_settings': {
               'libraries': [
-                '-lftd2xx'
+                '<(module_root_dir)/lib/mac/libftd2xx.a'
               ]
             }
           }
