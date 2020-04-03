@@ -423,7 +423,7 @@ export interface IReadResult extends IFtResult {
     /**
      * An array of bytes which was populated with the data read from the device
      */
-    readonly rxBuffer: ArrayBuffer;
+    readonly rxBuffer: Buffer;
     /**
      * The number of bytes actually read
      */
@@ -784,25 +784,25 @@ export class FTDI {
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public writeSync(txBuffer: ArrayBuffer, numBytesToWrite?: number): IWriteResult;
+    public writeSync(txBuffer: Buffer, numBytesToWrite?: number): IWriteResult;
     /**
      * Asynchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public write(txBuffer: ArrayBuffer, numBytesToWrite?: number): Promise<IWriteResult>;
+    public write(txBuffer: Buffer, numBytesToWrite?: number): Promise<IWriteResult>;
     /**
      * Synchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public readSync(rxBuffer: ArrayBuffer, numBytesToRead?: number): IReadResult;
+    public readSync(rxBuffer: Buffer, numBytesToRead?: number): IReadResult;
     /**
      * Asynchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public read(rxBuffer: ArrayBuffer, numBytesToRead?: number): Promise<IReadResult>;
+    public read(rxBuffer: Buffer, numBytesToRead?: number): Promise<IReadResult>;
     /**
      * Synchronously reads the EEPROM contents of an FT232H device
      */

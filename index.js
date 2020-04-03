@@ -366,10 +366,10 @@ Object.freeze(FT_232H_CBUS_OPTIONS)
  * @property {boolean} serNumEnableH non-zero if serial number to be used
  * @property {boolean} acSlowSlewH  non-zero if AC pins have slow slew
  * @property {boolean} acSchmittInputH non-zero if AC pins are Schmitt input
- * @property {number} acDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
+ * @property {FT_DRIVE_CURRENT} acDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
  * @property {boolean} adSlowSlewH non-zero if AD pins have slow slew
  * @property {boolean} adSchmittInputH non-zero if AD pins are Schmitt input
- * @property {number} adDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
+ * @property {FT_DRIVE_CURRENT} adDriveCurrentH valid values are 4mA, 8mA, 12mA, 16mA
  * @property {number} cbus0H Cbus Mux control
  * @property {number} cbus1H Cbus Mux control
  * @property {number} cbus2H Cbus Mux control
@@ -1018,7 +1018,7 @@ class FTDI {
    */
   /**
    * Synchronously write data to an open FTDI device
-   * @param {ArrayBuffer} txBuffer An array of bytes which contains the data to be written to the device
+   * @param {Buffer} txBuffer An array of bytes which contains the data to be written to the device
    * @param {number} [numBytesToWrite] The number of bytes to be written to the device
    * @returns {WriteResult}
    */
@@ -1030,7 +1030,7 @@ class FTDI {
 
   /**
    * Asynchronously write data to an open FTDI device
-   * @param {ArrayBuffer} txBuffer An array of bytes which contains the data to be written to the device
+   * @param {Buffer} txBuffer An array of bytes which contains the data to be written to the device
    * @param {number} [numBytesToWrite] The number of bytes to be written to the device
    * @returns {Promise<WriteResult>}
    */
@@ -1043,12 +1043,12 @@ class FTDI {
   /**
    * @typedef {object} ReadResult
    * @property {FT_STATUS} ftStatus Value from FT_Read
-   * @property {ArrayBuffer} rxBuffer An array of bytes which was populated with the data read from the device
+   * @property {Buffer} rxBuffer An array of bytes which was populated with the data read from the device
    * @property {number} numBytesRead The number of bytes actually read
    */
   /**
    * Synchronously read data from an open FTDI device
-   * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
+   * @param {Buffer} rxBuffer An array of bytes which will be populated with the data read from the device
    * @param {number} [numBytesToRead] The number of bytes requested from the device
    * @returns {ReadResult}
    */
@@ -1060,7 +1060,7 @@ class FTDI {
 
   /**
    * Asynchronously read data from an open FTDI device
-   * @param {ArrayBuffer} rxBuffer An array of bytes which will be populated with the data read from the device
+   * @param {Buffer} rxBuffer An array of bytes which will be populated with the data read from the device
    * @param {number} [numBytesToRead] The number of bytes requested from the device
    * @returns {Promise<ReadResult>}
    */

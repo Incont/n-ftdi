@@ -10,7 +10,7 @@ Napi::Object FtReadOp::Init(Napi::Env env, Napi::Object exports)
 Napi::Object FtReadOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
-    Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
+    Napi::Buffer<char> buf = info[1].As<Napi::Buffer<char>>();
     DWORD numBytesToRead = info[2].As<Napi::Number>().Uint32Value();
     if (numBytesToRead > buf.ByteLength())
     {
@@ -25,7 +25,7 @@ Napi::Object FtReadOp::InvokeSync(const Napi::CallbackInfo &info)
 Napi::Promise FtReadOp::Invoke(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
-    Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
+    Napi::Buffer<char> buf = info[1].As<Napi::Buffer<char>>();
     DWORD numBytesToRead = info[2].As<Napi::Number>().Uint32Value();
     if (numBytesToRead > buf.ByteLength())
     {
@@ -36,7 +36,7 @@ Napi::Promise FtReadOp::Invoke(const Napi::CallbackInfo &info)
     return operation->Promise();
 }
 
-FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer &buffer, DWORD numBytesToRead)
+FtReadOp::FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::Buffer<char> &buffer, DWORD numBytesToRead)
     : FtBaseOp(env),
       ftHandle(ftHandle),
       numBytesToRead(numBytesToRead),
@@ -56,7 +56,7 @@ void FtReadOp::OnOK()
     deferred.Resolve(CreateResult(Env(), ftStatus, objRef.Value(), numBytesRead));
 }
 
-Napi::Object FtReadOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, Napi::ArrayBuffer rxBuffer, DWORD numBytesRead)
+Napi::Object FtReadOp::CreateResult(Napi::Env env, FT_STATUS ftStatus, Napi::Buffer<char> rxBuffer, DWORD numBytesRead)
 {
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);

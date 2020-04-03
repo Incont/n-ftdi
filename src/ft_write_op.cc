@@ -10,7 +10,7 @@ Napi::Object FtWriteOp::Init(Napi::Env env, Napi::Object exports)
 Napi::Object FtWriteOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
-    Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
+    Napi::Buffer<char> buf = info[1].As<Napi::Buffer<char>>();
     DWORD numBytesToWrite = info[2].As<Napi::Number>().Uint32Value();
     if (numBytesToWrite > buf.ByteLength())
     {
@@ -25,7 +25,7 @@ Napi::Object FtWriteOp::InvokeSync(const Napi::CallbackInfo &info)
 Napi::Promise FtWriteOp::Invoke(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
-    Napi::ArrayBuffer buf = info[1].As<Napi::ArrayBuffer>();
+    Napi::Buffer<char> buf = info[1].As<Napi::Buffer<char>>();
     DWORD numBytesToWrite = info[2].As<Napi::Number>().Uint32Value();
     if (numBytesToWrite > buf.ByteLength())
     {
@@ -36,7 +36,7 @@ Napi::Promise FtWriteOp::Invoke(const Napi::CallbackInfo &info)
     return operation->Promise();
 }
 
-FtWriteOp::FtWriteOp(Napi::Env env, FT_HANDLE ftHandle, Napi::ArrayBuffer &buffer, DWORD numBytesToWrite)
+FtWriteOp::FtWriteOp(Napi::Env env, FT_HANDLE ftHandle, Napi::Buffer<char> &buffer, DWORD numBytesToWrite)
     : FtBaseOp(env),
       ftHandle(ftHandle),
       numBytesToWrite(numBytesToWrite),
