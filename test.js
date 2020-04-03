@@ -112,7 +112,8 @@ let p = new util.TextEncoder("utf-8").encode("aaaaaaaa");
 let h;
 let ftdi = new FTD2XX.FTDI()
 async function Test() {
-  await ftdi.openByIndex(0)
+  console.log(await FTD2XX.FTDI.getDeviceList())
+  console.log(await ftdi.openByDescription('FT232R USB UART'))
   await ftdi.setBaudRate(38400)
   console.log( await ftdi.getDeviceInfo())
   console.log( await ftdi.write(p.buffer, 1))
