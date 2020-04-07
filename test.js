@@ -103,7 +103,7 @@ function delay(ms) {
 }
 const _ftdiAddon = require('bindings')('N-FTD2XX')
 var util = require('util');
-let rxB = new Buffer(256);
+let rxB = Buffer.alloc(256);
 let str = String.fromCharCode.call(null, new Uint8Array(rxB));
 console.log(str);
 console.log();
@@ -115,7 +115,7 @@ async function Test() {
   console.log(await ftdi.openByDescription('FT232R USB UART'))
   await ftdi.setBaudRate(38400)
   console.log( await ftdi.getDeviceInfo())
-  console.log( await ftdi.write(new Buffer("aaaaaaaa"), 1))
+  console.log( await ftdi.write(Buffer.from("aaaaaaaa"), 1))
 
   let qqq = await ftdi.getQueueStatus()
   while(qqq.rxQueue == 0) {
