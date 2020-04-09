@@ -372,7 +372,7 @@ export interface IGetNumberOfDevicesResult extends IFtResult {
 }
 
 export interface IGetDeviceListResult extends IFtResult {
-    readonly devicelist: DeviceInfoNode[];
+    readonly deviceList: DeviceInfoNode[];
 }
 export interface IGetDeviceInfoResult extends IFtResult {
     /**
