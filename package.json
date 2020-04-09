@@ -1,6 +1,6 @@
 {
   "name": "n-ftdi",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "FTDI bindings for N-API Node.js, with the same interface as the managed .NET wrapper.",
   "main": "index.js",
   "typings": "index.d.ts",
