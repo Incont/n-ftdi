@@ -1,6 +1,6 @@
 {
   "name": "n-ftdi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "FTDI bindings for N-API Node.js, with the same interface as the managed .NET wrapper.",
   "main": "index.js",
   "typings": "index.d.ts",
@@ -28,6 +28,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^13.11.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.20.2",

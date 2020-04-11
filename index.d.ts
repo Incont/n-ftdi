@@ -811,4 +811,45 @@ export class FTDI {
      * Asynchronously reads the EEPROM contents of an FT232H device
      */
     public readFT232HEEPROM(): Promise<IReadFT232HEEPROM>;
+
+    /**
+     * Synchronously puts the device in a mode other than the default UART or FIFO mode
+     * @param {number} mask Sets up which bits are inputs and which are outputs. A bit value of 0 sets the corresponding
+     * pin to an input, a bit value of 1 sets the corresponding pin to an output. In the case of CBUS Bit Bang,
+     * the upper nibble of this value controls which pins are inputs and outputs, while the lower nibble controls
+     * which of the outputs are high and low
+     * @param {number} bitMode For FT232H devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG,
+     * FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG, FT_BIT_MODE_MCU_HOST,
+     * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT2232H devices, valid values are FT_BIT_MODE_RESET,
+     * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST,
+     * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT4232H devices, valid values are FT_BIT_MODE_RESET,
+     * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG. For FT232R devices,
+     * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG.
+     * For FT245R devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG.
+     * For FT2232 devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE,
+     * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
+     * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
+     */
+    public setBitModeSync(mask: number, bitMode: number): FT_STATUS;
+
+    /**
+     * Asynchronously puts the device in a mode other than the default UART or FIFO mode
+     * @param {number} mask Sets up which bits are inputs and which are outputs. A bit value of 0 sets the corresponding
+     * pin to an input, a bit value of 1 sets the corresponding pin to an output. In the case of CBUS Bit Bang,
+     * the upper nibble of this value controls which pins are inputs and outputs, while the lower nibble controls
+     * which of the outputs are high and low
+     * @param {number} bitMode For FT232H devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG,
+     * FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG, FT_BIT_MODE_MCU_HOST,
+     * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT2232H devices, valid values are FT_BIT_MODE_RESET,
+     * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST,
+     * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT4232H devices, valid values are FT_BIT_MODE_RESET,
+     * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG. For FT232R devices,
+     * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG.
+     * For FT245R devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG.
+     * For FT2232 devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE,
+     * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
+     * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
+     */
+    public setBitMode(mask: number, bitMode: number): Promise<FT_STATUS>;
+
 }

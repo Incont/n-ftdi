@@ -347,6 +347,46 @@ const FT_ERROR = {
 Object.freeze(FT_232H_CBUS_OPTIONS)
 
 /**
+ * Permitted bit mode values for FTDI devices. For use with SetBitMode
+ * @enum {number}
+ */
+const FT_BIT_MODES = {
+  /**
+   * Reset bit mode
+   */
+  FT_BIT_MODE_RESET: 0x00,
+  /**
+   * Asynchronous bit-bang mode
+   */
+  FT_BIT_MODE_ASYNC_BITBANG: 0x01,
+  /**
+   * MPSSE bit mode - only available on FT2232, FT2232H, FT4232H and FT232H
+   */
+  FT_BIT_MODE_MPSSE: 0x02,
+  /**
+   * Synchronous bit-bang mode
+   */
+  FT_BIT_MODE_SYNC_BITBANG: 0x04,
+  /**
+   * MCU host bus emulation mode - only available on FT2232, FT2232H, FT4232H and FT232H
+   */
+  FT_BIT_MODE_MCU_HOST: 0x08,
+  /**
+   * Fast opto-isolated serial mode - only available on FT2232, FT2232H, FT4232H and FT232H
+   */
+  FT_BIT_MODE_FAST_SERIAL: 0x10,
+  /**
+   * CBUS bit-bang mode - only available on FT232R and FT232H
+   */
+  FT_BIT_MODE_CBUS_BITBANG: 0x20,
+  /**
+   * Single channel synchronous 245 FIFO mode - only available on FT2232H channel A and FT232H
+   */
+  FT_BIT_MODE_SYNC_FIFO: 0x40
+}
+Object.freeze(FT_BIT_MODES)
+
+/**
  * @typedef {object} FT_PROGRAM_DATA
  * @property {number} signature1 Header - must be 0x0000000
  * @property {number} signature2 Header - must be 0xffffffff
@@ -557,7 +597,8 @@ class FtEeUtils {
   }
 }
 
-class FtException extends Error {}
+class FtException extends Error {
+}
 
 /**
  * Method to check ftStatus and ftErrorCondition values for error conditions and throw exceptions accordingly
@@ -720,6 +761,7 @@ class FTDI {
    * @property {object} [ftHandle] This value is not used externally and is provided for information only.
    * If the device is not open, ftHandle is undefined
    */
+
   /**
    * @typedef {object} GetDeviceListResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
@@ -857,7 +899,7 @@ class FTDI {
   }
 
   /**
-   * @typedef {object} GetDeviceInfoResult
+   * @typedef {object} GetDeviceInfoResulte
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R,
    * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
@@ -1116,6 +1158,88 @@ class FTDI {
     ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
     const ee232h = FtEeUtils.CreateEe232h(eeData)
     return { ftStatus, ee232h }
+  }
+
+  /**
+   *
+   * @param {FT_DEVICE} ftDevice
+   * @param {number} bitMode
+   * @returns {boolean}
+   * @private
+   */
+  _canSetBitMode (ftDevice, bitMode) {
+    switch (ftDevice) {
+      case FT_DEVICE.FT_DEVICE_AM:
+      case FT_DEVICE.FT_DEVICE_100AX:
+        return false
+      case FT_DEVICE.FT_DEVICE_BM:
+        if (bitMode !== FT_BIT_MODES.FT_BIT_MODE_RESET &&
+          (bitMode & (FT_BIT_MODES.FT_BIT_MODE_ASYNC_BITBANG)) === 0) {
+          return false
+        }
+        break
+    }
+    return true
+  }
+
+  /**
+   * Synchronously puts the device in a mode other than the default UART or FIFO mode
+   * @param {number} mask Sets up which bits are inputs and which are outputs. A bit value of 0 sets the corresponding
+   * pin to an input, a bit value of 1 sets the corresponding pin to an output. In the case of CBUS Bit Bang,
+   * the upper nibble of this value controls which pins are inputs and outputs, while the lower nibble controls
+   * which of the outputs are high and low
+   * @param {number} bitMode For FT232H devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG,
+   * FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG, FT_BIT_MODE_MCU_HOST,
+   * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT2232H devices, valid values are FT_BIT_MODE_RESET,
+   * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST,
+   * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT4232H devices, valid values are FT_BIT_MODE_RESET,
+   * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG. For FT232R devices,
+   * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG.
+   * For FT245R devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG.
+   * For FT2232 devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE,
+   * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
+   * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
+   * @returns {FT_STATUS}
+   * @throws {FtException} Thrown when the current device does not support the requested bit mode
+   */
+  setBitModeSync (mask, bitMode) {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    const { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK) {
+      return ftStatus
+    }
+    if (!this._canSetBitMode(ftDevice, bitMode)) errorHandler(ftStatus, FT_ERROR.FT_INVALID_BITMODE)
+    return _ftdiAddon.setBitModeSync(mask, bitMode)
+  }
+
+  /**
+   * Asynchronously puts the device in a mode other than the default UART or FIFO mode
+   * @param {number} mask Sets up which bits are inputs and which are outputs. A bit value of 0 sets the corresponding
+   * pin to an input, a bit value of 1 sets the corresponding pin to an output. In the case of CBUS Bit Bang,
+   * the upper nibble of this value controls which pins are inputs and outputs, while the lower nibble controls
+   * which of the outputs are high and low
+   * @param {number} bitMode For FT232H devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG,
+   * FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG, FT_BIT_MODE_MCU_HOST,
+   * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT2232H devices, valid values are FT_BIT_MODE_RESET,
+   * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST,
+   * FT_BIT_MODE_FAST_SERIAL, FT_BIT_MODE_SYNC_FIFO. For FT4232H devices, valid values are FT_BIT_MODE_RESET,
+   * FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE, FT_BIT_MODE_SYNC_BITBANG. For FT232R devices,
+   * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_CBUS_BITBANG.
+   * For FT245R devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_SYNC_BITBANG.
+   * For FT2232 devices, valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG, FT_BIT_MODE_MPSSE,
+   * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
+   * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
+   * @returns {Promise<FT_STATUS>}
+   * @throws {FtException} Thrown when the current device does not support the requested bit mode
+   */
+  async setBitMode (mask, bitMode) {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    const { ftStatus, ftDevice } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK) {
+      return ftStatus
+    }
+    if (!this._canSetBitMode(ftDevice, bitMode)) errorHandler(ftStatus, FT_ERROR.FT_INVALID_BITMODE)
+    return _ftdiAddon.setBitMode(mask, bitMode)
   }
 }
 
