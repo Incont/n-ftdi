@@ -19,6 +19,7 @@
         "./src/ft_set_data_characteristics_op.cc",
         "./src/ft_set_flow_control_op.cc",
         "./src/ft_set_baud_rate_op.cc",
+        "./src/ft_set_bit_mode_op.cc",
         "./src/ft_get_device_info_op.cc",
         "./src/ft_ee_read_op.cc",
         "./src/ft_write_op.cc",
