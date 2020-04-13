@@ -1209,7 +1209,7 @@ class FTDI {
       return ftStatus
     }
     if (!this._canSetBitMode(ftDevice, bitMode)) errorHandler(ftStatus, FT_ERROR.FT_INVALID_BITMODE)
-    return _ftdiAddon.setBitModeSync(mask, bitMode)
+    return _ftdiAddon.setBitModeSync(this._ftHandle, mask, bitMode)
   }
 
   /**
@@ -1239,7 +1239,7 @@ class FTDI {
       return ftStatus
     }
     if (!this._canSetBitMode(ftDevice, bitMode)) errorHandler(ftStatus, FT_ERROR.FT_INVALID_BITMODE)
-    return _ftdiAddon.setBitMode(mask, bitMode)
+    return _ftdiAddon.setBitMode(this._ftHandle, mask, bitMode)
   }
 }
 
