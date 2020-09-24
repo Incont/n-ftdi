@@ -20,6 +20,7 @@
 #include "ft_get_status_op.h"
 #include "ft_read_op.h"
 #include "ft_set_bit_mode_op.h"
+#include "ft_ex_program_device_description_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -39,6 +40,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtGetStatusOp::Init(env, exports);
     FtReadOp::Init(env, exports);
     FtSetBitModeOp::Init(env, exports);
+    FtExProgrammDeviceDescriptionOp::Init(env, exports);
     return exports;
 }
 

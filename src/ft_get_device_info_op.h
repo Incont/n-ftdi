@@ -1,5 +1,5 @@
-#ifndef FT_GET_DEVICE_INFO_H_
-#define FT_GET_DEVICE_INFO_H_
+#ifndef FT_GET_DEVICE_INFO_OP_H_
+#define FT_GET_DEVICE_INFO_OP_H_
 
 #include <napi.h>
 #include <ftd2xx.h>
@@ -30,4 +30,4 @@ private:
         char *description);
 };
 
-#endif // FT_GET_DEVICE_INFO_H_
+#endif // FT_GET_DEVICE_INFO_OP_H_

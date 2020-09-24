@@ -96,6 +96,8 @@ _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 _ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
 _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 */
+console.log(FTD2XX.FTDI.getDeviceListSync())
+/*
 function delay(ms) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);
@@ -128,3 +130,4 @@ async function Test() {
   console.log(str.length)
 }
 Test()
+*/
