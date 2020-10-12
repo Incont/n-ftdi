@@ -437,7 +437,18 @@ export interface IReadFT232HEEPROM extends IFtResult {
     readonly ee232h: FT232H_EEPROM_STRUCTURE;
 }
 
-export class FtException extends Error {}
+export interface IGetVIDPIDResult extends IFtResult {
+    /**
+     * Device Vendor ID (VID)
+     */
+    readonly dwVID: number;
+    /**
+     * Device Product ID (PID)
+     */
+    readonly dwPID: number;
+}
+
+export class FtException extends Error { }
 
 /**
  * Common EEPROM elements for all devices. Inherited to specific device type EEPROMs
@@ -852,4 +863,46 @@ export class FTDI {
      */
     public setBitMode(mask: number, bitMode: number): Promise<FT_STATUS>;
 
+    /**
+   * @param {string} description
+   * Synchronously programm device description in EEPROM
+   * @returns {FT_STATUS}
+   */
+    programDeviceDescriptionSync(description: string): FT_STATUS;
+
+    /**
+     * @param {string} description
+     * Asynchronously programm device description in EEPROM
+     * @returns {Promise<FT_STATUS>}
+     */
+    programDeviceDescription(description: string): Promise<FT_STATUS>;
+    /**
+       * @typedef {object} GetVIDPODResult
+       * @property {FT_STATUS} ftStatus Value from FT_Read
+       * @property {number} VID Pointer to DWORD that will contain the internal VID
+       * @property {number} PID Pointer to DWORD that will contain the internal PID
+       */
+    /**
+     * Synchronously retrieve the current VID and PID combination from within the internal device list table
+     * @returns {IGetVIDPIDResult}
+     */
+    static getVIDPIDSync(): IGetVIDPIDResult;
+
+    /**
+     * Asynchronously  retrieve the current VID and PID combination from within the internal device list table
+     * @returns {Promise<IGetVIDPIDResult>}
+     */
+    static getVIDPID(): Promise<IGetVIDPIDResult>;
+
+    /**
+   * Synchronously send a reset command to the port
+   * @returns {FT_STATUS} ftStatus Value from FT_CyclePort
+   */
+    cyclePortSync(): FT_STATUS;
+
+    /**
+     * Asynchronously send a reset command to the port
+     * @returns {Promise<FT_STATUS>} ftStatus Value from FT_CyclePort
+     */
+    cyclePort(): Promise<FT_STATUS>;
 }

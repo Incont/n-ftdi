@@ -1,60 +1,70 @@
 #include "ft_ex_program_device_description_op.h"
 
-Napi::Object FtExProgrammDeviceDescriptionOp::Init(Napi::Env env, Napi::Object exports)
+Napi::Object FtExProgramDeviceDescriptionOp::Init(Napi::Env env, Napi::Object exports)
 {
-    exports.Set("programDeviceDescriptionSync", Napi::Function::New(env, FtExProgrammDeviceDescriptionOp::InvokeSync));
-    exports.Set("programDeviceInfo", Napi::Function::New(env, FtExProgrammDeviceDescriptionOp::Invoke));
+    exports.Set("programDeviceDescriptionSync", Napi::Function::New(env, FtExProgramDeviceDescriptionOp::InvokeSync));
+    exports.Set("programDeviceDescription", Napi::Function::New(env, FtExProgramDeviceDescriptionOp::Invoke));
     return exports;
 }
 
-Napi::Object FtExProgrammDeviceDescriptionOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Object FtExProgramDeviceDescriptionOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
-    FT_PROGRAM_DATA eeData;
-    FT_STATUS ftStatus = FT_EE_Read(ftHandle, &eeData);
-    if (ftStatus != FT_OK)
-    {
-        return CreateResult(info.Env(), ftStatus);
-    }
-    char *description = strdup(info[1].As<Napi::String>().Utf8Value().c_str());
-    eeData.Description = description;
-    ftStatus = FT_EE_Program(ftHandle, &eeData);
-    free(description);
+    char description[64];
+    strcpy(description , info[1].As<Napi::String>().Utf8Value().c_str());
+    FT_STATUS ftStatus = FtExProgramDeviceDescription(ftHandle, description);
     return CreateResult(info.Env(), ftStatus);
 }
 
-Napi::Promise FtExProgrammDeviceDescriptionOp::Invoke(const Napi::CallbackInfo &info)
+Napi::Promise FtExProgramDeviceDescriptionOp::Invoke(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     std::string description = info[1].As<Napi::String>().Utf8Value();
-    auto *operation = new FtExProgrammDeviceDescriptionOp(info.Env(), ftHandle, description);
+    auto *operation = new FtExProgramDeviceDescriptionOp(info.Env(), ftHandle, description);
     operation->Queue();
     return operation->Promise();
 }
 
-FtExProgrammDeviceDescriptionOp::FtExProgrammDeviceDescriptionOp(Napi::Env env, FT_HANDLE ftHandle, std::string description) : FtBaseOp(env)
+FtExProgramDeviceDescriptionOp::FtExProgramDeviceDescriptionOp(Napi::Env env, FT_HANDLE ftHandle, std::string description) : FtBaseOp(env), ftHandle(ftHandle)
 {
     strcpy(this->description, description.c_str());
 }
 
-void FtExProgrammDeviceDescriptionOp::Execute()
+void FtExProgramDeviceDescriptionOp::Execute()
 {
-    FT_PROGRAM_DATA eeData;
-    ftStatus = FT_EE_Read(ftHandle, &eeData);
-    if (ftStatus == FT_OK)
-    {
-        eeData.Description = description;
-        ftStatus = FT_EE_Program(ftHandle, &eeData);
-    }
+    ftStatus = FtExProgramDeviceDescription(ftHandle, description);
 }
 
-void FtExProgrammDeviceDescriptionOp::OnOK()
+void FtExProgramDeviceDescriptionOp::OnOK()
 {
     Napi::HandleScope scope(Env());
     deferred.Resolve(CreateResult(Env(), ftStatus));
 }
 
-Napi::Object FtExProgrammDeviceDescriptionOp::CreateResult(
+FT_STATUS FtExProgramDeviceDescriptionOp::FtExProgramDeviceDescription(FT_HANDLE ftHandle, const char* description) {
+    FT_PROGRAM_DATA ftData;
+    char ManufacturerBuf[32];
+    char ManufacturerIdBuf[16];
+    char DescriptionBuf[64];
+    char SerialNumberBuf[16];
+    ftData.Signature1 = 0x00000000;
+    ftData.Signature2 = 0xffffffff;
+    ftData.Version = 0x00000005;
+    ftData.Manufacturer = ManufacturerBuf;
+    ftData.ManufacturerId = ManufacturerIdBuf;
+    ftData.Description = DescriptionBuf;
+    ftData.SerialNumber = SerialNumberBuf;
+    FT_STATUS ftStatus = FT_EE_Read(ftHandle, &ftData);
+    strcpy(ftData.Description , description);
+    if (ftStatus != FT_OK)
+    {
+        return ftStatus;
+    }
+    ftStatus = FT_EE_Program(ftHandle, &ftData);
+    return ftStatus;
+}
+
+Napi::Object FtExProgramDeviceDescriptionOp::CreateResult(
     Napi::Env env,
     FT_STATUS ftStatus)
 {

@@ -899,7 +899,7 @@ class FTDI {
   }
 
   /**
-   * @typedef {object} GetDeviceInfoResulte
+   * @typedef {object} GetDeviceInfoResult
    * @property {FT_STATUS} ftStatus Value from FT_GetDeviceInfoDetail
    * @property {FT_DEVICE} type Indicates the device type. Can be one of the following: FT_DEVICE_232R,
    * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
@@ -1240,6 +1240,67 @@ class FTDI {
     }
     if (!this._canSetBitMode(ftDevice, bitMode)) errorHandler(ftStatus, FT_ERROR.FT_INVALID_BITMODE)
     return _ftdiAddon.setBitMode(this._ftHandle, mask, bitMode)
+  }
+
+  /**
+   * @param {string} description
+   * Synchronously program device description in EEPROM
+   * @returns {FT_STATUS}
+   */
+  programDeviceDescriptionSync (description) {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.programDeviceDescriptionSync(this._ftHandle, description)
+  }
+
+  /**
+   * @param {string} description
+   * Asynchronously program device description in EEPROM
+   * @returns {Promise<FT_STATUS>}
+   */
+  programDeviceDescription (description) {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    return _ftdiAddon.programDeviceDescription(this._ftHandle, description)
+  }
+
+  /**
+   * @typedef {object} GetVIDPODResult
+   * @property {FT_STATUS} ftStatus Value from FT_Read
+   * @property {number} VID Pointer to DWORD that will contain the internal VID
+   * @property {number} PID Pointer to DWORD that will contain the internal PID
+   */
+  /**
+   * Synchronously retrieve the current VID and PID combination from within the internal device list table
+   * @returns {GetVIDPODResult}
+   */
+  static getVIDPIDSync () {
+    return _ftdiAddon.getVIDPIDSync()
+  }
+
+  /**
+   * Asynchronously retrieve the current VID and PID combination from within the internal device list table
+   * @returns {Promise<GetVIDPODResult>}
+   */
+  static getVIDPID () {
+    return _ftdiAddon.getVIDPID()
+  }
+
+  /**
+   * Synchronously send a reset command to the port
+   * @returns {FT_STATUS} ftStatus Value from FT_CyclePort
+   */
+  cyclePortSync () {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const ftStatus = _ftdiAddon.cyclePortSync(this._ftHandle)
+    return ftStatus
+  }
+
+  /**
+   * Asynchronously send a reset command to the port
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_CyclePort
+   */
+  cyclePort () {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.cyclePort(this._ftHandle)
   }
 }
 

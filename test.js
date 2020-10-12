@@ -96,8 +96,27 @@ _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 _ftdiAddon.createDeviceInfoList().then(r =>console.log(r))
 _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 */
+
 console.log(FTD2XX.FTDI.getDeviceListSync())
+let d = new FTD2XX.FTDI();
+d.openByIndexSync(0);
+console.log(d.getDeviceInfoSync());
+console.log(d.programDeviceDescriptionSync("cccc"));
+console.log(d.cyclePortSync());
+d.closeSync();
+d = new FTD2XX.FTDI();
+d.openByIndexSync(0);
+console.log(d.getDeviceInfoSync());
+
+//d.programDeviceDescription("TEST").then(v => console.log(v))
+//FTD2XX.FTDI.getVIDPID().then(v => console.log(v))
+//console.log(FTD2XX.FTDI.getVIDPIDSync())
 /*
+console.log(FTD2XX.FTDI.getVIDPIDSync());
+FTD2XX.FTDI.getVIDPID().then(v => console.log(v));
+*/
+/*
+TEMP_1WIRE
 function delay(ms) {
   return new Promise((resolve, reject) => {
     setTimeout(resolve, ms);

@@ -26,7 +26,9 @@
         "./src/ft_get_queue_status_op.cc",
         "./src/ft_get_status_op.cc",
         "./src/ft_read_op.cc",
-        "./src/ft_ex_program_device_description_op.cc"
+        "./src/ft_ex_program_device_description_op.cc",
+        "./src/ft_get_vid_pid_op.cc",
+        "./src/ft_cycle_port_op.cc"
       ],
       "include_dirs": [
         "./src",
