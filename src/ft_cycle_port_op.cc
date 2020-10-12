@@ -11,7 +11,6 @@ Napi::Number FtCyclePortOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     FT_STATUS ftStatus = FT_CyclePort(ftHandle);
-    printf("!!!!!!\n");
     return Napi::Number::New(info.Env(), ftStatus);
 }
 

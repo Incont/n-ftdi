@@ -5,6 +5,10 @@
 #include <ftd2xx.h>
 #include "ft_base_op.h"
 
+#if _WIN32
+inline FT_STATUS FT_GetVIDPID(DWORD *pdwVID, DWORD *pdwPID) { return FT_NOT_SUPPORTED; }
+#endif
+
 class FtGetVIDPIDOp : public FtBaseOp
 {
 public:
