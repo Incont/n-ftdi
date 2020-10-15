@@ -1,322 +1,333 @@
+type Enum<T> = T[keyof T];
 /**
  * Status values for FTDI devices
  */
-export const enum FT_STATUS {
+export const FT_STATUS: {
     /**
      * Status OK
      */
-    FT_OK = 0,
+    readonly FT_OK: 0,
     /**
      * The device handle is invalid
      */
-    FT_INVALID_HANDLE = 1,
+    readonly FT_INVALID_HANDLE:1,
     /**
      * Device not found
      */
-    FT_DEVICE_NOT_FOUND = 2,
+    readonly FT_DEVICE_NOT_FOUND : 2,
     /**
      * Device is not open
      */
-    FT_DEVICE_NOT_OPENED = 3,
+    readonly FT_DEVICE_NOT_OPENED : 3,
     /**
      * IO error
      */
-    FT_IO_ERROR = 4,
+    readonly FT_IO_ERROR: 4,
     /**
      * Insufficient resources
      */
-    FT_INSUFFICIENT_RESOURCES = 5,
+    readonly FT_INSUFFICIENT_RESOURCES: 5,
     /**
      * A parameter was invalid
      */
-    FT_INVALID_PARAMETER = 6,
+    readonly FT_INVALID_PARAMETER: 6,
     /**
      * The requested baud rate is invalid
      */
-    FT_INVALID_BAUD_RATE = 7,
+    readonly FT_INVALID_BAUD_RATE : 7,
     /**
      * Device not opened for erase
      */
-    FT_DEVICE_NOT_OPENED_FOR_ERASE = 8,
+    readonly FT_DEVICE_NOT_OPENED_FOR_ERASE: 8,
     /**
      * Device not poened for write
      */
-    FT_DEVICE_NOT_OPENED_FOR_WRITE = 9,
+    readonly FT_DEVICE_NOT_OPENED_FOR_WRITE: 9,
     /**
      * Failed to write to device
      */
-    FT_FAILED_TO_WRITE_DEVICE = 10,
+    readonly FT_FAILED_TO_WRITE_DEVICE: 10,
     /**
      * Failed to read the device EEPROM
      */
-    FT_EEPROM_READ_FAILED = 11,
+    readonly FT_EEPROM_READ_FAILED: 11,
     /**
      * Failed to write the device EEPROM
      */
-    FT_EEPROM_WRITE_FAILED = 12,
+    readonly FT_EEPROM_WRITE_FAILED: 12,
     /**
      * Failed to erase the device EEPROM
      */
-    FT_EEPROM_ERASE_FAILED = 13,
+    readonly FT_EEPROM_ERASE_FAILED: 13,
     /**
      * An EEPROM is not fitted to the device
      */
-    FT_EEPROM_NOT_PRESENT = 14,
+    readonly FT_EEPROM_NOT_PRESENT: 14,
     /**
      * Device EEPROM is blank
      */
-    FT_EEPROM_NOT_PROGRAMMED = 15,
+    readonly FT_EEPROM_NOT_PROGRAMMED: 15,
     /**
      * Invalid arguments
      */
-    FT_INVALID_ARGS = 16,
+    readonly FT_INVALID_ARGS: 16,
     /**
      * An other error has occurred
      */
-    FT_OTHER_ERROR = 17,
-}
+    readonly FT_OTHER_ERROR: 17
+};
+export type FT_STATUS = Enum<typeof FT_STATUS>;
 
 /**
  * Flags that provide information on the FTDI device state
  */
-export const enum FT_FLAGS {
+export const FT_FLAGS: {
     /**
      * Indicates that the device is open
      */
-    FT_FLAGS_OPENED = 0x00000001,
+    readonly FT_FLAGS_OPENED: 0x00000001,
     /**
      * Indicates that the device is enumerated as a hi-speed USB device
      */
-    FT_FLAGS_HISPEED = 0x00000002,
+    readonly FT_FLAGS_HISPEED: 0x00000002,
 }
+export type FT_FLAGS = Enum<typeof FT_FLAGS>;
 
 /**
  * Device type identifiers for FT_GetDeviceInfoDetail and FT_GetDeviceInfo
  */
-export const enum FT_DEVICE {
+export const FT_DEVICE: {
     /**
      * FT232B or FT245B device
      */
-    FT_DEVICE_BM = 0,
+    readonly FT_DEVICE_BM: 0,
     /**
      * FT8U232AM or FT8U245AM device
      */
-    FT_DEVICE_AM = 1,
+    readonly FT_DEVICE_AM: 1,
     /**
      * FT8U100AX device
      */
-    FT_DEVICE_100AX = 2,
+    readonly FT_DEVICE_100AX: 2,
     /**
      * Unknown device
      */
-    FT_DEVICE_UNKNOWN = 3,
+    readonly FT_DEVICE_UNKNOWN: 3,
     /**
      * FT2232 device
      */
-    FT_DEVICE_2232 = 4,
+    readonly FT_DEVICE_2232: 4,
     /**
      * FT232R or FT245R device
      */
-    FT_DEVICE_232R = 5,
+    readonly FT_DEVICE_232R: 5,
     /**
      * FT2232H device
      */
-    FT_DEVICE_2232H = 6,
+    readonly FT_DEVICE_2232H: 6,
     /**
      * FT4232H device
      */
-    FT_DEVICE_4232H = 7,
+    readonly FT_DEVICE_4232H: 7,
     /**
      * FT232H device
      */
-    FT_DEVICE_232H = 8,
+    readonly FT_DEVICE_232H: 8,
     /**
      * FT X-Series device
      */
-    FT_DEVICE_X_SERIES = 9,
+    readonly FT_DEVICE_X_SERIES: 9,
     /**
      * FT4222 hi-speed device Mode 0 - 2 interfaces
      */
-    FT_DEVICE_4222H_0 = 10,
+    readonly FT_DEVICE_4222H_0: 10,
     /**
      * FT4222 hi-speed device Mode 1 or 2 - 4 interfacesef
      */
-    FT_DEVICE_4222H_1_2 = 11,
+    readonly FT_DEVICE_4222H_1_2: 11,
     /**
      * FT4222 hi-speed device Mode 3 - 1 interface
      */
-    FT_DEVICE_4222H_3 = 12,
+    readonly FT_DEVICE_4222H_3: 12,
     /**
      * OTP programmer board for the FT4222
      */
-    FT_DEVICE_4222_PROG = 13,
+    readonly FT_DEVICE_4222_PROG: 13,
 }
+export type FT_DEVICE = Enum<typeof FT_DEVICE>;
 
 /**
  * Permitted data bits for FTDI devices
  */
-export const enum FT_DATA_BITS {
+export const FT_DATA_BITS: {
     /**
      * 8 data bits
      */
-    FT_BITS_8 = 0x08,
+    readonly FT_BITS_8: 0x08,
     /**
      * 7 data bits
      */
-    FT_BITS_7 = 0x07,
+    readonly FT_BITS_7: 0x07,
 }
+export type FT_DATA_BITS = Enum<typeof FT_DATA_BITS>;
 
 /**
  * Permitted stop bits for FTDI devices
  */
-export const enum FT_STOP_BITS {
+export const FT_STOP_BITS: {
     /**
      * 1 stop bit
      */
-    FT_STOP_BITS_1 = 0x00,
+    readonly FT_STOP_BITS_1: 0x00,
     /**
      * 2 stop bits
      */
-    FT_STOP_BITS_2 = 0x02,
+    readonly FT_STOP_BITS_2: 0x02,
 }
+export type FT_STOP_BITS = Enum<typeof FT_STOP_BITS>;
 
 /**
  * Permitted parity values for FTDI devices
  */
-export const enum FT_PARITY {
+export const FT_PARITY: {
     /**
      * No parity
      */
-    FT_PARITY_NONE = 0x00,
+    readonly FT_PARITY_NONE: 0x00,
     /**
      * Odd parity
      */
-    FT_PARITY_ODD = 0x01,
+    readonly FT_PARITY_ODD: 0x01,
     /**
      * Even parity
      */
-    FT_PARITY_EVEN = 0x02,
+    readonly FT_PARITY_EVEN: 0x02,
     /**
      * Mark parity
      */
-    FT_PARITY_MARK = 0x03,
+    readonly FT_PARITY_MARK: 0x03,
     /**
      * Space parity
      */
-    FT_PARITY_SPACE = 0x04,
+    readonly FT_PARITY_SPACE: 0x04,
 }
+export type FT_PARITY = Enum<typeof FT_PARITY>;
 
 /**
  * Permitted flow control values for FTDI devices
  */
-export const enum FT_FLOW_CONTROL {
+export const FT_FLOW_CONTROL: {
     /**
      * No flow control
      */
-    FT_FLOW_NONE = 0x0000,
+    readonly FT_FLOW_NONE : 0x0000,
     /**
      * RTS/CTS flow control
      */
-    FT_FLOW_RTS_CTS = 0x0100,
+    readonly FT_FLOW_RTS_CTS : 0x0100,
     /**
      * DTR/DSR flow control
      */
-    FT_FLOW_DTR_DSR = 0x0200,
+    readonly FT_FLOW_DTR_DSR : 0x0200,
     /**
      * Xon/Xoff flow control
      */
-    FT_FLOW_XON_XOFF = 0x0400,
+    readonly FT_FLOW_XON_XOFF : 0x0400,
 }
+export type FT_FLOW_CONTROL = Enum<typeof FT_FLOW_CONTROL>;
 
 /**
  * Valid values for drive current options on FT2232H, FT4232H and FT232H devices
  */
-export const enum FT_DRIVE_CURRENT {
+export const FT_DRIVE_CURRENT: {
     /**
      * 4mA drive current
      */
-    FT_DRIVE_CURRENT_4MA = 4,
+    readonly FT_DRIVE_CURRENT_4MA: 4,
     /**
      * 8mA drive current
      */
-    FT_DRIVE_CURRENT_8MA = 8,
+    readonly FT_DRIVE_CURRENT_8MA: 8,
     /**
      * 12mA drive current
      */
-    FT_DRIVE_CURRENT_12MA = 12,
+    readonly FT_DRIVE_CURRENT_12MA: 12,
     /**
      * 16mA drive current
      */
-    FT_DRIVE_CURRENT_16MA = 16,
-}
+    readonly FT_DRIVE_CURRENT_16MA: 16,
+};
+export type FT_DRIVE_CURRENT = Enum<typeof FT_DRIVE_CURRENT>;
 
 /**
  * Available functions for the FT232H CBUS pins. Controlled by FT232H EEPROM settings
  */
-export const enum FT_232H_CBUS_OPTIONS {
+export const FT_232H_CBUS_OPTIONS: {
     /**
      * FT232H CBUS EEPROM options - Tristate
      */
-    FT_CBUS_TRISTATE = 0x00,
+    readonly FT_CBUS_TRISTATE: 0x00,
     /**
      * FT232H CBUS EEPROM options - Rx LED
      */
-    FT_CBUS_RXLED = 0x01,
+    readonly FT_CBUS_RXLED : 0x01,
     /**
      * FT232H CBUS EEPROM options - Tx LED
      */
-    FT_CBUS_TXLED = 0x02,
+    readonly FT_CBUS_TXLED : 0x02,
     /**
      * FT232H CBUS EEPROM options - Tx and Rx LED
      */
-    FT_CBUS_TXRXLED = 0x03,
+    readonly FT_CBUS_TXRXLED : 0x03,
     /**
      * FT232H CBUS EEPROM options - Power Enable#
      */
-    FT_CBUS_PWREN = 0x04,
+    readonly FT_CBUS_PWREN : 0x04,
     /**
      * FT232H CBUS EEPROM options - Sleep
      */
-    FT_CBUS_SLEEP = 0x05,
+    readonly FT_CBUS_SLEEP : 0x05,
     /**
      * FT232H CBUS EEPROM options - Drive pin to logic 0
      */
-    FT_CBUS_DRIVE_0 = 0x06,
+    readonly FT_CBUS_DRIVE_0 : 0x06,
     /**
      * FT232H CBUS EEPROM options - Drive pin to logic 1
      */
-    FT_CBUS_DRIVE_1 = 0x07,
+    readonly FT_CBUS_DRIVE_1 : 0x07,
     /**
      * FT232H CBUS EEPROM options - IO Mode
      */
-    FT_CBUS_IOMODE = 0x08,
+    readonly FT_CBUS_IOMODE : 0x08,
     /**
      * FT232H CBUS EEPROM options - Tx Data Enable
      */
-    FT_CBUS_TXDEN = 0x09,
+    readonly FT_CBUS_TXDEN :0x09,
     /**
      * FT232H CBUS EEPROM options - 30MHz clock
      */
-    FT_CBUS_CLK30 = 0x0A,
+    readonly FT_CBUS_CLK30 : 0x0A,
     /**
      * FT232H CBUS EEPROM options - 15MHz clock
      */
-    FT_CBUS_CLK15 = 0x0B,
+    readonly FT_CBUS_CLK15 : 0x0B,
     /**
      * FT232H CBUS EEPROM options - 7.5MHz clock
      */
-    FT_CBUS_CLK7_5 = 0x0C,
+    readonly FT_CBUS_CLK7_5 : 0x0C,
 }
+export type FT_232H_CBUS_OPTIONS = Enum<typeof FT_232H_CBUS_OPTIONS>;
 
 /**
  * Error states not supported by FTD2XX
  */
-export const enum FT_ERROR {
-    FT_NO_ERROR = 0,
-    FT_INCORRECT_DEVICE = 1,
-    FT_INVALID_BITMODE = 2,
-    FT_BUFFER_SIZE = 3,
+export const FT_ERROR: {
+    readonly FT_NO_ERROR:0,
+    readonly FT_INCORRECT_DEVICE: 1,
+    readonly FT_INVALID_BITMODE : 2,
+    readonly FT_BUFFER_SIZE: 3,
 }
+export type FT_ERROR = Enum<typeof FT_ERROR>;
 
 /**
  * Type that holds device information for GetDeviceInfoDetail method
@@ -357,24 +368,25 @@ export type DeviceInfoNode = {
 
 };
 
-export interface IFtResult {
+export type FtResult = {
     /**
      * Value from FTDI native call
      */
     readonly ftStatus: FT_STATUS;
 }
 
-export interface IGetNumberOfDevicesResult extends IFtResult {
+export type GetNumberOfDevicesResult = {
     /**
      * The number of FTDI devices available
      */
-    readonly devCount: number;
-}
+    readonly devCount: number
+} & FtResult;
 
-export interface IGetDeviceListResult extends IFtResult {
+export type GetDeviceListResult = {
     readonly deviceList: DeviceInfoNode[];
-}
-export interface IGetDeviceInfoResult extends IFtResult {
+} & FtResult;
+
+export type GetDeviceInfoResult = {
     /**
      * Indicates the device type. Can be one of the following: FT_DEVICE_232R,
      * FT_DEVICE_2232C, FT_DEVICE_BM, FT_DEVICE_AM, FT_DEVICE_100AX or FT_DEVICE_UNKNOWN
@@ -392,16 +404,16 @@ export interface IGetDeviceInfoResult extends IFtResult {
      * The device description
      */
     readonly description: string;
-}
+} & FtResult;
 
-export interface IGetQueueStatusResult extends IFtResult {
+export type GetQueueStatusResult = {
     /**
      * The number of bytes available to be read
      */
-    readonly rxQueue: number;
-}
+    readonly rxQueue: number
+} & FtResult;
 
-export interface IGetStatusResult extends IGetQueueStatusResult {
+export type IGetStatusResult = {
     /**
      * The number of bytes waiting to be sent
      */
@@ -410,16 +422,16 @@ export interface IGetStatusResult extends IGetQueueStatusResult {
      * The type of event that has occurred
      */
     readonly eventStatus: number;
-}
+} & FtResult;
 
-export interface IWriteResult extends IFtResult {
+export type WriteResult = {
     /**
      * The number of bytes actually written to the device
      */
     readonly numBytesWritten: number;
-}
+} & FtResult;
 
-export interface IReadResult extends IFtResult {
+export type ReadResult = {
     /**
      * An array of bytes which was populated with the data read from the device
      */
@@ -428,16 +440,16 @@ export interface IReadResult extends IFtResult {
      * The number of bytes actually read
      */
     readonly numBytesRead: number;
-}
+} & FtResult;
 
-export interface IReadFT232HEEPROM extends IFtResult {
+export type ReadFT232HEEPROM = {
     /**
      * An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
      */
     readonly ee232h: FT232H_EEPROM_STRUCTURE;
-}
+} & FtResult;
 
-export interface IGetVIDPIDResult extends IFtResult {
+export type GetVIDPIDResult = {
     /**
      * Device Vendor ID (VID)
      */
@@ -446,7 +458,7 @@ export interface IGetVIDPIDResult extends IFtResult {
      * Device Product ID (PID)
      */
     readonly dwPID: number;
-}
+} & FtResult;
 
 export class FtException extends Error { }
 
@@ -642,19 +654,19 @@ export class FTDI {
     /**
      * Synchronously gets the number of FTDI devices available
      */
-    public static getNumberOfDevicesSync(): IGetNumberOfDevicesResult;
+    public static getNumberOfDevicesSync(): GetNumberOfDevicesResult;
     /**
      * Asynchronously gets the number of FTDI devices available
      */
-    public static getNumberOfDevices(): Promise<IGetNumberOfDevicesResult>;
+    public static getNumberOfDevices(): Promise<GetNumberOfDevicesResult>;
     /**
      * Synchronously gets information on all of the FTDI devices available
      */
-    public static getDeviceListSync(): IGetDeviceListResult;
+    public static getDeviceListSync(): GetDeviceListResult;
     /**
      * Asynchronously gets information on all of the FTDI devices available
      */
-    public static getDeviceList(): Promise<IGetDeviceListResult>;
+    public static getDeviceList(): Promise<GetDeviceListResult>;
     /**
      * Synchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
@@ -716,11 +728,11 @@ export class FTDI {
     /**
      * Synchronously gets device information for an open device
      */
-    public getDeviceInfoSync(): IGetDeviceListResult;
+    public getDeviceInfoSync(): GetDeviceListResult;
     /**
      * Asynchronously gets device information for an open device
      */
-    public getDeviceInfo(): Promise<IGetDeviceListResult>;
+    public getDeviceInfo(): Promise<GetDeviceListResult>;
     /**
      * Synchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -775,11 +787,11 @@ export class FTDI {
     /**
      * Synchronously gets the number of bytes available in the receive buffer
      */
-    public getQueueStatusSync(): IGetQueueStatusResult;
+    public getQueueStatusSync(): GetQueueStatusResult;
     /**
      * Asynchronously gets the number of bytes available in the receive buffer
      */
-    public getQueueStatus(): Promise<IGetQueueStatusResult>;
+    public getQueueStatus(): Promise<GetQueueStatusResult>;
     /**
      * Synchronously gets the device status including number of characters in the receive queue,
      * number of characters in the transmit queue, and the current event status
@@ -795,33 +807,33 @@ export class FTDI {
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public writeSync(txBuffer: Buffer, numBytesToWrite?: number): IWriteResult;
+    public writeSync(txBuffer: Buffer, numBytesToWrite?: number): WriteResult;
     /**
      * Asynchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public write(txBuffer: Buffer, numBytesToWrite?: number): Promise<IWriteResult>;
+    public write(txBuffer: Buffer, numBytesToWrite?: number): Promise<WriteResult>;
     /**
      * Synchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public readSync(rxBuffer: Buffer, numBytesToRead?: number): IReadResult;
+    public readSync(rxBuffer: Buffer, numBytesToRead?: number): ReadResult;
     /**
      * Asynchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public read(rxBuffer: Buffer, numBytesToRead?: number): Promise<IReadResult>;
+    public read(rxBuffer: Buffer, numBytesToRead?: number): Promise<ReadResult>;
     /**
      * Synchronously reads the EEPROM contents of an FT232H device
      */
-    public readFT232HEEPROMSync(): IReadFT232HEEPROM;
+    public readFT232HEEPROMSync(): ReadFT232HEEPROM;
     /**
      * Asynchronously reads the EEPROM contents of an FT232H device
      */
-    public readFT232HEEPROM(): Promise<IReadFT232HEEPROM>;
+    public readFT232HEEPROM(): Promise<ReadFT232HEEPROM>;
 
     /**
      * Synchronously puts the device in a mode other than the default UART or FIFO mode
@@ -886,13 +898,13 @@ export class FTDI {
      * Synchronously retrieve the current VID and PID combination from within the internal device list table
      * @returns {IGetVIDPIDResult}
      */
-    static getVIDPIDSync(): IGetVIDPIDResult;
+    static getVIDPIDSync(): GetVIDPIDResult;
 
     /**
      * Asynchronously  retrieve the current VID and PID combination from within the internal device list table
      * @returns {Promise<IGetVIDPIDResult>}
      */
-    static getVIDPID(): Promise<IGetVIDPIDResult>;
+    static getVIDPID(): Promise<GetVIDPIDResult>;
 
     /**
    * Synchronously send a reset command to the port
