@@ -7,13 +7,13 @@ Napi::Object FtExProgramDeviceDescriptionOp::Init(Napi::Env env, Napi::Object ex
     return exports;
 }
 
-Napi::Object FtExProgramDeviceDescriptionOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Number FtExProgramDeviceDescriptionOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     char description[64];
     strcpy(description , info[1].As<Napi::String>().Utf8Value().c_str());
     FT_STATUS ftStatus = FtExProgramDeviceDescription(ftHandle, description);
-    return CreateResult(info.Env(), ftStatus);
+    return Napi::Number::New(info.Env(), ftStatus);
 }
 
 Napi::Promise FtExProgramDeviceDescriptionOp::Invoke(const Napi::CallbackInfo &info)
@@ -38,7 +38,7 @@ void FtExProgramDeviceDescriptionOp::Execute()
 void FtExProgramDeviceDescriptionOp::OnOK()
 {
     Napi::HandleScope scope(Env());
-    deferred.Resolve(CreateResult(Env(), ftStatus));
+    deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
 FT_STATUS FtExProgramDeviceDescriptionOp::FtExProgramDeviceDescription(FT_HANDLE ftHandle, const char* description) {
@@ -62,13 +62,4 @@ FT_STATUS FtExProgramDeviceDescriptionOp::FtExProgramDeviceDescription(FT_HANDLE
     }
     ftStatus = FT_EE_Program(ftHandle, &ftData);
     return ftStatus;
-}
-
-Napi::Object FtExProgramDeviceDescriptionOp::CreateResult(
-    Napi::Env env,
-    FT_STATUS ftStatus)
-{
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("ftStatus", ftStatus);
-    return result;
 }

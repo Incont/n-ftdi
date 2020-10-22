@@ -9,7 +9,7 @@ class FtExProgramDeviceDescriptionOp : public FtBaseOp
 {
 public:
     static Napi::Object Init(Napi::Env env, Napi::Object exports);
-    static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
+    static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtExProgramDeviceDescriptionOp(Napi::Env env, FT_HANDLE ftHandle, std::string description);
     void Execute();
@@ -19,7 +19,6 @@ private:
     FT_HANDLE ftHandle;
     char description[64];
     inline static FT_STATUS FtExProgramDeviceDescription(FT_HANDLE ftHandle, const char* description);
-    inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus);
 };
 
 #endif // FT_EX_PROGRAM_DEVICE_DESCRIPTION_OP_H_
