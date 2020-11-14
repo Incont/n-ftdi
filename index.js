@@ -1125,8 +1125,8 @@ class FTDI {
    */
   readFT232HEEPROMSync () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
-    let { ftStatus, ftDevice } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
-    if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+    let { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (type !== FT_DEVICE.FT_DEVICE_232H) {
       errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
     }
     /** * @type {FT_PROGRAM_DATA} */
@@ -1146,8 +1146,8 @@ class FTDI {
    */
   async readFT232HEEPROM () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
-    let { ftStatus, ftDevice } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
-    if (ftDevice !== FT_DEVICE.FT_DEVICE_232H) {
+    let { ftStatus, type } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (type !== FT_DEVICE.FT_DEVICE_232H) {
       errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
     }
     /** * @type {FT_PROGRAM_DATA} */
