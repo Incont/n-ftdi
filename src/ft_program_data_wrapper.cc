@@ -24,6 +24,25 @@ Napi::Object FtProgramDataWrapper::Init(Napi::Env env, Napi::Object exports)
          InstanceAccessor("selfPowered", &FtProgramDataWrapper::GetSelfPowered, &FtProgramDataWrapper::SetSelfPowered),
          InstanceAccessor("remoteWakeup", &FtProgramDataWrapper::GetRemoteWakeup, &FtProgramDataWrapper::SetRemoteWakeup),
 
+         InstanceAccessor("useExtOsc", &FtProgramDataWrapper::GetUseExtOsc, &FtProgramDataWrapper::SetUseExtOsc),
+         InstanceAccessor("highDriveIOs", &FtProgramDataWrapper::GetHighDriveIOs, &FtProgramDataWrapper::SetHighDriveIOs),
+         InstanceAccessor("endpointSize", &FtProgramDataWrapper::GetEndpointSize, &FtProgramDataWrapper::SetEndpointSize),
+         InstanceAccessor("pullDownEnableR", &FtProgramDataWrapper::GetPullDownEnableR, &FtProgramDataWrapper::SetPullDownEnableR),
+         InstanceAccessor("serNumEnableR", &FtProgramDataWrapper::GetSerNumEnableR, &FtProgramDataWrapper::SetSerNumEnableR),
+         InstanceAccessor("invertTXD", &FtProgramDataWrapper::GetInvertTXD, &FtProgramDataWrapper::SetInvertTXD),
+         InstanceAccessor("invertRXD", &FtProgramDataWrapper::GetInvertRXD, &FtProgramDataWrapper::SetInvertRXD),
+         InstanceAccessor("invertRTS", &FtProgramDataWrapper::GetInvertRTS, &FtProgramDataWrapper::SetInvertRTS),
+         InstanceAccessor("invertCTS", &FtProgramDataWrapper::GetInvertCTS, &FtProgramDataWrapper::SetInvertCTS),
+         InstanceAccessor("invertDSR", &FtProgramDataWrapper::GetInvertDSR, &FtProgramDataWrapper::SetInvertDSR),
+         InstanceAccessor("invertDCD", &FtProgramDataWrapper::GetInvertDCD, &FtProgramDataWrapper::SetInvertDCD),
+         InstanceAccessor("invertRI", &FtProgramDataWrapper::GetInvertRI, &FtProgramDataWrapper::SetInvertRI),
+         InstanceAccessor("cbus0", &FtProgramDataWrapper::GetCbus0, &FtProgramDataWrapper::SetCbus0),
+         InstanceAccessor("cbus1", &FtProgramDataWrapper::GetCbus1, &FtProgramDataWrapper::SetCbus1),
+         InstanceAccessor("cbus2", &FtProgramDataWrapper::GetCbus2, &FtProgramDataWrapper::SetCbus2),
+         InstanceAccessor("cbus3", &FtProgramDataWrapper::GetCbus3, &FtProgramDataWrapper::SetCbus3),
+         InstanceAccessor("cbus4", &FtProgramDataWrapper::GetCbus4, &FtProgramDataWrapper::SetCbus4),
+         InstanceAccessor("rIsD2XX", &FtProgramDataWrapper::GetRIsD2XX, &FtProgramDataWrapper::SetRIsD2XX),
+
          InstanceAccessor("pullDownEnableH", &FtProgramDataWrapper::GetPullDownEnableH, &FtProgramDataWrapper::SetPullDownEnableH),
          InstanceAccessor("serNumEnableH", &FtProgramDataWrapper::GetSerNumEnableH, &FtProgramDataWrapper::SetSerNumEnableH),
          InstanceAccessor("acSlowSlewH", &FtProgramDataWrapper::GetACSlowSlewH, &FtProgramDataWrapper::SetACSlowSlewH),
@@ -249,6 +268,239 @@ void FtProgramDataWrapper::SetRemoteWakeup(const Napi::CallbackInfo &info, const
     if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
     {
         ftData.RemoteWakeup = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetUseExtOsc(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.UseExtOsc);
+}
+
+void FtProgramDataWrapper::SetUseExtOsc(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.UseExtOsc = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetHighDriveIOs(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.HighDriveIOs);
+}
+
+void FtProgramDataWrapper::SetHighDriveIOs(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.HighDriveIOs = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetEndpointSize(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.EndpointSize);
+}
+
+void FtProgramDataWrapper::SetEndpointSize(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.EndpointSize = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetPullDownEnableR(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.PullDownEnableR);
+}
+
+void FtProgramDataWrapper::SetPullDownEnableR(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.PullDownEnableR = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetSerNumEnableR(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.SerNumEnableR);
+}
+
+void FtProgramDataWrapper::SetSerNumEnableR(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.SerNumEnableR = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertTXD(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertTXD);
+}
+
+void FtProgramDataWrapper::SetInvertTXD(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertTXD = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertRXD(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertRXD);
+}
+
+void FtProgramDataWrapper::SetInvertRXD(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertRXD = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertRTS(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertRTS);
+}
+
+void FtProgramDataWrapper::SetInvertRTS(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertRTS = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertCTS(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertCTS);
+}
+
+void FtProgramDataWrapper::SetInvertCTS(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertCTS = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertDSR(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertDSR);
+}
+
+void FtProgramDataWrapper::SetInvertDSR(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertDSR = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertDCD(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertDCD);
+}
+
+void FtProgramDataWrapper::SetInvertDCD(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertDCD = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetInvertRI(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertRI);
+}
+
+void FtProgramDataWrapper::SetInvertRI(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertRI = value.As<Napi::Boolean>().Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus0(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.Cbus0);
+}
+void FtProgramDataWrapper::SetCbus0(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.Cbus0 = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus1(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.Cbus1);
+}
+
+void FtProgramDataWrapper::SetCbus1(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.Cbus1 = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus2(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.Cbus2);
+}
+
+void FtProgramDataWrapper::SetCbus2(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.Cbus2 = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus3(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.Cbus3);
+}
+
+void FtProgramDataWrapper::SetCbus3(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.Cbus3 = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetCbus4(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.Cbus4);
+}
+
+void FtProgramDataWrapper::SetCbus4(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
+    {
+        ftData.Cbus4 = value.As<Napi::Number>().Uint32Value();
+    }
+}
+
+Napi::Value FtProgramDataWrapper::GetRIsD2XX(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.RIsD2XX);
+}
+
+void FtProgramDataWrapper::SetRIsD2XX(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.RIsD2XX = value.As<Napi::Boolean>().Value();
     }
 }
 

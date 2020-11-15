@@ -50,7 +50,45 @@ private:
     Napi::Value GetRemoteWakeup(const Napi::CallbackInfo &info);
     void SetRemoteWakeup(const Napi::CallbackInfo &info, const Napi::Value &value);
 
-    // FT2232H extensions
+    // FT232R extensions
+    Napi::Value GetUseExtOsc(const Napi::CallbackInfo &info);
+    void SetUseExtOsc(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetHighDriveIOs(const Napi::CallbackInfo &info);
+    void SetHighDriveIOs(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetEndpointSize(const Napi::CallbackInfo &info);
+    void SetEndpointSize(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetPullDownEnableR(const Napi::CallbackInfo &info);
+    void SetPullDownEnableR(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetSerNumEnableR(const Napi::CallbackInfo &info);
+    void SetSerNumEnableR(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertTXD(const Napi::CallbackInfo &info);
+    void SetInvertTXD(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertRXD(const Napi::CallbackInfo &info);
+    void SetInvertRXD(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertRTS(const Napi::CallbackInfo &info);
+    void SetInvertRTS(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertCTS(const Napi::CallbackInfo &info);
+    void SetInvertCTS(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertDSR(const Napi::CallbackInfo &info);
+    void SetInvertDSR(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertDCD(const Napi::CallbackInfo &info);
+    void SetInvertDCD(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertRI(const Napi::CallbackInfo &info);
+    void SetInvertRI(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetCbus0(const Napi::CallbackInfo &info);
+    void SetCbus0(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetCbus1(const Napi::CallbackInfo &info);
+    void SetCbus1(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetCbus2(const Napi::CallbackInfo &info);
+    void SetCbus2(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetCbus3(const Napi::CallbackInfo &info);
+    void SetCbus3(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetCbus4(const Napi::CallbackInfo &info);
+    void SetCbus4(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetRIsD2XX(const Napi::CallbackInfo &info);
+    void SetRIsD2XX(const Napi::CallbackInfo &info, const Napi::Value &value);
+
+    // FT232H extensions
     Napi::Value GetPullDownEnableH(const Napi::CallbackInfo &info);
     void SetPullDownEnableH(const Napi::CallbackInfo &info, const Napi::Value &value);
     Napi::Value GetSerNumEnableH(const Napi::CallbackInfo &info);

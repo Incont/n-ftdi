@@ -387,6 +387,66 @@ const FT_BIT_MODES = {
 Object.freeze(FT_BIT_MODES)
 
 /**
+ * Available functions for the FT232R CBUS pins.  Controlled by FT232R EEPROM settings
+ * @enum {number}
+ */
+const FT_CBUS_OPTIONS = {
+  /**
+   * FT232R CBUS EEPROM options - Tx Data Enable
+   */
+  FT_CBUS_TXDEN: 0x00,
+  /**
+   * FT232R CBUS EEPROM options - Power On
+   */
+  FT_CBUS_PWRON: 0x01,
+  /**
+   * FT232R CBUS EEPROM options - Rx LED
+   */
+  FT_CBUS_RXLED: 0x02,
+  /**
+   * FT232R CBUS EEPROM options - Tx LED
+   */
+  FT_CBUS_TXLED: 0x03,
+  /**
+   * FT232R CBUS EEPROM options - Tx and Rx LED
+   */
+  FT_CBUS_TXRXLED: 0x04,
+  /**
+   * FT232R CBUS EEPROM options - Sleep
+   */
+  FT_CBUS_SLEEP: 0x05,
+  /**
+   * FT232R CBUS EEPROM options - 48MHz clock
+   */
+  FT_CBUS_CLK48: 0x06,
+  /**
+   * FT232R CBUS EEPROM options - 24MHz clock
+   */
+  FT_CBUS_CLK24: 0x07,
+  /**
+   * FT232R CBUS EEPROM options - 12MHz clock
+   */
+  FT_CBUS_CLK12: 0x08,
+  /**
+   * FT232R CBUS EEPROM options - 6MHz clock
+   */
+  FT_CBUS_CLK6: 0x09,
+  /**
+   * FT232R CBUS EEPROM options - IO mode
+   */
+  FT_CBUS_IOMODE: 0x0A,
+  /**
+   * FT232R CBUS EEPROM options - Bit-bang write strobe
+   */
+  FT_CBUS_BITBANG_WR: 0x0B,
+  /**
+   * FT232R CBUS EEPROM options - Bit-bang read strobe
+   */
+  FT_CBUS_BITBANG_RD: 0x0C
+}
+Object.freeze(FT_CBUS_OPTIONS)
+
+/**
  * @typedef {object} FT_PROGRAM_DATA
  * @property {number} signature1 Header - must be 0x0000000
  * @property {number} signature2 Header - must be 0xffffffff
@@ -551,6 +611,68 @@ class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
   }
 }
 
+/**
+ * EEPROM class for FT232R and FT245R
+ * @property {boolean} useExtOsc=false Disables the FT232R internal clock source. If the device has external oscillator enabled it must have an external oscillator fitted to function
+ * @property {boolean} highDriveIOs=false Enables high current IOs
+ * @property {number} endpointSize=64 Sets the endpoint size. This should always be set to 64
+ * @property {boolean} pullDownEnable=false Determines if IOs are pulled down when the device is in suspend
+ * @property {boolean} serNumEnable=true Determines if the serial number is enabled
+ * @property {boolean} invertTXD=false Inverts the sense of the TXD line
+ * @property {boolean} invertRXD=false Inverts the sense of the RXD line
+ * @property {boolean} invertRTS=false Inverts the sense of the RTS line
+ * @property {boolean} invertCTS=false Inverts the sense of the CTS line
+ * @property {boolean} invertDTR=false Inverts the sense of the DTR line
+ * @property {boolean} invertDSR=false Inverts the sense of the DSR line
+ * @property {boolean} invertDCD=false Inverts the sense of the DCD line
+ * @property {boolean} invertRI=false Inverts the sense of the RI line
+ * @property {number} cbus0=FT_CBUS_OPTIONS.FT_CBUS_SLEEP Sets the function of the CBUS0 pin for FT232R devices.
+ * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+ * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
+ * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+ * @property {number} cbus1=FT_CBUS_OPTIONS.FT_CBUS_SLEEP Sets the function of the CBUS1 pin for FT232R devices.
+ * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+ * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
+ * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+ * @property {number} cbus2=FT_CBUS_OPTIONS.FT_CBUS_SLEEP Sets the function of the CBUS2 pin for FT232R devices.
+ * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+ * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
+ * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+ * @property {number} cbus3=FT_CBUS_OPTIONS.FT_CBUS_SLEEP Sets the function of the CBUS3 pin for FT232R devices.
+ * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+ * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
+ * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+ * @property {number} cbus4=FT_CBUS_OPTIONS.FT_CBUS_SLEEP Sets the function of the CBUS4 pin for FT232R devices.
+ * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+ * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
+ * FT_CBUS_CLK6
+ * @property {boolean} rIsD2XX=false Determines if the VCP driver is loaded
+ */
+class FT232R_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
+  constructor () {
+    super()
+    this.useExtOsc = false
+    this.highDriveIOs = false
+    this.endpointSize = 64
+    this.pullDownEnable = false
+    this.serNumEnable = true
+    this.invertTXD = false
+    this.invertRXD = false
+    this.invertRTS = false
+    this.invertCTS = false
+    this.invertDTR = false
+    this.invertDSR = false
+    this.invertDCD = false
+    this.invertRI = false
+    this.cbus0 = FT_CBUS_OPTIONS.FT_CBUS_SLEEP
+    this.cbus1 = FT_CBUS_OPTIONS.FT_CBUS_SLEEP
+    this.cbus2 = FT_CBUS_OPTIONS.FT_CBUS_SLEEP
+    this.cbus3 = FT_CBUS_OPTIONS.FT_CBUS_SLEEP
+    this.cbus4 = FT_CBUS_OPTIONS.FT_CBUS_SLEEP
+    this.rIsD2XX = false
+  }
+}
+
 class FtEeUtils {
   /**
    * @param {FT_PROGRAM_DATA} eeData
@@ -594,6 +716,43 @@ class FtEeUtils {
     ee232h.isVCP = eeData.isVCPH
     ee232h.powerSaveEnable = eeData.powerSaveEnableH
     return ee232h
+  }
+
+  /**
+   * @param {FT_PROGRAM_DATA} eeData
+   * @returns {FT232R_EEPROM_STRUCTURE}
+   */
+  static createEe232r (eeData) {
+    const ee232r = new FT232R_EEPROM_STRUCTURE()
+    ee232r.manufacturer = eeData.manufacturer
+    ee232r.manufacturerId = eeData.manufacturerId
+    ee232r.description = eeData.description
+    ee232r.serialNumber = eeData.serialNumber
+    ee232r.vendorId = eeData.vendorId
+    ee232r.productId = eeData.productId
+    ee232r.maxPower = eeData.maxPower
+    ee232r.selfPowered = eeData.selfPowered
+    ee232r.remoteWakeup = eeData.remoteWakeup
+    ee232r.useExtOsc = eeData.useExtOsc
+    ee232r.highDriveIOs = eeData.highDriveIOs
+    ee232r.endpointSize = eeData.endpointSize
+    ee232r.pullDownEnable = eeData.pullDownEnableR
+    ee232r.serNumEnable = eeData.serNumEnableR
+    ee232r.invertTXD = eeData.invertTXD
+    ee232r.invertRXD = eeData.invertRXD
+    ee232r.invertRTS = eeData.invertRTS
+    ee232r.invertCTS = eeData.invertCTS
+    ee232r.invertDTR = eeData.invertDTR
+    ee232r.invertDSR = eeData.invertDSR
+    ee232r.invertDCD = eeData.invertDCD
+    ee232r.invertRI = eeData.invertRI
+    ee232r.cbus0 = eeData.cbus0
+    ee232r.cbus1 = eeData.cbus1
+    ee232r.cbus2 = eeData.cbus2
+    ee232r.cbus3 = eeData.cbus3
+    ee232r.cbus4 = eeData.cbus4
+    ee232r.rIsD2XX = eeData.rIsD2XX
+    return ee232r
   }
 
   /**
@@ -644,6 +803,48 @@ class FtEeUtils {
     eeData.ft1248FlowControlH = ee232h.ft1248FlowControl
     eeData.isVCPH = ee232h.isVCP
     eeData.powerSaveEnableH = ee232h.powerSaveEnable
+    return eeData
+  }
+
+  /**
+   * @param {FT232R_EEPROM_STRUCTURE} ee232r
+   * @returns {FT_PROGRAM_DATA}
+   */
+  static createEeDataFromEe232r (ee232r) {
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 2
+    eeData.manufacturer = ee232r.manufacturer.substr(0, 32)
+    eeData.manufacturerId = ee232r.manufacturerId.substr(0, 16)
+    eeData.description = ee232r.description.substr(0, 32)
+    eeData.serialNumber = ee232r.serialNumber.substr(0, 16)
+
+    eeData.vendorId = ee232r.vendorId
+    eeData.productId = ee232r.productId
+    eeData.maxPower = ee232r.maxPower
+    eeData.selfPowered = ee232r.selfPowered
+    eeData.remoteWakeup = ee232r.remoteWakeup
+    eeData.pullDownEnableR = ee232r.pullDownEnable
+    eeData.serNumEnableR = ee232r.serNumEnable
+    eeData.useExtOsc = ee232r.useExtOsc
+    eeData.highDriveIOs = ee232r.highDriveIOs
+    eeData.endpointSize = 64
+    eeData.invertTXD = ee232r.invertTXD
+    eeData.invertRXD = ee232r.invertRXD
+    eeData.invertRTS = ee232r.invertRTS
+    eeData.invertCTS = ee232r.invertCTS
+    eeData.invertDTR = ee232r.invertDTR
+    eeData.invertDSR = ee232r.invertDSR
+    eeData.invertDCD = ee232r.invertDCD
+    eeData.invertRI = ee232r.invertRI
+    eeData.cbus0 = ee232r.cbus0
+    eeData.cbus1 = ee232r.cbus1
+    eeData.cbus2 = ee232r.cbus2
+    eeData.cbus3 = ee232r.cbus3
+    eeData.cbus4 = ee232r.cbus4
+    eeData.rIsD2XX = ee232r.rIsD2XX
     return eeData
   }
 }
@@ -1248,6 +1449,94 @@ class FTDI {
     }
 
     const eeData = FtEeUtils.createEeDataFromEe232h(ee232h)
+    return _ftdiAddon.eeProgram(this._ftHandle, eeData)
+  }
+
+  /**
+   * @typedef {object} ReadFT232REEPROMResult
+   * @property {FT_STATUS} ftStatus Value from FT_EE_Read
+   * @property {FT232R_EEPROM_STRUCTURE} [ee232r] An FT232R_EEPROM_STRUCTURE which contains only the relevant
+   * information for an FT232R or FT245R device
+   */
+  /**
+   * Synchronously reads the EEPROM contents of an FT232R or FT245R device
+   * @returns {ReadFT232REEPROMResult}
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  readFT232REEPROMSync () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    let { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232R) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 2
+    ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
+    const ee232r = FtEeUtils.createEe232r(eeData)
+    return { ftStatus, ee232r }
+  }
+
+  /**
+   * Asynchronously reads the EEPROM contents of an FT232R or FT245R device
+   * @returns {Promise<ReadFT232REEPROMResult>}
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  async readFT232REEPROM () {
+    if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
+    let { ftStatus, type } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232R) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 2
+    ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
+    const ee232r = FtEeUtils.createEe232r(eeData)
+    return { ftStatus, ee232r }
+  }
+
+  /**
+   * Synchronously writes the specified values to the EEPROM of an FT232R or FT245R device
+   * @param {FT232R_EEPROM_STRUCTURE} ee232r The EEPROM settings to be written to the device
+   * @returns {FT_STATUS} Value from FT_EE_Program
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  writeFT232REEPROMSync (ee232r) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    if (ee232r.vendorId === 0x0000 || ee232r.productId === 0x0000) {
+      return FT_STATUS.FT_INVALID_PARAMETER
+    }
+
+    const eeData = FtEeUtils.createEeDataFromEe232r(ee232r)
+    return _ftdiAddon.eeProgramSync(this._ftHandle, eeData)
+  }
+
+  /**
+   * Asynchronously writes the specified values to the EEPROM of an FT232R or FT245R device
+   * @param {FT232R_EEPROM_STRUCTURE} ee232r The EEPROM settings to be written to the device
+   * @returns {Promise<FT_STATUS>} Value from FT_EE_Program
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  async writeFT232REEPROM (ee232r) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { ftStatus, type } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232R) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    if (ee232r.vendorId === 0x0000 || ee232r.productId === 0x0000) {
+      return FT_STATUS.FT_INVALID_PARAMETER
+    }
+
+    const eeData = FtEeUtils.createEeDataFromEe232r(ee232r)
     return _ftdiAddon.eeProgram(this._ftHandle, eeData)
   }
 

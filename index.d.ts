@@ -330,6 +330,65 @@ export const FT_ERROR: {
 export type FT_ERROR = Enum<typeof FT_ERROR>;
 
 /**
+ * Available functions for the FT232R CBUS pins.  Controlled by FT232R EEPROM settings
+ */
+export const FT_CBUS_OPTIONS: {
+    /**
+     * FT232R CBUS EEPROM options - Tx Data Enable
+     */
+    readonly FT_CBUS_TXDEN: 0x00,
+      /**
+     * FT232R CBUS EEPROM options - Power On
+     */
+    readonly FT_CBUS_PWRON: 0x01,
+      /**
+     * FT232R CBUS EEPROM options - Rx LED
+     */
+    readonly FT_CBUS_RXLED: 0x02,
+      /**
+     * FT232R CBUS EEPROM options - Tx LED
+     */
+    readonly FT_CBUS_TXLED: 0x03,
+      /**
+     * FT232R CBUS EEPROM options - Tx and Rx LED
+     */
+    readonly FT_CBUS_TXRXLED: 0x04,
+      /**
+     * FT232R CBUS EEPROM options - Sleep
+     */
+    readonly FT_CBUS_SLEEP: 0x05,
+      /**
+     * FT232R CBUS EEPROM options - 48MHz clock
+     */
+    readonly FT_CBUS_CLK48: 0x06,
+      /**
+     * FT232R CBUS EEPROM options - 24MHz clock
+     */
+    readonly FT_CBUS_CLK24: 0x07,
+      /**
+     * FT232R CBUS EEPROM options - 12MHz clock
+     */
+    readonly FT_CBUS_CLK12: 0x08,
+      /**
+     * FT232R CBUS EEPROM options - 6MHz clock
+     */
+    readonly FT_CBUS_CLK6: 0x09,
+      /**
+     * FT232R CBUS EEPROM options - IO mode
+     */
+    readonly FT_CBUS_IOMODE: 0x0A,
+      /**
+     * FT232R CBUS EEPROM options - Bit-bang write strobe
+     */
+    readonly FT_CBUS_BITBANG_WR: 0x0B,
+    /**
+     * FT232R CBUS EEPROM options - Bit-bang read strobe
+     */
+    readonly FT_CBUS_BITBANG_RD: 0x0C
+  }
+export type FT_CBUS_OPTIONS = Enum<typeof FT_CBUS_OPTIONS>;
+
+/**
  * Type that holds device information for GetDeviceInfoDetail method
  */
 export type DeviceInfoNode = {
@@ -442,11 +501,18 @@ export type ReadResult = {
     readonly numBytesRead: number;
 } & FtResult;
 
-export type ReadFT232HEEPROM = {
+export type ReadFT232HEEPROMResult = {
     /**
      * An FT232H_EEPROM_STRUCTURE which contains only the relevant information for an FT232H device
      */
     readonly ee232h: FT232H_EEPROM_STRUCTURE;
+} & FtResult;
+
+export type ReadFT232REEPROMResult = {
+    /**
+     * An FT232R_EEPROM_STRUCTURE which contains only the relevant information for an FT232R and FT245R devices
+     */
+    readonly ee232r: FT232R_EEPROM_STRUCTURE;
 } & FtResult;
 
 export type GetVIDPIDResult = {
@@ -469,42 +535,42 @@ export class FT_EEPROM_DATA {
     /**
      * Vendor ID as supplied by the USB Implementers Forum. Default: 0x0403
      */
-    public vendorId: number;
+    vendorId: number;
     /**
      * Product ID. Default: 0x6001
      */
-    public productId: number;
+    productId: number;
     /**
      * Manufacturer name string. Default: 'FTDI'
      */
-    public manufacturer: string;
+    manufacturer: string;
     /**
      * Manufacturer name abbreviation to be used as a prefix for automatically
      * generated serial numbers. Default: 'FT'
      */
-    public manufacturerId: string;
+    manufacturerId: string;
     /**
      * Device description string. Default: 'USB-Serial Converter'
      */
-    public description: string;
+    description: string;
     /**
      * Device serial number string. Default: ''
      */
-    public serialNumber: string;
+    serialNumber: string;
     /**
      * Maximum power the device needs. Default: 0x0090
      */
-    public maxPower: number;
+    maxPower: number;
     /**
      * Indicates if the device has its own power supply (self-powered) or
      * gets power from the USB port (bus-powered). Default: false
      */
-    public selfPowered: boolean;
+    selfPowered: boolean;
     /**
      * Determines if the device can wake the host PC from
      * suspend by toggling the RI line. Default: false
      */
-    public remoteWakeup: boolean;
+    remoteWakeup: boolean;
 }
 
 /**
@@ -514,225 +580,323 @@ export class FT232H_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
     /**
      * Determines if IOs are pulled down when the device is in suspend. Default: false
      */
-    public pullDownEnable: boolean;
+    pullDownEnable: boolean;
     /**
      * Determines if the serial number is enabled. Default: true
      */
-    public serNumEnable: boolean;
+    serNumEnable: boolean;
     /**
      * Determines if AC pins have a slow slew rate. Default: false
      */
-    public acSlowSlew: boolean;
+    acSlowSlew: boolean;
     /**
      *  Determines if the AC pins have a Schmitt input. Default: false
      */
-    public acSchmittInput: boolean;
+    acSchmittInput: boolean;
     /**
      * Determines the AC pins drive
      * current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or
      * FT_DRIVE_CURRENT_16MA. Default: FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA
      */
-    public acDriveCurrent: FT_DRIVE_CURRENT;
+    acDriveCurrent: FT_DRIVE_CURRENT;
     /**
      * Determines if AD pins have a slow slew rate. Default: false
      */
-    public adSlowSlew: boolean;
+    adSlowSlew: boolean;
     /**
      * Determines if the AD pins have a Schmitt input. Default: false
      */
-    public adSchmittInput: boolean;
+    adSchmittInput: boolean;
     /**
      * Determines the AD pins drive
      * current in mA. Valid values are FT_DRIVE_CURRENT_4MA, FT_DRIVE_CURRENT_8MA, FT_DRIVE_CURRENT_12MA or
      * FT_DRIVE_CURRENT_16MA. Default: FT_DRIVE_CURRENT.FT_DRIVE_CURRENT_4MA
      */
-    public adDriveCurrent: FT_DRIVE_CURRENT;
+    adDriveCurrent: FT_DRIVE_CURRENT;
     /**
      * Sets the function of the CBUS0 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5.
      * Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus0: FT_232H_CBUS_OPTIONS;
+    cbus0: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS1 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15, FT_CBUS_CLK7_5.
      * Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus1: FT_232H_CBUS_OPTIONS;
+    cbus1: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS2 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus2: FT_232H_CBUS_OPTIONS;
+    cbus2: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS3 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus3: FT_232H_CBUS_OPTIONS;
+    cbus3: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS4 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_TXDEN. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus4: FT_232H_CBUS_OPTIONS;
+    cbus4: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS5 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
      * FT_CBUS_CLK7_5. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus5: FT_232H_CBUS_OPTIONS;
+    cbus5: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS6 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
      * FT_CBUS_CLK7_5. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus6: FT_232H_CBUS_OPTIONS;
+    cbus6: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS7 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus7: FT_232H_CBUS_OPTIONS;
+    cbus7: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS8 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
      * FT_CBUS_CLK7_5. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus8: FT_232H_CBUS_OPTIONS;
+    cbus8: FT_232H_CBUS_OPTIONS;
     /**
      * Sets the function of the CBUS9 pin for
      * FT232H devices. Valid values are FT_CBUS_TRISTATE, FT_CBUS_RXLED, FT_CBUS_TXLED, FT_CBUS_TXRXLED, FT_CBUS_PWREN,
      * FT_CBUS_SLEEP, FT_CBUS_DRIVE_0, FT_CBUS_DRIVE_1, FT_CBUS_IOMODE, FT_CBUS_TXDEN, FT_CBUS_CLK30, FT_CBUS_CLK15,
      * FT_CBUS_CLK7_5. Default: FT_232H_CBUS_OPTIONS.FT_CBUS_TRISTATE
      */
-    public cbus9: FT_232H_CBUS_OPTIONS;
+    cbus9: FT_232H_CBUS_OPTIONS;
     /**
      * Determines if the device is in FIFO mode. Default: false
      */
-    public isFifo: boolean;
+    isFifo: boolean;
     /**
      * Determines if the device is in FIFO target mode. Default: false
      */
-    public isFifoTar: boolean;
+    isFifoTar: boolean;
     /**
      * Determines if the device is in fast serial mode. Default: false
      */
-    public isFastSer: boolean;
+    isFastSer: boolean;
     /**
      * Determines if the device is in FT1248 mode. Default: false
      */
-    public isFT1248: boolean;
+    isFT1248: boolean;
     /**
      * Determines FT1248 mode clock polarity. Default: false
      */
-    public ft1248Cpol: boolean;
+    ft1248Cpol: boolean;
     /**
      * Determines if data is ent MSB (0) or LSB (1) in FT1248 mode. Default: false
      */
-    public ft1248Lsb: boolean;
+    ft1248Lsb: boolean;
     /**
      * Determines if FT1248 mode uses flow control. Default: false
      */
-    public ft1248FlowControl: boolean;
+    ft1248FlowControl: boolean;
     /**
      * Determines if the VCP driver is loaded. Default: true
      */
-    public isVCP: boolean;
+    isVCP: boolean;
     /**
      * For self-powered designs, keeps the FT232H in low power state until ACBUS7 is high. Default: false
      */
-    public powerSaveEnable: boolean;
+    powerSaveEnable: boolean;
+}
+
+/**
+ * EEPROM structure specific to FT232R and FT245R devices
+ */
+export class FT232R_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
+    /**
+     * Disables the FT232R internal clock source.
+     * If the device has external oscillator enabled it must have an external oscillator fitted to function
+     */
+    useExtOsc: boolean;
+    /**
+     * Enables high current IOs
+     */
+    highDriveIOs: boolean;
+    /**
+     * Sets the endpoint size. This should always be set to 64
+     */
+    endpointSize: number;
+    /**
+     * Determines if IOs are pulled down when the device is in suspend
+     */
+    pullDownEnable: boolean;
+    /**
+     * Determines if the serial number is enabled
+     */
+    serNumEnable: boolean;
+    /**
+     * Inverts the sense of the TXD line
+     */
+    invertTXD: boolean;
+    /**
+     * Inverts the sense of the RXD line
+     */
+    invertRXD: boolean;
+    /**
+     * Inverts the sense of the RTS line
+     */
+    invertRTS: boolean;
+    /**
+     * Inverts the sense of the CTS line
+     */
+    invertCTS: boolean;
+    /**
+     * Inverts the sense of the DTR line
+     */
+    invertDTR: boolean;
+    /**
+     * Inverts the sense of the DSR line
+     */
+    invertDSR: boolean;
+    /**
+     * Inverts the sense of the DCD line
+     */
+    invertDCD: boolean;
+    /**
+     * Inverts the sense of the RI line
+     */
+    invertRI: boolean;
+    /**
+     * Sets the function of the CBUS0 pin for FT232R devices.
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+     */
+    cbus0: number;
+    /**
+     * Sets the function of the CBUS1 pin for FT232R devices.
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+     */
+    cbus1: number;
+    /**
+     * Sets the function of the CBUS2 pin for FT232R devices.
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+     */
+    cbus2: number;
+    /**
+     * Sets the function of the CBUS3 pin for FT232R devices.
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
+     */
+    cbus3: number;
+    /**
+     * Sets the function of the CBUS4 pin for FT232R devices.
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * FT_CBUS_CLK6
+     */
+    cbus4: number;
+    /**
+     * Determines if the VCP driver is loaded
+     */
+    rIsD2XX: boolean;
 }
 
 export class FTDI {
     /**
      * Synchronously gets the number of FTDI devices available
      */
-    public static getNumberOfDevicesSync(): GetNumberOfDevicesResult;
+    static getNumberOfDevicesSync(): GetNumberOfDevicesResult;
     /**
      * Asynchronously gets the number of FTDI devices available
      */
-    public static getNumberOfDevices(): Promise<GetNumberOfDevicesResult>;
+    static getNumberOfDevices(): Promise<GetNumberOfDevicesResult>;
     /**
      * Synchronously gets information on all of the FTDI devices available
      */
-    public static getDeviceListSync(): GetDeviceListResult;
+    static getDeviceListSync(): GetDeviceListResult;
     /**
      * Asynchronously gets information on all of the FTDI devices available
      */
-    public static getDeviceList(): Promise<GetDeviceListResult>;
+    static getDeviceList(): Promise<GetDeviceListResult>;
     /**
      * Synchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param index Index of the device to open,
      * note that this cannot be guaranteed to open a specific device
      */
-    public openByIndexSync(index: number): FT_STATUS;
+    openByIndexSync(index: number): FT_STATUS;
     /**
      * Asynchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param index Index of the device to open,
      * note that this cannot be guaranteed to open a specific device
      */
-    public openByIndex(index: number): Promise<FT_STATUS>;
+    openByIndex(index: number): Promise<FT_STATUS>;
     /**
      * Synchronously opens the FTDI device with the specified serial number
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param serialNumber Serial number of the device to open
      */
-    public openBySerialNumberSync(serialNumber: string): FT_STATUS;
+    openBySerialNumberSync(serialNumber: string): FT_STATUS;
     /**
      * Asynchronously opens the FTDI device with the specified serial number
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param serialNumber Serial number of the device to open
      */
-    public openBySerialNumber(serialNumber: string): Promise<FT_STATUS>;
+    openBySerialNumber(serialNumber: string): Promise<FT_STATUS>;
     /**
      * Synchronously opens the FTDI device with the specified description
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param description Description of the device to open
      */
-    public openByDescriptionSync(description: string): FT_STATUS;
+    openByDescriptionSync(description: string): FT_STATUS;
     /**
      * Asynchronously opens the FTDI device with the specified description
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param description Description of the device to open
      */
-    public openByDescription(description: string): Promise<FT_STATUS>;
+    openByDescription(description: string): Promise<FT_STATUS>;
     /**
      * Synchronously opens the FTDI device at the specified physical location
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param location Location of the device to open
      */
-    public openByLocationSync(location: number): FT_STATUS;
+    openByLocationSync(location: number): FT_STATUS;
     /**
      * Asynchronously opens the FTDI device at the specified physical location
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param location Location of the device to open
      */
-    public openByLocation(location: number): Promise<FT_STATUS>;
+    openByLocation(location: number): Promise<FT_STATUS>;
     /**
      * Synchronously closes the handle to an open FTDI device
      */
-    public closeSync(): FT_STATUS;
+    closeSync(): FT_STATUS;
     /**
      * Asynchronously closes the handle to an open FTDI device
      */
-    public close(): Promise<FT_STATUS>;
+    close(): Promise<FT_STATUS>;
     /**
      * Synchronously gets device information for an open device
      */
-    public getDeviceInfoSync(): GetDeviceListResult;
+    getDeviceInfoSync(): GetDeviceListResult;
     /**
      * Asynchronously gets device information for an open device
      */
-    public getDeviceInfo(): Promise<GetDeviceListResult>;
+    getDeviceInfo(): Promise<GetDeviceListResult>;
     /**
      * Synchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -742,7 +906,7 @@ export class FTDI {
      * @param parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE,
      * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
      */
-    public setDataCharacteristicsSync(wordLength: FT_DATA_BITS, stopBits: FT_STOP_BITS, parity: FT_PARITY): FT_STATUS;
+    setDataCharacteristicsSync(wordLength: FT_DATA_BITS, stopBits: FT_STOP_BITS, parity: FT_PARITY): FT_STATUS;
     /**
      * Asynchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -752,7 +916,7 @@ export class FTDI {
      * @param parity The parity of the UART data. Valid values are FT_PARITY.FT_PARITY_NONE,
      * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
      */
-    public setDataCharacteristics(
+    setDataCharacteristics(
         wordLength: FT_DATA_BITS,
         stopBits: FT_STOP_BITS,
         parity: FT_PARITY): Promise<FT_STATUS>;
@@ -764,7 +928,7 @@ export class FTDI {
      * @param xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow contro
      * @param xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
      */
-    public setFlowControlSync(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): FT_STATUS;
+    setFlowControlSync(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): FT_STATUS;
     /**
      * Asynchronously sets the flow control type
      * @param flowControl The type of flow control for the UART. Valid values are
@@ -773,79 +937,101 @@ export class FTDI {
      * @param xon The Xon character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow contro
      * @param xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
      */
-    public setFlowControl(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): Promise<FT_STATUS>;
+    setFlowControl(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): Promise<FT_STATUS>;
     /**
      * Synchronously sets the current Baud rate
      * @param baudRate The desired Baud rate for the device
      */
-    public setBaudRateSync(baudRate: number): FT_STATUS;
+    setBaudRateSync(baudRate: number): FT_STATUS;
     /**
      * Asynchronously sets the current Baud rate
      * @param baudRate The desired Baud rate for the device
      */
-    public setBaudRate(baudRate: number): Promise<FT_STATUS>;
+    setBaudRate(baudRate: number): Promise<FT_STATUS>;
     /**
      * Synchronously gets the number of bytes available in the receive buffer
      */
-    public getQueueStatusSync(): GetQueueStatusResult;
+    getQueueStatusSync(): GetQueueStatusResult;
     /**
      * Asynchronously gets the number of bytes available in the receive buffer
      */
-    public getQueueStatus(): Promise<GetQueueStatusResult>;
+    getQueueStatus(): Promise<GetQueueStatusResult>;
     /**
      * Synchronously gets the device status including number of characters in the receive queue,
      * number of characters in the transmit queue, and the current event status
      */
-    public getStatusSync(): IGetStatusResult;
+    getStatusSync(): IGetStatusResult;
     /**
      * Asynchronously gets the device status including number of characters in the receive queue,
      * number of characters in the transmit queue, and the current event status
      */
-    public getStatus(): Promise<IGetStatusResult>;
+    getStatus(): Promise<IGetStatusResult>;
     /**
      * Synchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public writeSync(txBuffer: Buffer, numBytesToWrite?: number): WriteResult;
+    writeSync(txBuffer: Buffer, numBytesToWrite?: number): WriteResult;
     /**
      * Asynchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
-    public write(txBuffer: Buffer, numBytesToWrite?: number): Promise<WriteResult>;
+    write(txBuffer: Buffer, numBytesToWrite?: number): Promise<WriteResult>;
     /**
      * Synchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public readSync(rxBuffer: Buffer, numBytesToRead?: number): ReadResult;
+    readSync(rxBuffer: Buffer, numBytesToRead?: number): ReadResult;
     /**
      * Asynchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
-    public read(rxBuffer: Buffer, numBytesToRead?: number): Promise<ReadResult>;
+    read(rxBuffer: Buffer, numBytesToRead?: number): Promise<ReadResult>;
     /**
      * Synchronously reads the EEPROM contents of an FT232H device
      */
-    public readFT232HEEPROMSync(): ReadFT232HEEPROM;
+    readFT232HEEPROMSync(): ReadFT232HEEPROMResult;
     /**
      * Asynchronously reads the EEPROM contents of an FT232H device
      */
-    public readFT232HEEPROM(): Promise<ReadFT232HEEPROM>;
+    readFT232HEEPROM(): Promise<ReadFT232HEEPROMResult>;
 
     /**
      * Synchronously writes the specified values to the EEPROM of an FT232H device
      * @param  ee232h The EEPROM settings to be written to the device
      */
-    writeFT232HEEPROMSync(ee232h: FT232H_EEPROM_STRUCTURE) : FT_STATUS;
+    writeFT232HEEPROMSync(ee232h: FT232H_EEPROM_STRUCTURE): FT_STATUS;
 
     /**
      * Asynchronously writes the specified values to the EEPROM of an FT232H device
      * @param ee232h The EEPROM settings to be written to the device
      */
-    async writeFT232HEEPROM(ee232h: FT232H_EEPROM_STRUCTURE) : Promise<FT_STATUS>;
+    writeFT232HEEPROM(ee232h: FT232H_EEPROM_STRUCTURE): Promise<FT_STATUS>;
+
+    /**
+     * Synchronously reads the EEPROM contents of an FT232R or FT245R device
+     */
+    readFT232REEPROMSync(): ReadFT232REEPROMResult;
+
+    /**
+     * Asynchronously reads the EEPROM contents of an FT232R or FT245R device
+     */
+    readFT232REEPROM(): Promise<ReadFT232REEPROMResult>;
+
+    /**
+     * Synchronously writes the specified values to the EEPROM of an FT232R or FT245R device
+     * @param {FT232R_EEPROM_STRUCTURE} ee232r The EEPROM settings to be written to the device
+     */
+    writeFT232REEPROMSync(ee232r: FT232R_EEPROM_STRUCTURE): FT_STATUS;
+
+    /**
+     * Asynchronously writes the specified values to the EEPROM of an FT232R or FT245R device
+     * @param {FT232R_EEPROM_STRUCTURE} ee232r The EEPROM settings to be written to the device
+     */
+    writeFT232REEPROM(ee232r: FT232R_EEPROM_STRUCTURE): Promise<FT_STATUS>;
 
     /**
      * Synchronously puts the device in a mode other than the default UART or FIFO mode
@@ -865,7 +1051,7 @@ export class FTDI {
      * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
      * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
      */
-    public setBitModeSync(mask: number, bitMode: number): FT_STATUS;
+    setBitModeSync(mask: number, bitMode: number): FT_STATUS;
 
     /**
      * Asynchronously puts the device in a mode other than the default UART or FIFO mode
@@ -885,7 +1071,7 @@ export class FTDI {
      * FT_BIT_MODE_SYNC_BITBANG, FT_BIT_MODE_MCU_HOST, FT_BIT_MODE_FAST_SERIAL. For FT232B and FT245B devices,
      * valid values are FT_BIT_MODE_RESET, FT_BIT_MODE_ASYNC_BITBANG
      */
-    public setBitMode(mask: number, bitMode: number): Promise<FT_STATUS>;
+    setBitMode(mask: number, bitMode: number): Promise<FT_STATUS>;
 
     /**
    * @param {string} description
