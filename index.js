@@ -556,7 +556,7 @@ class FtEeUtils {
    * @param {FT_PROGRAM_DATA} eeData
    * @returns {FT232H_EEPROM_STRUCTURE}
    */
-  static CreateEe232h (eeData) {
+  static createEe232h (eeData) {
     const ee232h = new FT232H_EEPROM_STRUCTURE()
     ee232h.manufacturer = eeData.manufacturer
     ee232h.manufacturerId = eeData.manufacturerId
@@ -594,6 +594,57 @@ class FtEeUtils {
     ee232h.isVCP = eeData.isVCPH
     ee232h.powerSaveEnable = eeData.powerSaveEnableH
     return ee232h
+  }
+
+  /**
+   * @param {FT232H_EEPROM_STRUCTURE} ee232h
+   * @returns {FT_PROGRAM_DATA}
+   */
+  static createEeDataFromEe232h (ee232h) {
+    /** * @type {FT_PROGRAM_DATA} */
+    const eeData = new _ftdiAddon.FT_PROGRAM_DATA()
+    eeData.signature1 = 0x00000000
+    eeData.signature2 = 0xFFFFFFFF
+    eeData.version = 5
+    eeData.manufacturer = ee232h.manufacturer.substr(0, 32)
+    eeData.manufacturerId = ee232h.manufacturerId.substr(0, 16)
+    eeData.description = ee232h.description.substr(0, 32)
+    eeData.serialNumber = ee232h.serialNumber.substr(0, 16)
+
+    eeData.vendorId = ee232h.vendorId
+    eeData.productId = ee232h.productId
+    eeData.maxPower = ee232h.maxPower
+    eeData.selfPowered = ee232h.selfPowered
+    eeData.remoteWakeup = ee232h.remoteWakeup
+
+    eeData.pullDownEnableH = ee232h.pullDownEnable
+    eeData.serNumEnableH = ee232h.serNumEnable
+    eeData.acSlowSlewH = ee232h.acSlowSlew
+    eeData.acSchmittInputH = ee232h.acSchmittInput
+    eeData.acDriveCurrentH = ee232h.acDriveCurrent
+    eeData.adSlowSlewH = ee232h.adSlowSlew
+    eeData.adSchmittInputH = ee232h.adSchmittInput
+    eeData.adDriveCurrentH = ee232h.adDriveCurrent
+    eeData.cbus0H = ee232h.cbus0
+    eeData.cbus1H = ee232h.cbus1
+    eeData.cbus2H = ee232h.cbus2
+    eeData.cbus3H = ee232h.cbus3
+    eeData.cbus4H = ee232h.cbus4
+    eeData.cbus5H = ee232h.cbus5
+    eeData.cbus6H = ee232h.cbus6
+    eeData.cbus7H = ee232h.cbus7
+    eeData.cbus8H = ee232h.cbus8
+    eeData.cbus9H = ee232h.cbus9
+    eeData.isFifoH = ee232h.isFifo
+    eeData.isFifoTarH = ee232h.isFifoTar
+    eeData.isFastSerH = ee232h.isFastSer
+    eeData.isFT1248H = ee232h.isFT1248
+    eeData.ft1248CpolH = ee232h.ft1248Cpol
+    eeData.ft1248LsbH = ee232h.ft1248Lsb
+    eeData.ft1248FlowControlH = ee232h.ft1248FlowControl
+    eeData.isVCPH = ee232h.isVCP
+    eeData.powerSaveEnableH = ee232h.powerSaveEnable
+    return eeData
   }
 }
 
@@ -1126,7 +1177,7 @@ class FTDI {
   readFT232HEEPROMSync () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     let { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
-    if (type !== FT_DEVICE.FT_DEVICE_232H) {
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
       errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
     }
     /** * @type {FT_PROGRAM_DATA} */
@@ -1135,7 +1186,7 @@ class FTDI {
     eeData.signature2 = 0xFFFFFFFF
     eeData.version = 5
     ftStatus = _ftdiAddon.eeReadSync(this._ftHandle, eeData)
-    const ee232h = FtEeUtils.CreateEe232h(eeData)
+    const ee232h = FtEeUtils.createEe232h(eeData)
     return { ftStatus, ee232h }
   }
 
@@ -1147,7 +1198,7 @@ class FTDI {
   async readFT232HEEPROM () {
     if (!this._ftHandle) return { ftStatus: FT_STATUS.FT_OTHER_ERROR }
     let { ftStatus, type } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
-    if (type !== FT_DEVICE.FT_DEVICE_232H) {
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
       errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
     }
     /** * @type {FT_PROGRAM_DATA} */
@@ -1156,8 +1207,48 @@ class FTDI {
     eeData.signature2 = 0xFFFFFFFF
     eeData.version = 5
     ftStatus = await _ftdiAddon.eeReadSync(this._ftHandle, eeData)
-    const ee232h = FtEeUtils.CreateEe232h(eeData)
+    const ee232h = FtEeUtils.createEe232h(eeData)
     return { ftStatus, ee232h }
+  }
+
+  /**
+   * Synchronously writes the specified values to the EEPROM of an FT232H device
+   * @param {FT232H_EEPROM_STRUCTURE} ee232h The EEPROM settings to be written to the device
+   * @returns {FT_STATUS} Value from FT_EE_Program
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  writeFT232HEEPROMSync (ee232h) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    if (ee232h.vendorId === 0x0000 || ee232h.productId === 0x0000) {
+      return FT_STATUS.FT_INVALID_PARAMETER
+    }
+
+    const eeData = FtEeUtils.createEeDataFromEe232h(ee232h)
+    return _ftdiAddon.eeProgramSync(this._ftHandle, eeData)
+  }
+
+  /**
+   * Asynchronously writes the specified values to the EEPROM of an FT232H device
+   * @param {FT232H_EEPROM_STRUCTURE} ee232h The EEPROM settings to be written to the device
+   * @returns {Promise<FT_STATUS>} Value from FT_EE_Program
+   * @throws {FtException} Thrown when the current device does not match the type required by this method
+   */
+  async writeFT232HEEPROM (ee232h) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { ftStatus, type } = await _ftdiAddon.getDeviceInfo(this._ftHandle)
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
+      errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
+    }
+    if (ee232h.vendorId === 0x0000 || ee232h.productId === 0x0000) {
+      return FT_STATUS.FT_INVALID_PARAMETER
+    }
+
+    const eeData = FtEeUtils.createEeDataFromEe232h(ee232h)
+    return _ftdiAddon.eeProgram(this._ftHandle, eeData)
   }
 
   /**
@@ -1314,5 +1405,6 @@ module.exports = {
   FT_FLOW_CONTROL,
   FT_DRIVE_CURRENT,
   FT_232H_CBUS_OPTIONS,
-  FTDI
+  FTDI,
+  FT232H_EEPROM_STRUCTURE
 }

@@ -66,7 +66,7 @@ Napi::Object FtProgramDataWrapper::NewInstance(Napi::Env env, FT_HANDLE ftHandle
 
 PFT_PROGRAM_DATA FtProgramDataWrapper::GetData(Napi::Value value)
 {
-    FtProgramDataWrapper *wrapper = Napi::ObjectWrap<FtProgramDataWrapper>::Unwrap(value.As<Napi::Object>());
+    FtProgramDataWrapper *wrapper = FtProgramDataWrapper::Unwrap(value.As<Napi::Object>());
     return wrapper->GetData();
 }
 
@@ -157,7 +157,7 @@ void FtProgramDataWrapper::SetManufacturer(const Napi::CallbackInfo &info, const
 {
     if (ThrowTypeErrorIfFalse(value.IsString(), info.Env(), "String expected"))
     {
-        StrCopy(value.As<Napi::String>(), manufacturer);
+        StrCopy(value.As<Napi::String>(), manufacturer, 32);
     }
 }
 
@@ -170,7 +170,7 @@ void FtProgramDataWrapper::SetManufacturerId(const Napi::CallbackInfo &info, con
 {
     if (ThrowTypeErrorIfFalse(value.IsString(), info.Env(), "String expected"))
     {
-        StrCopy(value.As<Napi::String>(), manufacturerId);
+        StrCopy(value.As<Napi::String>(), manufacturerId, 16);
     }
 }
 
@@ -183,7 +183,7 @@ void FtProgramDataWrapper::SetDescription(const Napi::CallbackInfo &info, const 
 {
     if (ThrowTypeErrorIfFalse(value.IsString(), info.Env(), "String expected"))
     {
-        StrCopy(value.As<Napi::String>(), description);
+        StrCopy(value.As<Napi::String>(), description, 64);
     }
 }
 
@@ -196,7 +196,7 @@ void FtProgramDataWrapper::SetSerialNumber(const Napi::CallbackInfo &info, const
 {
     if (ThrowTypeErrorIfFalse(value.IsString(), info.Env(), "String expected"))
     {
-        StrCopy(value.As<Napi::String>(), serialNumber);
+        StrCopy(value.As<Napi::String>(), serialNumber, 16);
     }
 }
 
@@ -311,7 +311,7 @@ Napi::Value FtProgramDataWrapper::GetACDriveCurrentH(const Napi::CallbackInfo &i
 
 void FtProgramDataWrapper::SetACDriveCurrentH(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
-    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    if (ThrowTypeErrorIfFalse(value.IsNumber(), info.Env(), "Number expected"))
     {
         ftData.ACDriveCurrentH = value.As<Napi::Number>().Uint32Value();
     }

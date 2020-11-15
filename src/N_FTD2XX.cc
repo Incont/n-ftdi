@@ -23,6 +23,7 @@
 #include "ft_ex_program_device_description_op.h"
 #include "ft_get_vid_pid_op.h"
 #include "ft_cycle_port_op.h"
+#include "ft_ee_program_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -45,6 +46,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtExProgramDeviceDescriptionOp::Init(env, exports);
     FtGetVIDPIDOp::Init(env, exports);
     FtCyclePortOp::Init(env, exports);
+    FtEeProgramOp::Init(env, exports);
     return exports;
 }
 

@@ -10,15 +10,15 @@ export const FT_STATUS: {
     /**
      * The device handle is invalid
      */
-    readonly FT_INVALID_HANDLE:1,
+    readonly FT_INVALID_HANDLE: 1,
     /**
      * Device not found
      */
-    readonly FT_DEVICE_NOT_FOUND : 2,
+    readonly FT_DEVICE_NOT_FOUND: 2,
     /**
      * Device is not open
      */
-    readonly FT_DEVICE_NOT_OPENED : 3,
+    readonly FT_DEVICE_NOT_OPENED: 3,
     /**
      * IO error
      */
@@ -34,7 +34,7 @@ export const FT_STATUS: {
     /**
      * The requested baud rate is invalid
      */
-    readonly FT_INVALID_BAUD_RATE : 7,
+    readonly FT_INVALID_BAUD_RATE: 7,
     /**
      * Device not opened for erase
      */
@@ -220,19 +220,19 @@ export const FT_FLOW_CONTROL: {
     /**
      * No flow control
      */
-    readonly FT_FLOW_NONE : 0x0000,
+    readonly FT_FLOW_NONE: 0x0000,
     /**
      * RTS/CTS flow control
      */
-    readonly FT_FLOW_RTS_CTS : 0x0100,
+    readonly FT_FLOW_RTS_CTS: 0x0100,
     /**
      * DTR/DSR flow control
      */
-    readonly FT_FLOW_DTR_DSR : 0x0200,
+    readonly FT_FLOW_DTR_DSR: 0x0200,
     /**
      * Xon/Xoff flow control
      */
-    readonly FT_FLOW_XON_XOFF : 0x0400,
+    readonly FT_FLOW_XON_XOFF: 0x0400,
 }
 export type FT_FLOW_CONTROL = Enum<typeof FT_FLOW_CONTROL>;
 
@@ -270,51 +270,51 @@ export const FT_232H_CBUS_OPTIONS: {
     /**
      * FT232H CBUS EEPROM options - Rx LED
      */
-    readonly FT_CBUS_RXLED : 0x01,
+    readonly FT_CBUS_RXLED: 0x01,
     /**
      * FT232H CBUS EEPROM options - Tx LED
      */
-    readonly FT_CBUS_TXLED : 0x02,
+    readonly FT_CBUS_TXLED: 0x02,
     /**
      * FT232H CBUS EEPROM options - Tx and Rx LED
      */
-    readonly FT_CBUS_TXRXLED : 0x03,
+    readonly FT_CBUS_TXRXLED: 0x03,
     /**
      * FT232H CBUS EEPROM options - Power Enable#
      */
-    readonly FT_CBUS_PWREN : 0x04,
+    readonly FT_CBUS_PWREN: 0x04,
     /**
      * FT232H CBUS EEPROM options - Sleep
      */
-    readonly FT_CBUS_SLEEP : 0x05,
+    readonly FT_CBUS_SLEEP: 0x05,
     /**
      * FT232H CBUS EEPROM options - Drive pin to logic 0
      */
-    readonly FT_CBUS_DRIVE_0 : 0x06,
+    readonly FT_CBUS_DRIVE_0: 0x06,
     /**
      * FT232H CBUS EEPROM options - Drive pin to logic 1
      */
-    readonly FT_CBUS_DRIVE_1 : 0x07,
+    readonly FT_CBUS_DRIVE_1: 0x07,
     /**
      * FT232H CBUS EEPROM options - IO Mode
      */
-    readonly FT_CBUS_IOMODE : 0x08,
+    readonly FT_CBUS_IOMODE: 0x08,
     /**
      * FT232H CBUS EEPROM options - Tx Data Enable
      */
-    readonly FT_CBUS_TXDEN :0x09,
+    readonly FT_CBUS_TXDEN: 0x09,
     /**
      * FT232H CBUS EEPROM options - 30MHz clock
      */
-    readonly FT_CBUS_CLK30 : 0x0A,
+    readonly FT_CBUS_CLK30: 0x0A,
     /**
      * FT232H CBUS EEPROM options - 15MHz clock
      */
-    readonly FT_CBUS_CLK15 : 0x0B,
+    readonly FT_CBUS_CLK15: 0x0B,
     /**
      * FT232H CBUS EEPROM options - 7.5MHz clock
      */
-    readonly FT_CBUS_CLK7_5 : 0x0C,
+    readonly FT_CBUS_CLK7_5: 0x0C,
 }
 export type FT_232H_CBUS_OPTIONS = Enum<typeof FT_232H_CBUS_OPTIONS>;
 
@@ -322,9 +322,9 @@ export type FT_232H_CBUS_OPTIONS = Enum<typeof FT_232H_CBUS_OPTIONS>;
  * Error states not supported by FTD2XX
  */
 export const FT_ERROR: {
-    readonly FT_NO_ERROR:0,
+    readonly FT_NO_ERROR: 0,
     readonly FT_INCORRECT_DEVICE: 1,
-    readonly FT_INVALID_BITMODE : 2,
+    readonly FT_INVALID_BITMODE: 2,
     readonly FT_BUFFER_SIZE: 3,
 }
 export type FT_ERROR = Enum<typeof FT_ERROR>;
@@ -834,6 +834,18 @@ export class FTDI {
      * Asynchronously reads the EEPROM contents of an FT232H device
      */
     public readFT232HEEPROM(): Promise<ReadFT232HEEPROM>;
+
+    /**
+     * Synchronously writes the specified values to the EEPROM of an FT232H device
+     * @param  ee232h The EEPROM settings to be written to the device
+     */
+    writeFT232HEEPROMSync(ee232h: FT232H_EEPROM_STRUCTURE) : FT_STATUS;
+
+    /**
+     * Asynchronously writes the specified values to the EEPROM of an FT232H device
+     * @param ee232h The EEPROM settings to be written to the device
+     */
+    async writeFT232HEEPROM(ee232h: FT232H_EEPROM_STRUCTURE) : Promise<FT_STATUS>;
 
     /**
      * Synchronously puts the device in a mode other than the default UART or FIFO mode
