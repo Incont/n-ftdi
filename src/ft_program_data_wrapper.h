@@ -69,6 +69,8 @@ private:
     void SetInvertRTS(const Napi::CallbackInfo &info, const Napi::Value &value);
     Napi::Value GetInvertCTS(const Napi::CallbackInfo &info);
     void SetInvertCTS(const Napi::CallbackInfo &info, const Napi::Value &value);
+    Napi::Value GetInvertDTR(const Napi::CallbackInfo &info);
+    void SetInvertDTR(const Napi::CallbackInfo &info, const Napi::Value &value);
     Napi::Value GetInvertDSR(const Napi::CallbackInfo &info);
     void SetInvertDSR(const Napi::CallbackInfo &info, const Napi::Value &value);
     Napi::Value GetInvertDCD(const Napi::CallbackInfo &info);

@@ -1137,8 +1137,7 @@ class FTDI {
    */
   closeSync () {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
-    const ftStatus = _ftdiAddon.closeSync(this._ftHandle)
-    return ftStatus
+    return _ftdiAddon.closeSync(this._ftHandle)
   }
 
   /**
@@ -1509,7 +1508,7 @@ class FTDI {
   writeFT232REEPROMSync (ee232r) {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     const { ftStatus, type } = _ftdiAddon.getDeviceInfoSync(this._ftHandle)
-    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232H) {
+    if (ftStatus !== FT_STATUS.FT_OK || type !== FT_DEVICE.FT_DEVICE_232R) {
       errorHandler(ftStatus, FT_ERROR.FT_INCORRECT_DEVICE)
     }
     if (ee232r.vendorId === 0x0000 || ee232r.productId === 0x0000) {
@@ -1670,8 +1669,7 @@ class FTDI {
    */
   cyclePortSync () {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
-    const ftStatus = _ftdiAddon.cyclePortSync(this._ftHandle)
-    return ftStatus
+    return _ftdiAddon.cyclePortSync(this._ftHandle)
   }
 
   /**
@@ -1693,6 +1691,7 @@ module.exports = {
   FT_PARITY,
   FT_FLOW_CONTROL,
   FT_DRIVE_CURRENT,
+  FT_CBUS_OPTIONS,
   FT_232H_CBUS_OPTIONS,
   FTDI,
   FT232H_EEPROM_STRUCTURE,

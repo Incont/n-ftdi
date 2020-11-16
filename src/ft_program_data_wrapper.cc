@@ -33,6 +33,7 @@ Napi::Object FtProgramDataWrapper::Init(Napi::Env env, Napi::Object exports)
          InstanceAccessor("invertRXD", &FtProgramDataWrapper::GetInvertRXD, &FtProgramDataWrapper::SetInvertRXD),
          InstanceAccessor("invertRTS", &FtProgramDataWrapper::GetInvertRTS, &FtProgramDataWrapper::SetInvertRTS),
          InstanceAccessor("invertCTS", &FtProgramDataWrapper::GetInvertCTS, &FtProgramDataWrapper::SetInvertCTS),
+         InstanceAccessor("invertDTR", &FtProgramDataWrapper::GetInvertDTR, &FtProgramDataWrapper::SetInvertDTR),
          InstanceAccessor("invertDSR", &FtProgramDataWrapper::GetInvertDSR, &FtProgramDataWrapper::SetInvertDSR),
          InstanceAccessor("invertDCD", &FtProgramDataWrapper::GetInvertDCD, &FtProgramDataWrapper::SetInvertDCD),
          InstanceAccessor("invertRI", &FtProgramDataWrapper::GetInvertRI, &FtProgramDataWrapper::SetInvertRI),
@@ -299,7 +300,7 @@ void FtProgramDataWrapper::SetHighDriveIOs(const Napi::CallbackInfo &info, const
 
 Napi::Value FtProgramDataWrapper::GetEndpointSize(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.EndpointSize);
+    return Napi::Number::New(info.Env(), ftData.EndpointSize);
 }
 
 void FtProgramDataWrapper::SetEndpointSize(const Napi::CallbackInfo &info, const Napi::Value &value)
@@ -388,6 +389,19 @@ void FtProgramDataWrapper::SetInvertCTS(const Napi::CallbackInfo &info, const Na
     }
 }
 
+Napi::Value FtProgramDataWrapper::GetInvertDTR(const Napi::CallbackInfo &info)
+{
+    return Napi::Boolean::New(info.Env(), ftData.InvertDTR);
+}
+
+void FtProgramDataWrapper::SetInvertDTR(const Napi::CallbackInfo &info, const Napi::Value &value)
+{
+    if (ThrowTypeErrorIfFalse(value.IsBoolean(), info.Env(), "Boolean expected"))
+    {
+        ftData.InvertDTR = value.As<Napi::Boolean>().Value();
+    }
+}
+
 Napi::Value FtProgramDataWrapper::GetInvertDSR(const Napi::CallbackInfo &info)
 {
     return Napi::Boolean::New(info.Env(), ftData.InvertDSR);
@@ -429,7 +443,7 @@ void FtProgramDataWrapper::SetInvertRI(const Napi::CallbackInfo &info, const Nap
 
 Napi::Value FtProgramDataWrapper::GetCbus0(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.Cbus0);
+    return Napi::Number::New(info.Env(), ftData.Cbus0);
 }
 void FtProgramDataWrapper::SetCbus0(const Napi::CallbackInfo &info, const Napi::Value &value)
 {
@@ -441,7 +455,7 @@ void FtProgramDataWrapper::SetCbus0(const Napi::CallbackInfo &info, const Napi::
 
 Napi::Value FtProgramDataWrapper::GetCbus1(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.Cbus1);
+    return Napi::Number::New(info.Env(), ftData.Cbus1);
 }
 
 void FtProgramDataWrapper::SetCbus1(const Napi::CallbackInfo &info, const Napi::Value &value)
@@ -454,7 +468,7 @@ void FtProgramDataWrapper::SetCbus1(const Napi::CallbackInfo &info, const Napi::
 
 Napi::Value FtProgramDataWrapper::GetCbus2(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.Cbus2);
+    return Napi::Number::New(info.Env(), ftData.Cbus2);
 }
 
 void FtProgramDataWrapper::SetCbus2(const Napi::CallbackInfo &info, const Napi::Value &value)
@@ -467,7 +481,7 @@ void FtProgramDataWrapper::SetCbus2(const Napi::CallbackInfo &info, const Napi::
 
 Napi::Value FtProgramDataWrapper::GetCbus3(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.Cbus3);
+    return Napi::Number::New(info.Env(), ftData.Cbus3);
 }
 
 void FtProgramDataWrapper::SetCbus3(const Napi::CallbackInfo &info, const Napi::Value &value)
@@ -480,7 +494,7 @@ void FtProgramDataWrapper::SetCbus3(const Napi::CallbackInfo &info, const Napi::
 
 Napi::Value FtProgramDataWrapper::GetCbus4(const Napi::CallbackInfo &info)
 {
-    return Napi::Boolean::New(info.Env(), ftData.Cbus4);
+    return Napi::Number::New(info.Env(), ftData.Cbus4);
 }
 
 void FtProgramDataWrapper::SetCbus4(const Napi::CallbackInfo &info, const Napi::Value &value)
