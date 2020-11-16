@@ -775,36 +775,36 @@ export class FT232R_EEPROM_STRUCTURE extends FT_EEPROM_DATA {
     invertRI: boolean;
     /**
      * Sets the function of the CBUS0 pin for FT232R devices.
-     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
-     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
      * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
      */
     cbus0: number;
     /**
      * Sets the function of the CBUS1 pin for FT232R devices.
-     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
-     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
      * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
      */
     cbus1: number;
     /**
      * Sets the function of the CBUS2 pin for FT232R devices.
-     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
-     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
      * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
      */
     cbus2: number;
     /**
      * Sets the function of the CBUS3 pin for FT232R devices.
-     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
-     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
      * FT_CBUS_CLK6, FT_CBUS_IOMODE, FT_CBUS_BITBANG_WR, FT_CBUS_BITBANG_RD
      */
     cbus3: number;
     /**
      * Sets the function of the CBUS4 pin for FT232R devices.
-     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED, 
-     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12, 
+     * Valid values are FT_CBUS_TXDEN, FT_CBUS_PWRON , FT_CBUS_RXLED, FT_CBUS_TXLED,
+     * FT_CBUS_TXRXLED, FT_CBUS_SLEEP, FT_CBUS_CLK48, FT_CBUS_CLK24, FT_CBUS_CLK12,
      * FT_CBUS_CLK6
      */
     cbus4: number;
@@ -892,11 +892,11 @@ export class FTDI {
     /**
      * Synchronously gets device information for an open device
      */
-    getDeviceInfoSync(): GetDeviceListResult;
+    getDeviceInfoSync(): GetDeviceInfoResult;
     /**
      * Asynchronously gets device information for an open device
      */
-    getDeviceInfo(): Promise<GetDeviceListResult>;
+    getDeviceInfo(): Promise<GetDeviceInfoResult>;
     /**
      * Synchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -1094,13 +1094,13 @@ export class FTDI {
        */
     /**
      * Synchronously retrieve the current VID and PID combination from within the internal device list table
-     * @returns {IGetVIDPIDResult}
+     * @returns {GetVIDPIDResult}
      */
     static getVIDPIDSync(): GetVIDPIDResult;
 
     /**
      * Asynchronously  retrieve the current VID and PID combination from within the internal device list table
-     * @returns {Promise<IGetVIDPIDResult>}
+     * @returns {Promise<GetVIDPIDResult>}
      */
     static getVIDPID(): Promise<GetVIDPIDResult>;
 
