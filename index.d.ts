@@ -1155,4 +1155,20 @@ export class FTDI {
      * @param {number} writeTimeout Write timeout value in ms. A value of 0 indicates an infinite timeout
      */
     setTimeouts(readTimeout: number, writeTimeout: number): Promise<FT_STATUS>;
+
+    /**
+     * Synchronously sets the value of the latency timer. Default value is 16ms.
+     * @param {latency} The latency timer value in ms.
+     * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
+     * Valid values are 0ms - 255ms for other devices
+     */
+    setLatencySync(latency: number): FT_STATUS;
+
+    /**
+     * Asynchronously sets the value of the latency timer. Default value is 16ms.
+     * @param {latency} The latency timer value in ms.
+     * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
+     * Valid values are 0ms - 255ms for other devices
+     */
+    setLatency(latency: number): Promise<FT_STATUS>;
 }

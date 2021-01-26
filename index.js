@@ -1702,6 +1702,42 @@ class FTDI {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.setTimeouts(this._ftHandle, readTimeout, writeTimeout)
   }
+
+  /**
+   * Synchronously sets the value of the latency timer. Default value is 16ms.
+   * @param {latency} The latency timer value in ms.
+   * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
+   * Valid values are 0ms - 255ms for other devices
+   * @returns {FT_STATUS} ftStatus Value from FT_SetLatencyTimer
+   */
+  setLatencySync (latency) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { type } = this.getDeviceInfoSync()
+    if (type === FT_DEVICE.FT_DEVICE_BM || type === FT_DEVICE.FT_DEVICE_2232) {
+      if (latency < 2) {
+        latency = 2
+      }
+    }
+    return _ftdiAddon.setLatencyTimerSync(this._ftHandle, latency)
+  }
+
+  /**
+   * Asynchronously sets the value of the latency timer. Default value is 16ms.
+   * @param {latency} The latency timer value in ms.
+   * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
+   * Valid values are 0ms - 255ms for other devices
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetLatencyTimer
+   */
+  async setLatency (latency) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    const { type } = await this.getDeviceInfo()
+    if (type === FT_DEVICE.FT_DEVICE_BM || type === FT_DEVICE.FT_DEVICE_2232) {
+      if (latency < 2) {
+        latency = 2
+      }
+    }
+    return _ftdiAddon.setLatencyTimer(this._ftHandle, latency)
+  }
 }
 
 module.exports = {
