@@ -251,6 +251,22 @@ const FT_FLOW_CONTROL = {
 Object.freeze(FT_FLOW_CONTROL)
 
 /**
+ * Purge buffer constant definitions
+ * @enum {number}
+ */
+const FT_PURGE = {
+  /**
+   * Purge Rx buffer
+   */
+  FT_PURGE_RX: 0x01,
+  /**
+   * Purge Tx buffer
+   */
+  FT_PURGE_TX: 0x02
+}
+Object.freeze(FT_PURGE)
+
+/**
  * Valid values for drive current options on FT2232H, FT4232H and FT232H devices
  * @enum {number}
  */
@@ -1704,8 +1720,8 @@ class FTDI {
   }
 
   /**
-   * Synchronously sets the value of the latency timer. Default value is 16ms.
-   * @param {latency} The latency timer value in ms.
+   * Synchronously sets the value of the latency timer. Default value is 16ms
+   * @param {number} latency The latency timer value in ms.
    * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
    * Valid values are 0ms - 255ms for other devices
    * @returns {FT_STATUS} ftStatus Value from FT_SetLatencyTimer
@@ -1722,8 +1738,8 @@ class FTDI {
   }
 
   /**
-   * Asynchronously sets the value of the latency timer. Default value is 16ms.
-   * @param {latency} The latency timer value in ms.
+   * Asynchronously sets the value of the latency timer. Default value is 16ms
+   * @param {number} latency The latency timer value in ms.
    * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
    * Valid values are 0ms - 255ms for other devices
    * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetLatencyTimer
@@ -1737,6 +1753,28 @@ class FTDI {
       }
     }
     return _ftdiAddon.setLatencyTimer(this._ftHandle, latency)
+  }
+
+  /**
+   * Synchronously purge data from the devices transmit and/or receive buffers
+   * @param {FT_PURGE} mask Specifies which buffer(s) to be purged.
+   * Valid values are any combination of the following flags: FT_PURGE_RX, FT_PURGE_TX
+   * @returns {FT_STATUS} ftStatus Value from FT_Purge
+   */
+  purgeSync (mask) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.purgeSync(this._ftHandle, mask)
+  }
+
+  /**
+   * Asynchronously purge data from the devices transmit and/or receive buffers
+   * @param {FT_PURGE} mask Specifies which buffer(s) to be purged.
+   * Valid values are any combination of the following flags: FT_PURGE_RX, FT_PURGE_TX
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_Purge
+   */
+  purge (mask) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.purge(this._ftHandle, mask)
   }
 }
 

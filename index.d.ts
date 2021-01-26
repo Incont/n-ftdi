@@ -237,6 +237,22 @@ export const FT_FLOW_CONTROL: {
 export type FT_FLOW_CONTROL = Enum<typeof FT_FLOW_CONTROL>;
 
 /**
+ * Purge buffer constant definitions
+ * @enum {number}
+ */
+export const FT_PURGE: {
+    /**
+     * Purge Rx buffer
+     */
+    readonly FT_PURGE_RX: 0x01,
+    /**
+     * Purge Tx buffer
+     */
+    readonly FT_PURGE_TX: 0x02
+}
+export type FT_PURGE = Enum<typeof FT_PURGE>;
+
+/**
  * Valid values for drive current options on FT2232H, FT4232H and FT232H devices
  */
 export const FT_DRIVE_CURRENT: {
@@ -1157,18 +1173,33 @@ export class FTDI {
     setTimeouts(readTimeout: number, writeTimeout: number): Promise<FT_STATUS>;
 
     /**
-     * Synchronously sets the value of the latency timer. Default value is 16ms.
-     * @param {latency} The latency timer value in ms.
+     * Synchronously sets the value of the latency timer. Default value is 16ms
+     * @param {number} latency The latency timer value in ms.
      * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
      * Valid values are 0ms - 255ms for other devices
      */
     setLatencySync(latency: number): FT_STATUS;
 
     /**
-     * Asynchronously sets the value of the latency timer. Default value is 16ms.
-     * @param {latency} The latency timer value in ms.
+     * Asynchronously sets the value of the latency timer. Default value is 16ms
+     * @param {number} latency The latency timer value in ms.
      * Valid values are 2ms - 255ms for FT232BM, FT245BM and FT2232 devices.
      * Valid values are 0ms - 255ms for other devices
      */
     setLatency(latency: number): Promise<FT_STATUS>;
+
+    /**
+     * Synchronously purge data from the devices transmit and/or receive buffers
+     * @param {FT_PURGE} mask Specifies which buffer(s) to be purged.
+     * Valid values are any combination of the following flags: FT_PURGE_RX, FT_PURGE_TX
+     */
+    purgeSync(mask: FT_PURGE): FT_STATUS;
+
+    /**
+     * Asynchronously purge data from the devices transmit and/or receive buffers
+     * @param {FT_PURGE} mask Specifies which buffer(s) to be purged.
+     * Valid values are any combination of the following flags: FT_PURGE_RX, FT_PURGE_TX
+     */
+    purge(mask: FT_PURGE): Promise<FT_STATUS>;
 }
+
