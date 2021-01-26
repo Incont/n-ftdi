@@ -24,6 +24,9 @@
 #include "ft_get_vid_pid_op.h"
 #include "ft_cycle_port_op.h"
 #include "ft_ee_program_op.h"
+#include "ft_set_timeouts_op.h"
+#include "ft_set_latency_timer_op.h"
+#include "ft_purge_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -47,6 +50,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtGetVIDPIDOp::Init(env, exports);
     FtCyclePortOp::Init(env, exports);
     FtEeProgramOp::Init(env, exports);
+    FtSetTimeoutsOp::Init(env, exports);
+    FtSetLatencyTimerOp::Init(env, exports);
+    FtPurgeOp::Init(env, exports);
     return exports;
 }
 

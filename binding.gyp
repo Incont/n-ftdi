@@ -29,7 +29,10 @@
         "./src/ft_ex_program_device_description_op.cc",
         "./src/ft_get_vid_pid_op.cc",
         "./src/ft_cycle_port_op.cc",
-        "./src/ft_ee_program_op.cc"
+        "./src/ft_ee_program_op.cc",
+        "./src/ft_set_timeouts_op.cc",
+        "./src/ft_set_latency_timer_op.cc",
+        "./src/ft_purge_op.cc"
       ],
       "include_dirs": [
         "./src",
