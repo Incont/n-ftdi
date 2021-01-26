@@ -819,18 +819,22 @@ export class FTDI {
      * Synchronously gets the number of FTDI devices available
      */
     static getNumberOfDevicesSync(): GetNumberOfDevicesResult;
+
     /**
      * Asynchronously gets the number of FTDI devices available
      */
     static getNumberOfDevices(): Promise<GetNumberOfDevicesResult>;
+
     /**
      * Synchronously gets information on all of the FTDI devices available
      */
     static getDeviceListSync(): GetDeviceListResult;
+
     /**
      * Asynchronously gets information on all of the FTDI devices available
      */
     static getDeviceList(): Promise<GetDeviceListResult>;
+
     /**
      * Synchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
@@ -838,6 +842,7 @@ export class FTDI {
      * note that this cannot be guaranteed to open a specific device
      */
     openByIndexSync(index: number): FT_STATUS;
+
     /**
      * Asynchronously opens the FTDI device with the specified index.
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
@@ -845,58 +850,69 @@ export class FTDI {
      * note that this cannot be guaranteed to open a specific device
      */
     openByIndex(index: number): Promise<FT_STATUS>;
+
     /**
      * Synchronously opens the FTDI device with the specified serial number
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param serialNumber Serial number of the device to open
      */
     openBySerialNumberSync(serialNumber: string): FT_STATUS;
+
     /**
      * Asynchronously opens the FTDI device with the specified serial number
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param serialNumber Serial number of the device to open
      */
     openBySerialNumber(serialNumber: string): Promise<FT_STATUS>;
+
     /**
      * Synchronously opens the FTDI device with the specified description
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param description Description of the device to open
      */
     openByDescriptionSync(description: string): FT_STATUS;
+
     /**
      * Asynchronously opens the FTDI device with the specified description
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param description Description of the device to open
      */
     openByDescription(description: string): Promise<FT_STATUS>;
+
     /**
      * Synchronously opens the FTDI device at the specified physical location
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param location Location of the device to open
      */
     openByLocationSync(location: number): FT_STATUS;
+
     /**
      * Asynchronously opens the FTDI device at the specified physical location
      * Initialises the device to 8 data bits, 1 stop bit, no parity, no flow control and 9600 Baud
      * @param location Location of the device to open
      */
     openByLocation(location: number): Promise<FT_STATUS>;
+
     /**
      * Synchronously closes the handle to an open FTDI device
      */
     closeSync(): FT_STATUS;
+
     /**
      * Asynchronously closes the handle to an open FTDI device
      */
     close(): Promise<FT_STATUS>;
+
     /**
      * Synchronously gets device information for an open device
      */
     getDeviceInfoSync(): GetDeviceInfoResult;
+
     /**
      * Asynchronously gets device information for an open device
      */
     getDeviceInfo(): Promise<GetDeviceInfoResult>;
+
     /**
      * Synchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -907,6 +923,7 @@ export class FTDI {
      * FT_PARITY.FT_PARITY_ODD, FT_PARITY.FT_PARITY_EVEN, FT_PARITY.FT_PARITY_MARK or FT_PARITY.FT_PARITY_SPACE
      */
     setDataCharacteristicsSync(wordLength: FT_DATA_BITS, stopBits: FT_STOP_BITS, parity: FT_PARITY): FT_STATUS;
+
     /**
      * Asynchronously sets the data bits, stop bits and parity for the device
      * @param wordLength The number of data bits for UART data. Valid values are FT_DATA_BITS.FT_DATA_7 or
@@ -920,6 +937,7 @@ export class FTDI {
         wordLength: FT_DATA_BITS,
         stopBits: FT_STOP_BITS,
         parity: FT_PARITY): Promise<FT_STATUS>;
+
     /**
      * Synchronously sets the flow control type
      * @param flowControl The type of flow control for the UART. Valid values are
@@ -929,6 +947,7 @@ export class FTDI {
      * @param xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
      */
     setFlowControlSync(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): FT_STATUS;
+
     /**
      * Asynchronously sets the flow control type
      * @param flowControl The type of flow control for the UART. Valid values are
@@ -938,62 +957,74 @@ export class FTDI {
      * @param xoff The Xoff character for Xon/Xoff flow control. Ignored if not using Xon/XOff flow control
      */
     setFlowControl(flowControl: FT_FLOW_CONTROL, xon: number, xoff: number): Promise<FT_STATUS>;
+
     /**
      * Synchronously sets the current Baud rate
      * @param baudRate The desired Baud rate for the device
      */
     setBaudRateSync(baudRate: number): FT_STATUS;
+
     /**
      * Asynchronously sets the current Baud rate
      * @param baudRate The desired Baud rate for the device
      */
     setBaudRate(baudRate: number): Promise<FT_STATUS>;
+
     /**
      * Synchronously gets the number of bytes available in the receive buffer
      */
     getQueueStatusSync(): GetQueueStatusResult;
+
     /**
      * Asynchronously gets the number of bytes available in the receive buffer
      */
     getQueueStatus(): Promise<GetQueueStatusResult>;
+
     /**
      * Synchronously gets the device status including number of characters in the receive queue,
      * number of characters in the transmit queue, and the current event status
      */
     getStatusSync(): IGetStatusResult;
+
     /**
      * Asynchronously gets the device status including number of characters in the receive queue,
      * number of characters in the transmit queue, and the current event status
      */
     getStatus(): Promise<IGetStatusResult>;
+
     /**
      * Synchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
     writeSync(txBuffer: Buffer, numBytesToWrite?: number): WriteResult;
+
     /**
      * Asynchronously write data to an open FTDI device
      * @param txBuffer An array of bytes which contains the data to be written to the device
      * @param numBytesToWrite The number of bytes to be written to the device. Default: txBuffer.Length
      */
     write(txBuffer: Buffer, numBytesToWrite?: number): Promise<WriteResult>;
+
     /**
      * Synchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
     readSync(rxBuffer: Buffer, numBytesToRead?: number): ReadResult;
+
     /**
      * Asynchronously read data from an open FTDI device
      * @param rxBuffer An array of bytes which will be populated with the data read from the device
      * @param numBytesToRead The number of bytes requested from the device. Default: rxBuffer.Length
      */
     read(rxBuffer: Buffer, numBytesToRead?: number): Promise<ReadResult>;
+
     /**
      * Synchronously reads the EEPROM contents of an FT232H device
      */
     readFT232HEEPROMSync(): ReadFT232HEEPROMResult;
+
     /**
      * Asynchronously reads the EEPROM contents of an FT232H device
      */
@@ -1074,45 +1105,54 @@ export class FTDI {
     setBitMode(mask: number, bitMode: number): Promise<FT_STATUS>;
 
     /**
-   * @param {string} description
-   * Synchronously programm device description in EEPROM
-   * @returns {FT_STATUS}
-   */
+     * @param {string} description
+     * Synchronously programm device description in EEPROM
+     */
     programDeviceDescriptionSync(description: string): FT_STATUS;
 
     /**
      * @param {string} description
      * Asynchronously programm device description in EEPROM
-     * @returns {Promise<FT_STATUS>}
      */
     programDeviceDescription(description: string): Promise<FT_STATUS>;
+
     /**
-       * @typedef {object} GetVIDPODResult
-       * @property {FT_STATUS} ftStatus Value from FT_Read
-       * @property {number} VID Pointer to DWORD that will contain the internal VID
-       * @property {number} PID Pointer to DWORD that will contain the internal PID
-       */
+     * @typedef {object} GetVIDPODResult
+     * @property {FT_STATUS} ftStatus Value from FT_Read
+     * @property {number} VID Pointer to DWORD that will contain the internal VID
+     * @property {number} PID Pointer to DWORD that will contain the internal PID
+     */
     /**
      * Synchronously retrieve the current VID and PID combination from within the internal device list table
-     * @returns {GetVIDPIDResult}
      */
     static getVIDPIDSync(): GetVIDPIDResult;
 
     /**
      * Asynchronously  retrieve the current VID and PID combination from within the internal device list table
-     * @returns {Promise<GetVIDPIDResult>}
      */
     static getVIDPID(): Promise<GetVIDPIDResult>;
 
     /**
-   * Synchronously send a reset command to the port
-   * @returns {FT_STATUS} ftStatus Value from FT_CyclePort
-   */
+     * Synchronously send a reset command to the port
+     */
     cyclePortSync(): FT_STATUS;
 
     /**
      * Asynchronously send a reset command to the port
-     * @returns {Promise<FT_STATUS>} ftStatus Value from FT_CyclePort
      */
     cyclePort(): Promise<FT_STATUS>;
+
+    /**
+     * Synchronously sets the read and write timeout values
+     * @param {number} readTimeout Read timeout value in ms. A value of 0 indicates an infinite timeout
+     * @param {number} writeTimeout Write timeout value in ms. A value of 0 indicates an infinite timeout
+     */
+    setTimeoutsSync(readTimeout: number, writeTimeout: number): FT_STATUS;
+
+    /**
+     * Asynchronously sets the read and write timeout values
+     * @param {number} readTimeout Read timeout value in ms. A value of 0 indicates an infinite timeout
+     * @param {number} writeTimeout Write timeout value in ms. A value of 0 indicates an infinite timeout
+     */
+    setTimeouts(readTimeout: number, writeTimeout: number): Promise<FT_STATUS>;
 }

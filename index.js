@@ -1680,6 +1680,28 @@ class FTDI {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.cyclePort(this._ftHandle)
   }
+
+  /**
+   * Synchronously sets the read and write timeout values
+   * @param {number} readTimeout Read timeout value in ms. A value of 0 indicates an infinite timeout
+   * @param {number} writeTimeout Write timeout value in ms. A value of 0 indicates an infinite timeout
+   * @returns {FT_STATUS} ftStatus Value from FT_SetTimeouts
+   */
+  setTimeoutsSync (readTimeout, writeTimeout) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setTimeoutsSync(this._ftHandle, readTimeout, writeTimeout)
+  }
+
+  /**
+   * Asynchronously sets the read and write timeout values
+   * @param {number} readTimeout Read timeout value in ms. A value of 0 indicates an infinite timeout
+   * @param {number} writeTimeout Write timeout value in ms. A value of 0 indicates an infinite timeout
+   * @returns {Promise<FT_STATUS>} ftStatus Value from FT_SetTimeouts
+   */
+  setTimeouts (readTimeout, writeTimeout) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.setTimeouts(this._ftHandle, readTimeout, writeTimeout)
+  }
 }
 
 module.exports = {
