@@ -2,7 +2,7 @@
 
 Napi::Object FtPurgeOp::Init(Napi::Env env, Napi::Object exports)
 {
-    exports.Set("purgeSunc", Napi::Function::New(env, FtPurgeOp::InvokeSync));
+    exports.Set("purgeSync", Napi::Function::New(env, FtPurgeOp::InvokeSync));
     exports.Set("purge", Napi::Function::New(env, FtPurgeOp::Invoke));
     return exports;
 }
