@@ -32,7 +32,9 @@
         "./src/ft_ee_program_op.cc",
         "./src/ft_set_timeouts_op.cc",
         "./src/ft_set_latency_timer_op.cc",
-        "./src/ft_purge_op.cc"
+        "./src/ft_purge_op.cc",
+        "./src/ft_read_ee_op.cc",
+        "./src/ft_write_ee_op.cc"
       ],
       "include_dirs": [
         "./src",

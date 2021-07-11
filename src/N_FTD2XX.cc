@@ -27,6 +27,8 @@
 #include "ft_set_timeouts_op.h"
 #include "ft_set_latency_timer_op.h"
 #include "ft_purge_op.h"
+#include "ft_read_ee_op.h"
+#include "ft_write_ee_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -53,6 +55,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtSetTimeoutsOp::Init(env, exports);
     FtSetLatencyTimerOp::Init(env, exports);
     FtPurgeOp::Init(env, exports);
+    FtReadEEOp::Init(env, exports);
+    FtWriteEEOp::Init(env, exports);
     return exports;
 }
 

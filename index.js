@@ -1776,6 +1776,53 @@ class FTDI {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.purge(this._ftHandle, mask)
   }
+
+  /**
+   * @typedef {object} ReadEEPROMLocationResult
+   * @property {FT_STATUS} ftStatus Value from FT_ReadEE
+   * @property {number} value The WORD value read from the EEPROM location specified in the Address paramter
+   */
+  /**
+   * Synchronously reads an individual word value from a specified location in the device's EEPROM
+   * @param {number} address The EEPROM location to read data from
+   * @returns {ReadEEPROMLocationResult}
+   */
+   readEEPROMLocationSync (address) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.readEESync(this._ftHandle, address)
+  }
+
+  /**
+  * Asynchronously reads an individual word value from a specified location in the device's EEPROM
+  * @param {number} address The EEPROM location to read data from
+  * @returns {Promise<ReadEEPROMLocationResult>}
+  */
+   readEEPROMLocation (address) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.readEE(this._ftHandle, address)
+  }
+
+  /**
+   * Synchronously writes an individual word value to a specified location in the device's EEPROM
+   * @param {number} address The EEPROM location to write data from
+   * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
+   * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
+   */
+   writeEEPROMLocationSync (address, eeValue) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.writeEESync(this._ftHandle, address, eeValue)
+  }
+
+  /**
+   * Asynchronously writes an individual word value to a specified location in the device's EEPROM
+   * @param {number} address The EEPROM location to write data from
+   * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
+   * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
+   */
+   writeEEPROMLocation (address, eeValue) {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.writeEE(this._ftHandle, address, eeValue)
+  }
 }
 
 module.exports = {
