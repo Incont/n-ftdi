@@ -1234,7 +1234,7 @@ export class FTDI {
    * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
    * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
    */
-   writeEEPROMLocationSync (address, eeValue): FT_STATUS;
+   writeEEPROMLocationSync (address: number, eeValue: number): FT_STATUS;
 
   /**
    * Asynchronously writes an individual word value to a specified location in the device's EEPROM
@@ -1242,6 +1242,6 @@ export class FTDI {
    * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
    * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
    */
-   writeEEPROMLocation (address, eeValue): Promise<FT_STATUS>;
+   writeEEPROMLocation (address: number, eeValue: number): Promise<FT_STATUS>;
 }
 
