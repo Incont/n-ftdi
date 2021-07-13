@@ -7,13 +7,13 @@ Napi::Object FtWriteEEOp::Init(Napi::Env env, Napi::Object exports)
     return exports;
 }
 
-Napi::Object FtWriteEEOp::InvokeSync(const Napi::CallbackInfo &info)
+Napi::Number FtWriteEEOp::InvokeSync(const Napi::CallbackInfo &info)
 {
     FT_HANDLE ftHandle = (FT_HANDLE)info[0].As<Napi::External<void>>().Data();
     DWORD wordOffset = info[1].As<Napi::Number>().Uint32Value();
     WORD value = info[2].As<Napi::Number>().Int32Value();
     FT_STATUS ftStatus = FT_WriteEE(ftHandle, wordOffset, value);
-    return CreateResult(info.Env(), ftStatus);
+    return Napi::Number::New(info.Env(), ftStatus);
 }
 
 Napi::Promise FtWriteEEOp::Invoke(const Napi::CallbackInfo &info)
@@ -42,12 +42,5 @@ void FtWriteEEOp::Execute()
 void FtWriteEEOp::OnOK()
 {
     Napi::HandleScope scope(Env());
-    deferred.Resolve(CreateResult(Env(), ftStatus));
-}
-
-Napi::Object FtWriteEEOp::CreateResult(Napi::Env env, FT_STATUS ftStatus)
-{
-    Napi::Object result = Napi::Object::New(env);
-    result.Set("ftStatus", ftStatus);
-    return result;
+    deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
