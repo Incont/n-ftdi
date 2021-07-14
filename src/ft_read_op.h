@@ -1,5 +1,5 @@
-#ifndef FT_READ_H_
-#define FT_READ_H_
+#ifndef FT_READ_OP_H_
+#define FT_READ_OP_H_
 
 #include <napi.h>
 #include <ftd2xx.h>
@@ -24,4 +24,4 @@ private:
     inline static Napi::Object CreateResult(Napi::Env env, FT_STATUS ftStatus, Napi::Buffer<char> rxBuffer, DWORD numBytesRead);
 };
 
-#endif // FT_READ_H_
+#endif // FT_READ_OP_H_
