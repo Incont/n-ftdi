@@ -1,3 +1,5 @@
+import { type } from "os";
+
 type Enum<T> = T[keyof T];
 /**
  * Status values for FTDI devices
@@ -547,6 +549,13 @@ export type ReadEEPROMLocationResult  = {
      * The WORD value read from the EEPROM location specified in the Address paramter
      */
     readonly value: number;
+} & FtResult;
+
+export type REEUserAreaSizeResult = {
+    /**
+     * The EEPROM user area size in bytes
+     */
+    readonly uaSize: number;
 } & FtResult;
 
 export class FtException extends Error { }
@@ -1210,38 +1219,39 @@ export class FTDI {
     purge(mask: FT_PURGE): Promise<FT_STATUS>;
 
     /**
-   * @typedef {object} ReadEEPROMLocationResult
-   * @property {FT_STATUS} ftStatus Value from FT_ReadEE
-   * @property {number} value The WORD value read from the EEPROM location specified in the Address paramter
-   */
-  /**
-   * Synchronously reads an individual word value from a specified location in the device's EEPROM
-   * @param {number} address The EEPROM location to read data from
-   * @returns {ReadEEPROMLocationResult}
-   */
-   readEEPROMLocationSync (address: number): ReadEEPROMLocationResult;
+     * Synchronously reads an individual word value from a specified location in the device's EEPROM
+     * @param {number} address The EEPROM location to read data from
+     */
+    readEEPROMLocationSync (address: number): ReadEEPROMLocationResult;
 
-  /**
-  * Asynchronously reads an individual word value from a specified location in the device's EEPROM
-  * @param {number} address The EEPROM location to read data from
-  * @returns {Promise<ReadEEPROMLocationResult>}
-  */
-   readEEPROMLocation (address: number): Promise<ReadEEPROMLocationResult>;
+    /**
+     * Asynchronously reads an individual word value from a specified location in the device's EEPROM
+     * @param {number} address The EEPROM location to read data from
+     */
+    readEEPROMLocation (address: number): Promise<ReadEEPROMLocationResult>;
 
-  /**
-   * Synchronously writes an individual word value to a specified location in the device's EEPROM
-   * @param {number} address The EEPROM location to write data from
-   * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
-   * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
-   */
-   writeEEPROMLocationSync (address: number, eeValue: number): FT_STATUS;
+    /**
+     * Synchronously writes an individual word value to a specified location in the device's EEPROM
+     * @param {number} address The EEPROM location to write data from
+     * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
+     */
+    writeEEPROMLocationSync (address: number, eeValue: number): FT_STATUS;
 
-  /**
-   * Asynchronously writes an individual word value to a specified location in the device's EEPROM
-   * @param {number} address The EEPROM location to write data from
-   * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
-   * @returns {FT_STATUS} FT_STATUS value from FT_WriteEE
-   */
-   writeEEPROMLocation (address: number, eeValue: number): Promise<FT_STATUS>;
+    /**
+     * Asynchronously writes an individual word value to a specified location in the device's EEPROM
+     * @param {number} address The EEPROM location to write data from
+     * @param {number} eeValue The WORD value to write to the EEPROM location specified by the Address parameter
+     */
+    writeEEPROMLocation (address: number, eeValue: number): Promise<FT_STATUS>;
+
+    /**
+     * Synchronously gets the size of the EEPROM user area
+     */
+    eeUserAreaSizeSync (): number;
+
+    /**
+     * Asynchronously gets the size of the EEPROM user area
+     */
+    eeUserAreaSize (): Promise<number>;
 }
 

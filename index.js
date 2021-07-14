@@ -1823,6 +1823,30 @@ class FTDI {
     if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
     return _ftdiAddon.writeEE(this._ftHandle, address, eeValue)
   }
+
+  /**
+   * @typedef {object} EEUserAreaSizeResult
+   * @property {FT_STATUS} ftStatus Value from FT_EE_UASize
+   * @property {number} uaSize The EEPROM user area size in bytes
+   */
+  /**
+   * Synchronously gets the size of the EEPROM user area
+   * @returns {REEUserAreaSizeResult}
+   */
+  eeUserAreaSizeSync () {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.eeUaSizeSync(this._ftHandle)
+  }
+
+  /**
+  * Asynchronously gets the size of the EEPROM user area
+  * @returns {Promise<REEUserAreaSizeResult>}
+  */
+  eeUserAreaSize () {
+    if (!this._ftHandle) return FT_STATUS.FT_OTHER_ERROR
+    return _ftdiAddon.eeUaSize(this._ftHandle)
+  }
+
 }
 
 module.exports = {

@@ -1,5 +1,5 @@
-#ifndef FT_WRITE_EE_H_
-#define FT_WRITE_EE_H_
+#ifndef FT_WRITE_EE_OP_H_
+#define FT_WRITE_EE_OP_H_
 
 #include <napi.h>
 #include <ftd2xx.h>
@@ -21,4 +21,4 @@ private:
     WORD value;
 };
 
-#endif // FT_WRITE_EE_H_
+#endif // FT_WRITE_EE_OP_H_

@@ -29,6 +29,7 @@
 #include "ft_purge_op.h"
 #include "ft_read_ee_op.h"
 #include "ft_write_ee_op.h"
+#include "ft_ee_ua_size_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -57,6 +58,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtPurgeOp::Init(env, exports);
     FtReadEeOp::Init(env, exports);
     FtWriteEeOp::Init(env, exports);
+    FtEeUaSize::Init(env, exports);
     return exports;
 }
 
