@@ -55,8 +55,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtSetTimeoutsOp::Init(env, exports);
     FtSetLatencyTimerOp::Init(env, exports);
     FtPurgeOp::Init(env, exports);
-    FtReadEEOp::Init(env, exports);
-    FtWriteEEOp::Init(env, exports);
+    FtReadEeOp::Init(env, exports);
+    FtWriteEeOp::Init(env, exports);
     return exports;
 }
 
