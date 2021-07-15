@@ -1291,6 +1291,6 @@ export class FTDI {
      * @param {Buffer} uaBuffer An array of bytes which will be written to the device EEPROM user area
      * @param {number} [numBytesToWrite] Size, in bytes, of buffer that contains storage for the data to be read
      */
-    eeWriteUserArea(uaBuffer, numBytesToWrite?: number): Promise<FT_STATUS>;
+    eeWriteUserArea(uaBuffer: Buffer, numBytesToWrite?: number): Promise<FT_STATUS>;
 }
 
