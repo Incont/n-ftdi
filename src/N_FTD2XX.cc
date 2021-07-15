@@ -30,6 +30,8 @@
 #include "ft_read_ee_op.h"
 #include "ft_write_ee_op.h"
 #include "ft_ee_ua_size_op.h"
+#include "ft_ee_ua_read_op.h"
+#include "ft_ee_ua_write_op.h"
 
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
@@ -59,6 +61,8 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
     FtReadEeOp::Init(env, exports);
     FtWriteEeOp::Init(env, exports);
     FtEeUaSize::Init(env, exports);
+    FtEeUaReadOp::Init(env, exports);
+    FtEeUaWriteOp::Init(env, exports);
     return exports;
 }
 

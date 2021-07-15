@@ -35,7 +35,9 @@
         "./src/ft_purge_op.cc",
         "./src/ft_read_ee_op.cc",
         "./src/ft_write_ee_op.cc",
-        "./src/ft_ee_ua_size_op.cc"
+        "./src/ft_ee_ua_size_op.cc",
+        "./src/ft_ee_ua_read_op.cc",
+        "./src/ft_ee_ua_write_op.cc"
       ],
       "include_dirs": [
         "./src",

@@ -44,6 +44,6 @@ Napi::Object FtEeUaSize::CreateResult(Napi::Env env, FT_STATUS ftStatus, DWORD u
 {
     Napi::Object result = Napi::Object::New(env);
     result.Set("ftStatus", ftStatus);
-    result.Set("value", uaSize);
+    result.Set("uaSize", uaSize);
     return result;
 }

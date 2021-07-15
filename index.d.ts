@@ -551,11 +551,22 @@ export type ReadEEPROMLocationResult  = {
     readonly value: number;
 } & FtResult;
 
-export type REEUserAreaSizeResult = {
+export type EEUserAreaSizeResult = {
     /**
      * The EEPROM user area size in bytes
      */
     readonly uaSize: number;
+} & FtResult;
+
+export type EEReadUserAreaResult = {
+    /**
+     * An array of bytes which will be populated with the data read from the device EEPROM user area
+     */
+    readonly uaBuffer: Buffer;
+    /**
+     * The number of bytes actually read from the EEPROM user area
+     */
+    readonly numBytesRead: number;
 } & FtResult;
 
 export class FtException extends Error { }
@@ -1247,11 +1258,39 @@ export class FTDI {
     /**
      * Synchronously gets the size of the EEPROM user area
      */
-    eeUserAreaSizeSync (): number;
+    eeUserAreaSizeSync (): EEUserAreaSizeResult;
 
     /**
      * Asynchronously gets the size of the EEPROM user area
      */
-    eeUserAreaSize (): Promise<number>;
+    eeUserAreaSize (): Promise<EEUserAreaSizeResult>;
+
+    /**
+     * Synchronously reads data from the user area of the device EEPROM
+     * @param {Buffer} uaBuffer An array of bytes which will be populated with the data read from the device EEPROM user area
+     * @param {number} [numBytesToRead] The number of bytes requested
+     */
+    eeReadUserAreaSync (uaBuffer: Buffer, numBytesToRead?: number): EEReadUserAreaResult;
+
+    /**
+     * Asynchronously reads data from the user area of the device EEPROM
+     * @param {Buffer} uaBuffer An array of bytes which will be populated with the data read from the device EEPROM user area
+     * @param {number} [numBytesToRead] The number of bytes requested
+     */
+     eeReadUserArea (uaBuffer: Buffer, numBytesToRead?: number): Promise<EEReadUserAreaResult>;
+
+    /**
+     * Synchronously writes data to the user area of the device EEPROM
+     * @param {Buffer} uaBuffer An array of bytes which will be written to the device EEPROM user area
+     * @param {number} [numBytesToWrite] Size, in bytes, of buffer that contains storage for the data to be read
+     */
+    eeWriteUserAreaSync(uaBuffer: Buffer, numBytesToWrite?: number): FT_STATUS;
+
+    /**
+     * Asynchronously writes data to the user area of the device EEPROM
+     * @param {Buffer} uaBuffer An array of bytes which will be written to the device EEPROM user area
+     * @param {number} [numBytesToWrite] Size, in bytes, of buffer that contains storage for the data to be read
+     */
+    eeWriteUserArea(uaBuffer, numBytesToWrite?: number): Promise<FT_STATUS>;
 }
 
