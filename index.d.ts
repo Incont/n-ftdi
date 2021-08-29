@@ -1,4 +1,4 @@
-import { type } from "os";
+export const FTDI_DRIVER_LOADED: boolean;
 
 type Enum<T> = T[keyof T];
 /**
