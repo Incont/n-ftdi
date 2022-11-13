@@ -1,5 +1,6 @@
 //'use strict';
 let FTD2XX = require('./index');
+
 /*
 (function() {
     let ftdi = new FTD2XX.FTDI();
