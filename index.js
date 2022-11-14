@@ -3,6 +3,7 @@ let _ftdiAddon
 try {
   _ftdiAddon = require('bindings')('N-FTD2XX')
 } catch (e) {
+  console.log(e)
 }
 const FTDI_DRIVER_LOADED = _ftdiAddon !== undefined
 

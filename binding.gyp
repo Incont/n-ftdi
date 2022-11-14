@@ -87,6 +87,32 @@
               ]
             }
           }
+        ],
+        [
+          "OS == 'linux'",
+          
+          {
+            "link_settings": {
+              "conditions": [
+                [
+                  "target_arch=='ia32'",
+                  {
+                    "libraries": [
+                      "<(module_root_dir)/lib/linux/x86_32/libftd2xx.a"
+                    ]
+                  }
+                ],
+                [
+                  "target_arch=='x64'",
+                  {
+                    "libraries": [
+                      "<(module_root_dir)/lib/linux/x86_64/libftd2xx.a"
+                    ]
+                  }
+                ]
+              ]
+            }
+          }
         ]
       ],
     }
