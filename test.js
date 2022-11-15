@@ -99,15 +99,6 @@ _ftdiAddon.getDeviceInfoDetail(0).then(r =>console.log(r))
 */
 
 console.log(FTD2XX.FTDI.getDeviceListSync())
-let d = new FTD2XX.FTDI();
-d.openByIndexSync(0);
-console.log(d.getDeviceInfoSync());
-console.log(d.programDeviceDescriptionSync("cccc"));
-console.log(d.cyclePortSync());
-d.closeSync();
-d = new FTD2XX.FTDI();
-d.openByIndexSync(0);
-console.log(d.getDeviceInfoSync());
 
 //d.programDeviceDescription("TEST").then(v => console.log(v))
 //FTD2XX.FTDI.getVIDPID().then(v => console.log(v))
