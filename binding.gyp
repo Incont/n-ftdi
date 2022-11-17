@@ -90,7 +90,6 @@
         ],
         [
           "OS == 'linux'",
-          
           {
             "link_settings": {
               "conditions": [
@@ -116,5 +115,8 @@
         ]
       ],
     }
-  ]
+  ],
+  "variables": {
+    "openssl_fips": ""
+  }
 }
