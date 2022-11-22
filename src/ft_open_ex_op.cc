@@ -49,7 +49,7 @@ FtOpenExOp::FtOpenExOp(Napi::Env env, Napi::Value arg, DWORD flags) : FtBaseOp(e
     }
 }
 
-FtOpenExOp::~FtOpenExOp()
+void FtOpenExOp::Destroy()
 {
     if (flags != FT_OPEN_BY_LOCATION)
     {

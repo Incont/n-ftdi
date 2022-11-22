@@ -13,9 +13,9 @@ public:
     static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtEeProgramOp(Napi::Env env, FT_HANDLE ftHandle, FtProgramDataWrapper *pftProgramDataWrapper);
-    void Execute();
-    void OnOK();
-    void OnWorkComplete();
+    void Execute() override;
+    void OnOK() override;
+    void Destroy() override;
 
 private:
     FT_HANDLE ftHandle;

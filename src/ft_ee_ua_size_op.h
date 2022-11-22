@@ -12,8 +12,8 @@ public:
     static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtEeUaSize(Napi::Env env, FT_HANDLE ftHandle);
-    void Execute();
-    void OnOK();
+    void Execute() override;
+    void OnOK() override;
 
 private:
     FT_HANDLE ftHandle;

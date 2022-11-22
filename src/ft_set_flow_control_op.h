@@ -12,8 +12,8 @@ public:
     static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtSetFlowControlOp(Napi::Env env, FT_HANDLE ftHandle, USHORT flowControl, UCHAR xon, UCHAR xoff);
-    void Execute();
-    void OnOK();
+    void Execute() override;
+    void OnOK() override;
 
 private:
     FT_HANDLE ftHandle;

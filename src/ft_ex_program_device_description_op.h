@@ -12,8 +12,8 @@ public:
     static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtExProgramDeviceDescriptionOp(Napi::Env env, FT_HANDLE ftHandle, std::string description);
-    void Execute();
-    void OnOK();
+    void Execute() override;
+    void OnOK() override;
 
 private:
     FT_HANDLE ftHandle;

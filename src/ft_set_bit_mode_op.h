@@ -12,8 +12,8 @@ public:
     static Napi::Number InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtSetBitModeOp(Napi::Env env, FT_HANDLE ftHandle, UCHAR mask, UCHAR bitMode);
-    void Execute();
-    void OnOK();
+    void Execute() override;
+    void OnOK() override;
 
 private:
     FT_HANDLE ftHandle;

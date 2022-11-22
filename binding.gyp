@@ -78,12 +78,10 @@
         [
           "OS == 'mac'",
           {
-            "ldflags": [
-              "-Wl,-Map=output.map"
-            ],
             "link_settings": {
               "libraries": [
-                "<(module_root_dir)/lib/mac/libftd2xx.a"
+                "<(module_root_dir)/lib/mac/libftd2xx.a",
+                "-framework IOKit"
               ]
             }
           }

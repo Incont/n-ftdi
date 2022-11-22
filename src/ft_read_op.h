@@ -12,8 +12,8 @@ public:
     static Napi::Object InvokeSync(const Napi::CallbackInfo &info);
     static Napi::Promise Invoke(const Napi::CallbackInfo &info);
     FtReadOp(Napi::Env env, FT_HANDLE ftHandle, Napi::Buffer<char> &buffer, DWORD numBytesToRead);
-    void Execute();
-    void OnOK();
+    void Execute() override;
+    void OnOK() override;
 
 private:
     FT_HANDLE ftHandle;

@@ -39,7 +39,7 @@ void FtEeProgramOp::OnOK()
     deferred.Resolve(Napi::Number::New(Env(), ftStatus));
 }
 
-void FtEeProgramOp::OnWorkComplete()
+void FtEeProgramOp::Destroy()
 {
     pftProgramDataWrapper->Unref();
 }
